@@ -1,38 +1,188 @@
-.App {
-  text-align: center;
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+  color: var(--color2);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+:root {
+  --color1: #203f9a;
+  --color2: #ffffff;
+  --color3: #363636;
+  --color4: #3db166;
+
+  --shadow: 0px 0px 15px 3px rgba(0, 0, 0, 0.5);
+  --radius: 20px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* NOTIFICATION STYLES START */
+.notification-container {
+  position: fixed;
+  width: max-content;
+  padding: clamp(1em, 2vw, 2em);
+  height: 2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 2em;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color4);
+  z-index: 100;
+  backdrop-filter: blur(3px);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  animation: animate-notification 0.4s ease-in-out;
 }
+.notification-container::after {
+  content: "";
+  background: inherit;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  transform: scale(1.05);
+  border-radius: var(--radius);
+  filter: blur(10px);
+  opacity: 0.5;
+}
+.notification-container p {
+  letter-spacing: 1px;
+  font-size: clamp(0.6em, 1.5vw, 1em);
+  text-transform: uppercase;
+}
+/* NOTIFICATION STYLES END */
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* LOGIN STYLING START */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  gap: clamp(1rem, 10vw, 10rem);
+  padding: 5rem;
+}
+.login-image {
+  width: clamp(10rem, 30vw, 30rem);
+  height: clamp(10rem, 30vw, 30rem);
+}
+.login-fields-container {
+  background-color: var(--color1);
+  display: inline-flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.login-input-container {
   display: flex;
   flex-direction: column;
+  gap: 5vh;
+  width: 40%;
+}
+.login-input {
+  background-color: transparent;
+  outline: none;
+  color: var(--color2);
+  border-radius: var(--radius);
+  border: 2px solid var(--color4);
+  min-width: 100%;
+  font-size: clamp(0.7rem, 1.4vw, 1.1rem);
+  padding: 0.4em 0.8em;
+}
+.login-input::placeholder {
+  color: #bbbbbb;
+  opacity: 0.5;
+}
+.login-btn {
+  color: var(--color2);
+  font-weight: bold;
+  font-size: clamp(0.7em, 1.6vw, 1em);
+  background-color: transparent;
+  text-transform: uppercase;
+  padding: 1em 3em;
+  box-shadow: 0 0 0 2pt var(--color4);
+  border: none;
+  border-radius: var(--radius);
+  position: relative;
+  z-index: 3;
+  transition: box-shadow 300ms ease;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.login-btn::before {
+  content: "";
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: opacity 300ms ease;
+  background-color: var(--color4);
+}
+.login-btn:hover {
+  box-shadow: none;
+}
+.login-btn:hover::before {
+  opacity: 1;
+}
+.login-btn-container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 2rem;
+}
+.login-link-container {
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  gap: 1.5rem;
+  width: 100%;
+  padding: 0 1em;
+  font-size: clamp(0.7em, 1.6vw, 1em);
+  text-align: center;
+}
+.btn {
+  background-color: var(--color4);
+  border: 1px solid var(--color4);
+  border-radius: var(--radius);
+  color: var(--color2);
+  padding: 0.3em 1.5em;
+  font-size: clamp(1em, 2vw, 1em);
+  cursor: pointer;
 }
 
-.App-link {
-  color: #61dafb;
-}
+/* LOGIN STYLING END */
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+@media screen and (max-width: 550px) {
+  .login-input-container {
+    width: 70%;
   }
-  to {
-    transform: rotate(360deg);
+  .login-image-container {
+    display: none;
+  }
+  .login-container {
+    padding: 2rem;
+  }
+}
+
+@keyframes animate-notification {
+  0% {
+    top: -100px;
+  }
+  100% {
+    top: 2em;
   }
 }

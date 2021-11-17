@@ -4,8 +4,6 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: "Poppins", sans-serif;
-  color: var(--color2);
 }
 
 :root {
@@ -20,6 +18,7 @@
 
 /* NOTIFICATION STYLES START */
 .notification-container {
+  font-family: "Poppins", sans-serif;
   position: fixed;
   width: max-content;
   padding: clamp(1em, 2vw, 2em);
@@ -57,6 +56,11 @@
   text-transform: uppercase;
 }
 /* NOTIFICATION STYLES END */
+
+.logo {
+  max-width: clamp(5rem, 30vw, 8rem);
+  max-height: clamp(5rem, 30vw, 8rem);
+}
 
 /* LOGIN STYLING START */
 .login-container {
@@ -165,6 +169,67 @@
 }
 
 /* LOGIN STYLING END */
+
+/* SCHEDULE STYLING START */
+.schedule-table {
+  max-width: 100vw;
+  font-family: "Poppins", sans-serif;
+}
+.schedule-table,
+.schedule-table td,
+.schedule-table th,
+.schedule-table tr,
+.schedule-table tbody,
+.schedule-table thead {
+  border: 1px solid var(--color3);
+  border-collapse: collapse;
+  font-size: 0.95vw;
+}
+.schedule-table td {
+  padding: 0.3em;
+  max-width: fit-content;
+  text-align: center;
+  cursor: pointer;
+  transition: all 300ms ease;
+}
+td:nth-child(1):hover {
+  background: var(--color1) !important;
+  cursor: unset;
+}
+td:hover {
+  background-color: #dfdcfdb9 !important;
+}
+.schedule-table th {
+  padding: 0.3em;
+  max-width: fit-content;
+  text-align: center;
+  background-color: var(--color1);
+  color: var(--color2);
+}
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  font-family: "Segoe UI" !important;
+}
+.class-span {
+  display: flex;
+  flex-direction: column;
+  margin-block: 2em;
+  font-family: "Segoe UI" !important;
+}
+.start-time {
+  color: var(--color1);
+}
+.end-time {
+  color: red;
+}
+.room {
+  background-color: var(--color1);
+  color: var(--color2);
+}
+
+/* SCHEDULE STYLING END */
 
 @media screen and (max-width: 550px) {
   .login-input-container {

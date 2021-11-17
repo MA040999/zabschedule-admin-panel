@@ -52,21 +52,7 @@ function App() {
             )
           }
         />
-        {/* {!user ? (
-          <Route path="/login" element={<Login />} />
-        ) : (
-          <Route path="/Home" element={<Home />} />
-        )} */}
-
-        {/* {user === null && (
-          <Route path="/signup" exact render={() => <Signup />} />
-        )} */}
       </Routes>
-      {/* {user ? (
-        <Navigate replace to="/Home" />
-      ) : (
-        <Navigate replace to="/login" />
-      )} */}
     </>
   );
 }

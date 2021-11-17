@@ -9,9 +9,6 @@ import { addNotificationMsg } from "../redux/auth/authActions";
 function Login({ user }) {
   const navigate = useNavigate();
 
-  if (user) {
-    navigate("/Home", { replace: true });
-  }
   const dispatch = useDispatch();
 
   const [userId, setUserId] = useState("");
@@ -34,10 +31,14 @@ function Login({ user }) {
     }
   };
 
+  if (user) {
+    return <Navigate to="/Home" replace />;
+  }
+
   return (
     <form className="login-container" onSubmit={(e) => handleSubmit(e)}>
       <div className="login-fields-container">
-        <h2>LOGIN</h2>
+        <img className="logo" src="/logo-white.svg" alt="logo" />
         <div className="login-input-container">
           <input
             className="login-input"

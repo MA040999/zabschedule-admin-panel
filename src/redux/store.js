@@ -1,15 +1,13 @@
 import { createStore, applyMiddleware, combineReducers } from "redux";
 import thunk from "redux-thunk";
 import authReducer from "./auth/authReducer";
-import conversationReducer from "./conversation/conversationReducer";
-import messageReducer from "./message/messageReducer";
 import logger from "redux-logger";
 import { composeWithDevTools } from "redux-devtools-extension";
+import scheduleReducer from "./schedule/scheduleReducer";
 
 const reducer = combineReducers({
   auth: authReducer,
-  conversation: conversationReducer,
-  message: messageReducer,
+  schedule: scheduleReducer,
 });
 
 const store = createStore(

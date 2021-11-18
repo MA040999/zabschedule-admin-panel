@@ -1,1 +1,2 @@
-export const FETCH_ALL = "FETCH_ALL";
+export const FETCH_COMBINED_SCHEDULE = "FETCH_COMBINED_SCHEDULE";
+export const FETCH_SLOTS = "FETCH_SLOTS";

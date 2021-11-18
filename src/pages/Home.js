@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import CombinedSchedule from "../components/CombinedSchedule";
-import { fetchCombinedSchedule } from "../redux/schedule/scheduleAction";
+import Filter from "../components/Filter";
+import {
+  fetchCombinedSchedule,
+  fetchSlots,
+} from "../redux/schedule/scheduleAction";
 
 function Home() {
   const dispatch = useDispatch();
@@ -9,9 +13,11 @@ function Home() {
 
   useEffect(() => {
     dispatch(fetchCombinedSchedule());
+    dispatch(fetchSlots());
   }, [dispatch]);
   return (
     <>
+      <Filter setSelectedDay={setSelectedDay} />
       <CombinedSchedule selectedDay={selectedDay} />
     </>
   );

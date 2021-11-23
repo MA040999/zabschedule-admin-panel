@@ -56,23 +56,23 @@ function CampusSchedule({ schedule, campus, selectedDay }) {
                     )}
                   <td style={{ backgroundColor: j % 2 === 0 && "#dadada" }}>
                     <span className="block">
-                      {sortedSchedule[i + j].Teacher.map((teacher, t) => (
-                        <span key={t}>{teacher}</span>
+                      {sortedSchedule[i + j].teacher.map((teacher, t) => (
+                        <span key={t}>{teacher.faculty_name}</span>
                       ))}
                     </span>
                   </td>
                   <td style={{ backgroundColor: j % 2 === 0 && "#dadada" }}>
                     <span className="block">
-                      {sortedSchedule[i + j].Subject.map((subject, s) => (
-                        <span key={s}>{subject}</span>
+                      {sortedSchedule[i + j].subject.map((subject, s) => (
+                        <span key={s}>{subject.course_name}</span>
                       ))}
                     </span>
                   </td>
                   <td style={{ backgroundColor: j % 2 === 0 && "#dadada" }}>
                     {sortedSchedule[i + j].Time.length === 2 &&
-                      sortedSchedule[i + j].Class.map((cls, k) => (
+                      sortedSchedule[i + j].class.map((cls, k) => (
                         <span key={k} className="class-span">
-                          <span>{cls}</span>
+                          <span>{`${cls.program} ${cls.semester} ${cls.section}`}</span>
                           <span className="start-time">
                             {sortedSchedule[i + j].Time[k].split("-")[0]}
                           </span>
@@ -84,11 +84,15 @@ function CampusSchedule({ schedule, campus, selectedDay }) {
                     {sortedSchedule[i + j].Time.length === 1 && (
                       <span className="class-span">
                         {sortedSchedule[i + j].Time.length === 1 &&
-                          sortedSchedule[i + j].Class.map((cls, c) =>
-                            sortedSchedule[i + j].Class.length === 1 ? (
-                              <span key={c}>{cls}</span>
+                          sortedSchedule[i + j].class.map((cls, c) =>
+                            sortedSchedule[i + j].class.length === 1 ? (
+                              <span
+                                key={c}
+                              >{`${cls.program} ${cls.semester} ${cls.section}`}</span>
                             ) : (
-                              <span key={c}>{`${cls},`}</span>
+                              <span
+                                key={c}
+                              >{`${cls.program} ${cls.semester} ${cls.section},`}</span>
                             )
                           )}
                         {sortedSchedule[i + j].Time.length === 1 && (

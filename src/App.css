@@ -11,6 +11,7 @@
   --color2: #ffffff;
   --color3: #363636;
   --color4: #3db166;
+  --color5: #ff3c3c;
 
   --shadow: 0px 0px 15px 3px rgba(0, 0, 0, 0.5);
   --radius: 20px;
@@ -30,7 +31,7 @@
   left: 50%;
   transform: translateX(-50%);
   background-color: var(--color4);
-  z-index: 100;
+  z-index: 150;
   backdrop-filter: blur(3px);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
@@ -109,6 +110,7 @@
 .login-btn {
   color: var(--color2);
   font-weight: bold;
+  font-family: "Poppins", sans-serif !important;
   font-size: clamp(0.7em, 1.6vw, 1em);
   background-color: transparent;
   text-transform: uppercase;
@@ -222,7 +224,7 @@ td:hover {
   color: var(--color1);
 }
 .end-time {
-  color: red;
+  color: var(--color5);
 }
 .room {
   background-color: var(--color1);
@@ -258,6 +260,140 @@ td:hover {
   background-color: var(--color4);
   color: var(--color1);
 }
+
+/* MODAL STYLING START */
+.modal-container {
+  position: fixed;
+  font-family: "Poppins", sans-serif !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+}
+.modal-content {
+  background-color: var(--color2);
+
+  width: 85%;
+  height: 85%;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.modal-heading {
+  background-color: var(--color1);
+  color: var(--color2);
+  display: flex;
+  flex-direction: column;
+  height: 6rem;
+  justify-content: center;
+  align-items: center;
+}
+.modal-main-heading {
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  height: 50%;
+  align-items: center;
+}
+.line-break {
+  width: 100%;
+  height: 1px;
+  background-color: var(--color2);
+}
+.modal-time-heading {
+  height: 50%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+.modal-body {
+  height: calc(100% - 6rem);
+}
+.modal-row {
+  display: flex;
+  height: 20%;
+  width: 90%;
+  align-items: center;
+  margin: auto;
+  justify-content: space-between;
+}
+.buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: calc(100% - 20%);
+
+  align-items: center;
+  justify-content: space-between;
+}
+.modal-btn {
+  background-color: transparent;
+  border: none;
+  border-radius: 12px;
+  font-family: "Poppins", sans-serif !important;
+  color: var(--color2);
+  padding: 0.5em 3em;
+  z-index: 100;
+  font-size: clamp(1em, 2vw, 1em);
+  cursor: pointer;
+  transition: all 300ms ease;
+  position: relative;
+  overflow: hidden;
+}
+.modal-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: var(--color3);
+  width: 20px;
+  z-index: -1;
+  height: 20px;
+  border-radius: 50%;
+  transform: translate(-100%, -100%);
+  transition: all 600ms ease;
+}
+.modal-btn:hover::after {
+  transform: translate(0, 0);
+  transform: scale(30, 30);
+}
+.modal-btn:hover {
+  transform: scale(1.05);
+}
+.add-class-btn {
+  background-color: var(--color1);
+  box-shadow: none;
+  font-size: large;
+  text-transform: none;
+}
+.delete-class-btn {
+  background-color: var(--color5);
+  box-shadow: none;
+  font-size: large;
+  text-transform: none;
+}
+.btn-container {
+  display: flex;
+  margin-bottom: 2rem;
+  gap: 4rem;
+}
+.cancel-btn {
+  background-color: var(--color5);
+
+  text-transform: none;
+}
+.submit-btn {
+  background-color: var(--color4);
+  text-transform: none;
+  color: var(--color2);
+}
+
+/* MODAL STYLING END */
 
 /* FILTER STYLING END */
 

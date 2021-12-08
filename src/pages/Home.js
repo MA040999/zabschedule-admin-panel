@@ -6,6 +6,7 @@ import {
   fetchCombinedSchedule,
   fetchSlots,
 } from "../redux/schedule/scheduleAction";
+import Modal from "../components/Modal";
 
 function Home() {
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ function Home() {
   }, [dispatch]);
   return (
     <>
+      <Modal />
       <Filter setSelectedDay={setSelectedDay} />
       <CombinedSchedule selectedDay={selectedDay} />
     </>

@@ -13,7 +13,7 @@
   --color4: #3db166;
   --color5: #ff3c3c;
 
-  --shadow: 0px 0px 15px 3px rgba(0, 0, 0, 0.5);
+  --shadow: 0px 0px 15px 2px rgba(0, 0, 0, 0.4);
   --radius: 20px;
 }
 
@@ -278,7 +278,7 @@ td:hover {
 }
 .modal-content {
   background-color: var(--color2);
-
+  box-shadow: var(--shadow);
   width: 85%;
   height: 85%;
   border-radius: var(--radius);
@@ -313,23 +313,40 @@ td:hover {
 }
 .modal-body {
   height: calc(100% - 6rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
 .modal-row {
   display: flex;
-  height: 20%;
-  width: 90%;
+  /* height: calc(calc(100% - 6rem) / 4); */
+  width: 95%;
   align-items: center;
-  margin: auto;
+  /* margin: auto; */
   justify-content: space-between;
 }
 .buttons-container {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  height: calc(100% - 20%);
 
   align-items: center;
   justify-content: space-between;
+}
+.icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 40px;
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 100;
+  overflow: hidden;
+  position: relative;
+  background-color: var(--color5);
+  transition: all 300ms ease;
 }
 .modal-btn {
   background-color: transparent;
@@ -337,15 +354,21 @@ td:hover {
   border-radius: 12px;
   font-family: "Poppins", sans-serif !important;
   color: var(--color2);
-  padding: 0.5em 3em;
+  padding: 0.5em 1em;
   z-index: 100;
   font-size: clamp(1em, 2vw, 1em);
   cursor: pointer;
   transition: all 300ms ease;
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
 }
-.modal-btn::after {
+
+.modal-btn::after,
+.icon-container::after {
   content: "";
   position: absolute;
   top: 0;
@@ -358,12 +381,22 @@ td:hover {
   transform: translate(-100%, -100%);
   transition: all 600ms ease;
 }
-.modal-btn:hover::after {
+.modal-btn:hover::after,
+.icon-container:hover::after {
   transform: translate(0, 0);
   transform: scale(30, 30);
 }
-.modal-btn:hover {
+.icon-container:hover::after {
+  transform: scale(6, 6);
+}
+.modal-btn:hover,
+.modal-btn:focus {
   transform: scale(1.05);
+  box-shadow: var(--shadow);
+}
+.icon-container:hover {
+  transform: scale(1.08);
+  box-shadow: 0px 0px 12px 2px rgba(0, 0, 0, 0.3);
 }
 .add-class-btn {
   background-color: var(--color1);
@@ -379,7 +412,7 @@ td:hover {
 }
 .btn-container {
   display: flex;
-  margin-bottom: 2rem;
+  /* margin-bottom: 2rem; */
   gap: 4rem;
 }
 .cancel-btn {
@@ -391,6 +424,10 @@ td:hover {
   background-color: var(--color4);
   text-transform: none;
   color: var(--color2);
+}
+
+.search-select {
+  width: 17%;
 }
 
 /* MODAL STYLING END */

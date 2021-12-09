@@ -1,8 +1,13 @@
-import { FETCH_COMBINED_SCHEDULE, FETCH_SLOTS } from "./scheduleTypes";
+import {
+  FETCH_COMBINED_SCHEDULE,
+  FETCH_SLOTS,
+  TOGGLE_MODAL,
+} from "./scheduleTypes";
 
 const intitalState = {
   schedule: [],
   slots: [],
+  isModalOpen: false,
 };
 
 const scheduleReducer = (state = intitalState, action) => {
@@ -16,6 +21,11 @@ const scheduleReducer = (state = intitalState, action) => {
       return {
         ...state,
         slots: action.payload,
+      };
+    case TOGGLE_MODAL:
+      return {
+        ...state,
+        isModalOpen: !state.isModalOpen,
       };
     default:
       return state;

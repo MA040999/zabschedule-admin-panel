@@ -1,7 +1,9 @@
 import React, { Fragment } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleModal } from "../redux/schedule/scheduleAction";
 
 function CampusSchedule({ schedule, campus, selectedDay }) {
+  const dispatch = useDispatch();
   const campusSchedule = schedule.filter(
     (schedule) => schedule.campus === campus
   );
@@ -54,21 +56,30 @@ function CampusSchedule({ schedule, campus, selectedDay }) {
                         NAMAZ BREAK
                       </td>
                     )}
-                  <td style={{ backgroundColor: j % 2 === 0 && "#dadada" }}>
+                  <td
+                    onClick={() => dispatch(toggleModal())}
+                    style={{ backgroundColor: j % 2 === 0 && "#dadada" }}
+                  >
                     <span className="block">
                       {sortedSchedule[i + j].teacher.map((teacher, t) => (
                         <span key={t}>{teacher.faculty_name}</span>
                       ))}
                     </span>
                   </td>
-                  <td style={{ backgroundColor: j % 2 === 0 && "#dadada" }}>
+                  <td
+                    onClick={() => dispatch(toggleModal())}
+                    style={{ backgroundColor: j % 2 === 0 && "#dadada" }}
+                  >
                     <span className="block">
                       {sortedSchedule[i + j].subject.map((subject, s) => (
                         <span key={s}>{subject.course_name}</span>
                       ))}
                     </span>
                   </td>
-                  <td style={{ backgroundColor: j % 2 === 0 && "#dadada" }}>
+                  <td
+                    onClick={() => dispatch(toggleModal())}
+                    style={{ backgroundColor: j % 2 === 0 && "#dadada" }}
+                  >
                     {sortedSchedule[i + j].Time.length === 2 &&
                       sortedSchedule[i + j].class.map((cls, k) => (
                         <span key={k} className="class-span">

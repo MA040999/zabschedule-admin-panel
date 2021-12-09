@@ -1,5 +1,9 @@
 import app from "../../axiosConfig";
-import { FETCH_COMBINED_SCHEDULE, FETCH_SLOTS } from "./scheduleTypes";
+import {
+  FETCH_COMBINED_SCHEDULE,
+  FETCH_SLOTS,
+  TOGGLE_MODAL,
+} from "./scheduleTypes";
 
 export const fetchCombinedSchedule = () => {
   return async (dispatch) => {
@@ -26,5 +30,11 @@ export const fetchSlots = () => {
     } catch (error) {
       console.log(`error`, error);
     }
+  };
+};
+
+export const toggleModal = () => {
+  return {
+    type: TOGGLE_MODAL,
   };
 };

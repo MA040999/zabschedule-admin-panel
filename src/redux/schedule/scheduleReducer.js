@@ -8,6 +8,7 @@ const intitalState = {
   schedule: [],
   slots: [],
   isModalOpen: false,
+  modalData: {},
 };
 
 const scheduleReducer = (state = intitalState, action) => {
@@ -26,6 +27,7 @@ const scheduleReducer = (state = intitalState, action) => {
       return {
         ...state,
         isModalOpen: !state.isModalOpen,
+        modalData: !state.isModalOpen ? action.payload : {},
       };
     default:
       return state;

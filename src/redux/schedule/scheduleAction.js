@@ -33,8 +33,9 @@ export const fetchSlots = () => {
   };
 };
 
-export const toggleModal = () => {
+export const toggleModal = (room, selectedDay, campus, slot, id) => {
   return {
     type: TOGGLE_MODAL,
+    payload: { room, selectedDay, campus, slot, id },
   };
 };

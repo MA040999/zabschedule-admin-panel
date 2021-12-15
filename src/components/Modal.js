@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FiTrash, FiX, FiCheck, FiPlus } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
+import { ordinal_suffix_of } from "../common/common";
 import { toggleModal } from "../redux/schedule/scheduleAction";
 import CustomSelect from "./CustomSelect";
 
@@ -20,6 +21,8 @@ function Modal() {
   console.log(selectedData);
 
   const modalState = useSelector((state) => state.schedule.isModalOpen);
+  const modalData = useSelector((state) => state.schedule.modalData);
+
   const dispatch = useDispatch();
   const handleAddRow = () => {
     setRows(2);
@@ -103,13 +106,26 @@ function Modal() {
       <div className="modal-content">
         <div className="modal-heading">
           <div className="modal-main-heading">
-            <h3>Room-104</h3>
-            <h3>Saturday</h3>
-            <h3>100 Campus</h3>
+            <h3>{modalData.room}</h3>
+            <h3>{modalData.selectedDay}</h3>
+            <h3>{modalData.campus}</h3>
           </div>
           <div className="line-break"></div>
           <div className="modal-time-heading">
-            <h3>1st Time Slot (08:15AM to 09:30AM - 09:30AM to 10:45AM)</h3>
+            <h3>{ordinal_suffix_of(modalData.slot.slot) + " Time Slot"}</h3>
+            <h3>
+              {"("}
+              {modalData.selectedDay === "Friday"
+                ? modalData.slot.friday_slot_timing.length > 0
+                  ? modalData.slot.friday_slot_timing.map((time, index) => {
+                      return `${index !== 0 ? ` - ` : ""}` + time;
+                    })
+                  : "asdasd"
+                : modalData.slot.slot_timing.map((time, index) => {
+                    return `${index !== 0 ? ` - ` : ""}` + time;
+                  })}
+              {")"}
+            </h3>
           </div>
         </div>
         <div className="modal-body">

@@ -185,7 +185,7 @@
 .schedule-table thead {
   border: 1.5px solid #bbbbbb;
   border-collapse: collapse;
-  font-size: 0.95vw;
+  font-size: 1em;
 }
 .schedule-table td {
   padding: 0.3em;
@@ -203,7 +203,6 @@ td:hover {
 }
 .schedule-table th {
   padding: 0.3em;
-  max-width: fit-content;
   text-align: center;
   background-color: var(--color1);
   color: var(--color2);
@@ -294,7 +293,7 @@ td:hover {
   align-items: center;
 }
 .modal-main-heading {
-  width: 90%;
+  width: 95%;
   display: flex;
   justify-content: space-between;
   height: 50%;
@@ -307,9 +306,12 @@ td:hover {
 }
 .modal-time-heading {
   height: 50%;
+  width: 95%;
   display: flex;
   align-items: center;
   text-align: center;
+  justify-content: center;
+  gap: 1.5rem;
 }
 .modal-body {
   height: calc(100% - 6rem);

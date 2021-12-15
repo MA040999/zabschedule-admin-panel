@@ -13,16 +13,18 @@ function CombinedSchedule({ selectedDay }) {
     state.schedule.slots.sort((a, b) => a.slot - b.slot)
   );
 
+  const colSpan = slots.length * 3 + 1;
+
   return (
     <>
       {schedule.length > 0 && (
         <table className="schedule-table">
           <thead>
             <tr>
-              <th colSpan={50}>ZabSchedule</th>
+              <th colSpan={colSpan}>ZabSchedule</th>
             </tr>
             <tr>
-              <th colSpan={50}>{selectedDay}</th>
+              <th colSpan={colSpan}>{selectedDay}</th>
             </tr>
             <tr>
               <th rowSpan={10}>Class Room</th>
@@ -41,14 +43,7 @@ function CombinedSchedule({ selectedDay }) {
                           return `${index !== 0 ? ` - ` : ""}` + time;
                         })
                       : "Namaz Break"
-                    : // slot.friday_slot_timing[0] +
-                      //   `
-                      // ${
-                      //   slot.friday_slot_timing[1]
-                      //     ? ` - ` + slot.friday_slot_timing[1]
-                      //     : ""
-                      // }`
-                      slot.slot_timing.map((time, index) => {
+                    : slot.slot_timing.map((time, index) => {
                         return `${index !== 0 ? ` - ` : ""}` + time;
                       })}
                 </th>
@@ -72,10 +67,6 @@ function CombinedSchedule({ selectedDay }) {
                         {slot.llb_slot_timing.map((llbSlot, j) => {
                           return `${j !== 0 ? ` - ` : ""}` + llbSlot;
                         })}
-                        {/* {slot.llb_slot_timing.length > 0 &&
-                          slot.llb_slot_timing[0] +
-                            " - " +
-                            slot.llb_slot_timing[1]} */}
                       </th>
                     );
                   }
@@ -94,6 +85,7 @@ function CombinedSchedule({ selectedDay }) {
           <tbody>
             {campusArray?.map((campus) => (
               <CampusSchedule
+                colSpan={colSpan}
                 selectedDay={selectedDay}
                 key={campus}
                 schedule={schedule}

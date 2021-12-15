@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleModal } from "../redux/schedule/scheduleAction";
 
-function CampusSchedule({ schedule, campus, selectedDay }) {
+function CampusSchedule({ schedule, campus, selectedDay, colSpan }) {
   const dispatch = useDispatch();
   const campusSchedule = schedule.filter(
     (schedule) => schedule.campus === campus
@@ -35,7 +35,7 @@ function CampusSchedule({ schedule, campus, selectedDay }) {
   return (
     <>
       <tr>
-        <th colSpan={50}>{campus}</th>
+        <th colSpan={colSpan}>{campus}</th>
       </tr>
       {sortedSchedule.map((schedule, i) => (
         <Fragment key={schedule._id}>
@@ -46,81 +46,108 @@ function CampusSchedule({ schedule, campus, selectedDay }) {
                 ...Array(
                   selectedDay === "Friday" ? totalSlots - 1 : totalSlots
                 ),
-              ].map((_, j) => (
-                <Fragment key={j}>
-                  {selectedDay === "Friday" &&
-                    i === 0 &&
-                    campus === "100 CAMPUS" &&
-                    j + 1 === fridayEmptySlot[0].slot && (
-                      <td colSpan={3} rowSpan={56}>
-                        NAMAZ BREAK
-                      </td>
-                    )}
-                  <td
-                    onClick={() => dispatch(toggleModal())}
-                    style={{ backgroundColor: j % 2 === 0 && "#dadada" }}
-                  >
-                    <span className="block">
-                      {sortedSchedule[i + j].teacher.map((teacher, t) => (
-                        <span key={t}>{teacher.faculty_name}</span>
-                      ))}
-                    </span>
-                  </td>
-                  <td
-                    onClick={() => dispatch(toggleModal())}
-                    style={{ backgroundColor: j % 2 === 0 && "#dadada" }}
-                  >
-                    <span className="block">
-                      {sortedSchedule[i + j].subject.map((subject, s) => (
-                        <span key={s}>{subject.course_name}</span>
-                      ))}
-                    </span>
-                  </td>
-                  <td
-                    onClick={() => dispatch(toggleModal())}
-                    style={{ backgroundColor: j % 2 === 0 && "#dadada" }}
-                  >
-                    {sortedSchedule[i + j].Time.length === 2 &&
-                      sortedSchedule[i + j].class.map((cls, k) => (
-                        <span key={k} className="class-span">
-                          <span>{`${cls.program} ${cls.semester} ${cls.section}`}</span>
-                          <span className="start-time">
-                            {sortedSchedule[i + j].Time[k].split("-")[0]}
-                          </span>
-                          <span className="end-time">
-                            {sortedSchedule[i + j].Time[k].split("-")[1]}
-                          </span>
+              ].map((_, j) => {
+                const toggleFunction = () => {
+                  const jIndex =
+                    selectedDay === "Friday" &&
+                    slots[j].slot >= fridayEmptySlot[0].slot
+                      ? j + 1
+                      : j;
+
+                  dispatch(
+                    toggleModal(
+                      schedule.room,
+                      selectedDay,
+                      campus,
+                      slots[jIndex],
+                      schedule.room === sortedSchedule[i + jIndex]?.room
+                        ? sortedSchedule[i + jIndex]?._id
+                        : undefined
+                    )
+                  );
+                };
+                return (
+                  <Fragment key={j}>
+                    {selectedDay === "Friday" &&
+                      i === 0 &&
+                      campus === "100 CAMPUS" &&
+                      j + 1 === fridayEmptySlot[0].slot && (
+                        <td colSpan={3} rowSpan={56}>
+                          NAMAZ BREAK
+                        </td>
+                      )}
+                    <td
+                      onClick={toggleFunction}
+                      style={{ backgroundColor: j % 2 === 0 && "#dadada" }}
+                    >
+                      {schedule.room === sortedSchedule[i + j]?.room && (
+                        <span className="block">
+                          {sortedSchedule[i + j]?.teacher.map((teacher, t) => (
+                            <span key={t}>{teacher.faculty_name}</span>
+                          ))}
                         </span>
-                      ))}
-                    {sortedSchedule[i + j].Time.length === 1 && (
-                      <span className="class-span">
-                        {sortedSchedule[i + j].Time.length === 1 &&
-                          sortedSchedule[i + j].class.map((cls, c) =>
-                            sortedSchedule[i + j].class.length === 1 ? (
-                              <span
-                                key={c}
-                              >{`${cls.program} ${cls.semester} ${cls.section}`}</span>
-                            ) : (
-                              <span
-                                key={c}
-                              >{`${cls.program} ${cls.semester} ${cls.section},`}</span>
-                            )
-                          )}
-                        {sortedSchedule[i + j].Time.length === 1 && (
-                          <>
+                      )}
+                    </td>
+                    <td
+                      onClick={toggleFunction}
+                      style={{ backgroundColor: j % 2 === 0 && "#dadada" }}
+                    >
+                      {schedule.room === sortedSchedule[i + j]?.room && (
+                        <span className="block">
+                          {sortedSchedule[i + j]?.subject.map((subject, s) => (
+                            <span key={s}>{subject.course_name}</span>
+                          ))}
+                        </span>
+                      )}
+                    </td>
+                    <td
+                      onClick={toggleFunction}
+                      style={{ backgroundColor: j % 2 === 0 && "#dadada" }}
+                    >
+                      {schedule.room === sortedSchedule[i + j]?.room &&
+                        sortedSchedule[i + j]?.Time.length === 2 &&
+                        sortedSchedule[i + j]?.class.map((cls, k) => (
+                          <span key={k} className="class-span">
+                            <span>{`${cls.program} ${cls.semester} ${cls.section}`}</span>
                             <span className="start-time">
-                              {sortedSchedule[i + j].Time[0].split("-")[0]}
+                              {sortedSchedule[i + j]?.Time[k].split("-")[0]}
                             </span>
                             <span className="end-time">
-                              {sortedSchedule[i + j].Time[0].split("-")[1]}
+                              {sortedSchedule[i + j]?.Time[k].split("-")[1]}
                             </span>
-                          </>
+                          </span>
+                        ))}
+                      {schedule.room === sortedSchedule[i + j]?.room &&
+                        sortedSchedule[i + j]?.Time.length === 1 && (
+                          <span className="class-span">
+                            {sortedSchedule[i + j]?.Time.length === 1 &&
+                              sortedSchedule[i + j]?.class.map((cls, c) =>
+                                sortedSchedule[i + j]?.class.length === 1 ? (
+                                  <span
+                                    key={c}
+                                  >{`${cls.program} ${cls.semester} ${cls.section}`}</span>
+                                ) : (
+                                  <span
+                                    key={c}
+                                  >{`${cls.program} ${cls.semester} ${cls.section},`}</span>
+                                )
+                              )}
+                            {sortedSchedule[i + j]?.Time.length === 1 && (
+                              <>
+                                <span className="start-time">
+                                  {sortedSchedule[i + j]?.Time[0].split("-")[0]}
+                                </span>
+                                <span className="end-time">
+                                  {sortedSchedule[i + j]?.Time[0].split("-")[1]}
+                                </span>
+                              </>
+                            )}
+                          </span>
                         )}
-                      </span>
-                    )}
-                  </td>
-                </Fragment>
-              ))}
+                    </td>
+                  </Fragment>
+                );
+              })}
             </tr>
           )}
         </Fragment>

@@ -1,27 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { FiTrash, FiX, FiCheck, FiPlus } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-import { ordinal_suffix_of } from "../common/common";
+import { ordinal_suffix_of, tConvert } from "../common/common";
 import { toggleModal } from "../redux/schedule/scheduleAction";
 import CustomSelect from "./CustomSelect";
 
-function Modal() {
+function Modal({ faculty, courses, classes }) {
   const [rows, setRows] = useState(1);
+
+  const modalState = useSelector((state) => state.schedule.isModalOpen);
+  const modalData = useSelector((state) => state.schedule.modalData);
+
+  const [relevantCoursesRow1, setRelevantCoursesRow1] = useState(courses);
+  const [relevantCoursesRow2, setRelevantCoursesRow2] = useState(courses);
+
+  const [relevantClassesRow1, setRelevantClassesRow1] = useState(classes);
+  const [relevantClassesRow2, setRelevantClassesRow2] = useState(classes);
+
+  const [relevantFacultyRow1, setRelevantFacultyRow1] = useState(faculty);
+  const [relevantFacultyRow2, setRelevantFacultyRow2] = useState(faculty);
+
   const [selectedData, setSelectedData] = useState({
     Time: [],
-    campus: "",
+    campus: modalData?.campus,
     class: [],
-    day: "",
-    room: "",
-    slot: null,
+    day: modalData?.selectedDay,
+    room: modalData?.room,
+    slot: modalData?.slot?.slot,
     subject: [],
     teacher: [],
     _id: "",
   });
   console.log(selectedData);
-
-  const modalState = useSelector((state) => state.schedule.isModalOpen);
-  const modalData = useSelector((state) => state.schedule.modalData);
 
   const dispatch = useDispatch();
   const handleAddRow = () => {
@@ -30,20 +40,21 @@ function Modal() {
   const handleTrashClick = (i) => {
     if (i === 0) {
       setSelectedData({
+        ...selectedData,
         Time: selectedData.Time[1] ? [undefined, selectedData.Time[1]] : [],
-        campus: "",
         class: selectedData.class[1] ? [undefined, selectedData.class[1]] : [],
-        day: "",
-        room: "",
-        slot: null,
         subject: selectedData.subject[1]
           ? [undefined, selectedData.subject[1]]
           : [],
         teacher: selectedData.teacher[1]
           ? [undefined, selectedData.teacher[1]]
           : [],
-        _id: "",
       });
+      setRelevantCoursesRow1(courses);
+      setRelevantClassesRow1(classes);
+      setRelevantFacultyRow1(faculty);
+      document.getElementById(`from${i}`).value = "";
+      document.getElementById(`to${i}`).value = "";
     } else {
       if (
         selectedData.Time[1] === undefined &&
@@ -54,22 +65,63 @@ function Modal() {
         setRows(1);
       } else {
         setSelectedData({
+          ...selectedData,
           Time: selectedData.Time.filter((_, index) => index !== i),
-          campus: "",
           class: selectedData.class.filter((_, index) => index !== i),
-          day: "",
-          room: "",
-          slot: null,
           subject: selectedData.subject.filter((_, index) => index !== i),
           teacher: selectedData.teacher.filter((_, index) => index !== i),
-          _id: "",
         });
+        setRelevantCoursesRow2(courses);
+        setRelevantClassesRow2(classes);
+        setRelevantFacultyRow2(faculty);
+        document.getElementById(`from${i}`).value = "";
+        document.getElementById(`to${i}`).value = "";
       }
     }
   };
 
   const handleSelectChange = (e, index) => {
     if (index === 0) {
+      if (e.name === "teacher") {
+        setRelevantCoursesRow1(
+          selectedData.class[index]
+            ? courses
+                .filter((course) =>
+                  e.taught_courses.includes(course.course_code)
+                )
+                .filter((relCourse) => {
+                  const cls = classes.find(
+                    (cls) => cls._id === selectedData.class[index]
+                  );
+                  return cls.courses.includes(relCourse.course_code);
+                })
+            : courses.filter((course) =>
+                e.taught_courses.includes(course.course_code)
+              )
+        );
+      } else if (e.name === "subject") {
+        console.log("e", e);
+        setRelevantClassesRow1(
+          classes.filter((cls) => cls.courses.includes(e.course_code))
+        );
+        setRelevantFacultyRow1(
+          faculty.filter((fac) => fac.taught_courses.includes(e.course_code))
+        );
+      } else if (e.name === "class") {
+        setRelevantCoursesRow1(
+          selectedData.teacher[index]
+            ? courses
+                .filter((course) => e.courses.includes(course.course_code))
+                .filter((relCourse) => {
+                  const teacher = faculty.find(
+                    (fac) => fac._id === selectedData.teacher[index]
+                  );
+                  return teacher.taught_courses.includes(relCourse.course_code);
+                })
+            : courses.filter((course) => e.courses.includes(course.course_code))
+        );
+      }
+
       setSelectedData({
         ...selectedData,
         [e.name]: selectedData[e.name][index + 1]
@@ -77,6 +129,45 @@ function Modal() {
           : [e.value],
       });
     } else {
+      if (e.name === "teacher") {
+        setRelevantCoursesRow2(
+          selectedData.class[index]
+            ? courses
+                .filter((course) =>
+                  e.taught_courses.includes(course.course_code)
+                )
+                .filter((relCourse) => {
+                  const cls = classes.find(
+                    (cls) => cls._id === selectedData.class[index]
+                  );
+                  return cls.courses.includes(relCourse.course_code);
+                })
+            : courses.filter((course) =>
+                e.taught_courses.includes(course.course_code)
+              )
+        );
+      } else if (e.name === "subject") {
+        setRelevantClassesRow2(
+          classes.filter((cls) => cls.courses.includes(e.course_code))
+        );
+        setRelevantFacultyRow2(
+          faculty.filter((fac) => fac.taught_courses.includes(e.course_code))
+        );
+      } else if (e.name === "class") {
+        setRelevantCoursesRow2(
+          selectedData.teacher[index]
+            ? courses
+                .filter((course) => e.courses.includes(course.course_code))
+                .filter((relCourse) => {
+                  const teacher = faculty.find(
+                    (fac) => fac._id === selectedData.teacher[index]
+                  );
+                  return teacher.taught_courses.includes(relCourse.course_code);
+                })
+            : courses.filter((course) => e.courses.includes(course.course_code))
+        );
+      }
+
       setSelectedData({
         ...selectedData,
         [e.name]: [selectedData[e.name][index - 1], e.value],
@@ -84,20 +175,102 @@ function Modal() {
     }
   };
 
+  const handleTimeChange = (e, index) => {
+    if (index === 0) {
+      if (e.target.name === "to") {
+        setSelectedData({
+          ...selectedData,
+          Time: selectedData.Time[index + 1]
+            ? [
+                `${selectedData.Time[index].split("-")[0].trim()} - ${tConvert(
+                  e.target.value
+                )}`,
+                selectedData.Time[index + 1],
+              ]
+            : [
+                `${selectedData.Time[index].split("-")[0].trim()} - ${tConvert(
+                  e.target.value
+                )}`,
+              ],
+        });
+      } else {
+        setSelectedData({
+          ...selectedData,
+          Time: selectedData.Time[index + 1]
+            ? [
+                `${tConvert(e.target.value)} - ${selectedData.Time[index]
+                  ?.split("-")[1]
+                  .trim()}`,
+                selectedData.Time[index + 1],
+              ]
+            : [
+                `${tConvert(e.target.value)} - ${selectedData.Time[index]
+                  ?.split("-")[1]
+                  .trim()}`,
+              ],
+        });
+      }
+    } else {
+      if (e.target.name === "to") {
+        setSelectedData({
+          ...selectedData,
+          Time: selectedData.Time[index - 1]
+            ? [
+                selectedData.Time[index - 1],
+                `${selectedData.Time[index].split("-")[0].trim()} - ${tConvert(
+                  e.target.value
+                )}`,
+              ]
+            : [
+                undefined,
+                `${selectedData.Time[index].split("-")[0].trim()} - ${tConvert(
+                  e.target.value
+                )}`,
+              ],
+        });
+      } else {
+        setSelectedData({
+          ...selectedData,
+          Time: selectedData.Time[index - 1]
+            ? [
+                selectedData.Time[index - 1],
+                `${tConvert(e.target.value)} - ${selectedData.Time[index]
+                  ?.split("-")[1]
+                  .trim()}`,
+              ]
+            : [
+                undefined,
+                `${tConvert(e.target.value)} - ${selectedData.Time[index]
+                  ?.split("-")[1]
+                  .trim()}`,
+              ],
+        });
+      }
+    }
+  };
   useEffect(() => {
     setRows(1);
     setSelectedData({
       Time: [],
-      campus: "",
+      campus: modalData?.campus,
       class: [],
-      day: "",
-      room: "",
-      slot: null,
+      day: modalData?.selectedDay,
+      room: modalData?.room,
+      slot: modalData?.slot?.slot,
       subject: [],
       teacher: [],
       _id: "",
     });
-  }, [modalState]);
+    setRelevantCoursesRow1(courses);
+    setRelevantCoursesRow2(courses);
+
+    setRelevantClassesRow1(classes);
+    setRelevantClassesRow2(classes);
+
+    setRelevantFacultyRow1(faculty);
+    setRelevantFacultyRow2(faculty);
+    // eslint-disable-next-line
+  }, [modalState, modalData]);
 
   if (!modalState) return null;
 
@@ -116,11 +289,9 @@ function Modal() {
             <h3>
               {"("}
               {modalData.selectedDay === "Friday"
-                ? modalData.slot.friday_slot_timing.length > 0
-                  ? modalData.slot.friday_slot_timing.map((time, index) => {
-                      return `${index !== 0 ? ` - ` : ""}` + time;
-                    })
-                  : "asdasd"
+                ? modalData.slot.friday_slot_timing.map((time, index) => {
+                    return `${index !== 0 ? ` - ` : ""}` + time;
+                  })
                 : modalData.slot.slot_timing.map((time, index) => {
                     return `${index !== 0 ? ` - ` : ""}` + time;
                   })}
@@ -133,11 +304,25 @@ function Modal() {
             <div key={index} className="modal-row">
               <CustomSelect
                 placeholder="Faculty..."
-                options={[
-                  { name: "teacher", value: "chocolate", label: "Chocolate" },
-                  { name: "teacher", value: "strawberry", label: "Strawberry" },
-                  { name: "teacher", value: "vanilla", label: "Vanilla" },
-                ]}
+                options={
+                  index === 0
+                    ? [
+                        ...relevantFacultyRow1.map((teacher) => ({
+                          value: teacher._id,
+                          label: teacher.faculty_name,
+                          name: "teacher",
+                          taught_courses: teacher.taught_courses,
+                        })),
+                      ]
+                    : [
+                        ...relevantFacultyRow2.map((teacher) => ({
+                          value: teacher._id,
+                          label: teacher.faculty_name,
+                          name: "teacher",
+                          taught_courses: teacher.taught_courses,
+                        })),
+                      ]
+                }
                 defaultValue={selectedData.teacher[index]}
                 onChange={(e) => handleSelectChange(e, index)}
                 controlShouldRenderValue={
@@ -146,11 +331,25 @@ function Modal() {
               />
               <CustomSelect
                 placeholder="Subject..."
-                options={[
-                  { name: "subject", value: "chocolate", label: "Chocolate" },
-                  { name: "subject", value: "strawberry", label: "Strawberry" },
-                  { name: "subject", value: "vanilla", label: "Vanilla" },
-                ]}
+                options={
+                  index === 0
+                    ? [
+                        ...relevantCoursesRow1.map((course) => ({
+                          value: course._id,
+                          label: course.course_name,
+                          name: "subject",
+                          course_code: course.course_code,
+                        })),
+                      ]
+                    : [
+                        ...relevantCoursesRow2.map((course) => ({
+                          value: course._id,
+                          label: course.course_name,
+                          name: "subject",
+                          course_code: course.course_code,
+                        })),
+                      ]
+                }
                 defaultValue={selectedData.subject[index]}
                 onChange={(e) => handleSelectChange(e, index)}
                 controlShouldRenderValue={
@@ -159,20 +358,91 @@ function Modal() {
               />
               <CustomSelect
                 placeholder="Class..."
-                options={[
-                  { name: "class", value: "chocolate", label: "Chocolate" },
-                  { name: "class", value: "strawberry", label: "Strawberry" },
-                  { name: "class", value: "vanilla", label: "Vanilla" },
-                ]}
+                options={
+                  index === 0
+                    ? [
+                        ...relevantClassesRow1.map((cls) => ({
+                          value: cls._id,
+                          label: `${cls.program} ${cls.semester} ${cls.section}`,
+                          name: "class",
+                          courses: cls.courses,
+                        })),
+                      ]
+                    : [
+                        ...relevantClassesRow2.map((cls) => ({
+                          value: cls._id,
+                          label: `${cls.program} ${cls.semester} ${cls.section}`,
+                          name: "class",
+                          courses: cls.courses,
+                        })),
+                      ]
+                }
                 defaultValue={selectedData.class[index]}
                 onChange={(e) => handleSelectChange(e, index)}
                 controlShouldRenderValue={
                   selectedData.class[index] !== undefined
                 }
               />
-
-              <CustomSelect placeholder="From..." />
-              <CustomSelect placeholder="To..." />
+              <input
+                type="time"
+                name="from"
+                id={`from${index}`}
+                defaultValue={selectedData.Time[index]?.split("-")[0].trim()}
+                onChange={(e) => handleTimeChange(e, index)}
+                min={"8:00"}
+                max={"22:00"}
+              />
+              <input
+                type="time"
+                name="to"
+                id={`to${index}`}
+                defaultValue={selectedData.Time[index]?.split("-")[1].trim()}
+                onChange={(e) => handleTimeChange(e, index)}
+                min={"8:00"}
+                max={"22:00"}
+              />
+              {/* <CustomSelect
+                placeholder="From..."
+                options={
+                  modalData.selectedDay !== "Friday"
+                    ? modalData?.slot?.slot_timing.map((time) => ({
+                        value: `${time.split("to")[0].trim()}`,
+                        label: `${time.split("to")[0].trim()}`,
+                        name: "Time",
+                      }))
+                    : modalData?.slot?.friday_slot_timing.map((time) => ({
+                        value: `${time.split("to")[0].trim()}`,
+                        label: `${time.split("to")[0].trim()}`,
+                        name: "Time",
+                      }))
+                }
+                defaultValue={selectedData.Time[index]}
+                onChange={(e) => handleSelectChange(e, index)}
+                controlShouldRenderValue={
+                  selectedData.Time[index] !== undefined
+                }
+              /> */}
+              {/* <CustomSelect
+                placeholder="To..."
+                options={
+                  modalData.selectedDay !== "Friday"
+                    ? modalData?.slot?.slot_timing.map((time) => ({
+                        value: `${time.split("to")[1].trim()}`,
+                        label: `${time.split("to")[1].trim()}`,
+                        name: "to",
+                      }))
+                    : modalData?.slot?.friday_slot_timing.map((time) => ({
+                        value: `${time.split("to")[1].trim()}`,
+                        label: `${time.split("to")[1].trim()}`,
+                        name: "to",
+                      }))
+                }
+                defaultValue={selectedData.Time[index]}
+                onChange={(e) => handleSelectChange(e, index)}
+                controlShouldRenderValue={
+                  selectedData.Time[index] !== undefined
+                }
+              /> */}
 
               <div
                 onClick={() => handleTrashClick(index)}

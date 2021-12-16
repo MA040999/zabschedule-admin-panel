@@ -14,6 +14,7 @@ function CustomSelect({
       styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
       placeholder={placeholder}
       options={options}
+      noOptionsMessage={() => "No record available"}
       onChange={onChange}
       defaultValue={defaultValue}
       className="search-select"

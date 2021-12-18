@@ -4,6 +4,7 @@ import Select from "react-select";
 function CustomSelect({
   placeholder,
   options,
+  isMulti,
   defaultValue,
   onChange,
   controlShouldRenderValue,
@@ -16,6 +17,7 @@ function CustomSelect({
       options={options}
       noOptionsMessage={() => "No record available"}
       onChange={onChange}
+      isMulti={isMulti}
       defaultValue={defaultValue}
       className="search-select"
       controlShouldRenderValue={controlShouldRenderValue}

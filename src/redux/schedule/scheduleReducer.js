@@ -1,7 +1,9 @@
 import {
+  ADD_CLASS,
   FETCH_COMBINED_SCHEDULE,
   FETCH_SLOTS,
   TOGGLE_MODAL,
+  UPDATE_CLASS,
 } from "./scheduleTypes";
 
 const intitalState = {
@@ -22,6 +24,20 @@ const scheduleReducer = (state = intitalState, action) => {
       return {
         ...state,
         slots: action.payload,
+      };
+    case ADD_CLASS:
+      return {
+        ...state,
+        schedule: [...state.schedule, action.payload],
+      };
+    case UPDATE_CLASS:
+      return {
+        ...state,
+        schedule: [
+          ...state.schedule.map((schedule) =>
+            schedule._id !== action.payload._id ? schedule : action.payload
+          ),
+        ],
       };
     case TOGGLE_MODAL:
       return {

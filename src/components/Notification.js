@@ -9,8 +9,7 @@ function Notification() {
   useEffect(() => {
     setTimeout(() => {
       dispatch(removeNotificationMsg());
-    }, 3000);
-
+    }, 4000);
     // eslint-disable-next-line
   }, [notificationMsg]);
 

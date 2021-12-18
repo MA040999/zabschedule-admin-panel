@@ -1,8 +1,10 @@
 import app from "../../axiosConfig";
 import {
+  ADD_CLASS,
   FETCH_COMBINED_SCHEDULE,
   FETCH_SLOTS,
   TOGGLE_MODAL,
+  UPDATE_CLASS,
 } from "./scheduleTypes";
 
 export const fetchCombinedSchedule = () => {
@@ -27,6 +29,30 @@ export const fetchSlots = () => {
         type: FETCH_SLOTS,
         payload: slots?.data,
       });
+    } catch (error) {
+      console.log(`error`, error);
+    }
+  };
+};
+
+export const addClass = (data) => {
+  return async (dispatch) => {
+    try {
+      const newClass = await app.post("/time-table/add-class", data);
+
+      if (data._id) {
+        dispatch({
+          type: UPDATE_CLASS,
+          payload: newClass?.data,
+        });
+        dispatch(toggleModal());
+      } else {
+        dispatch({
+          type: ADD_CLASS,
+          payload: newClass?.data,
+        });
+        dispatch(toggleModal());
+      }
     } catch (error) {
       console.log(`error`, error);
     }

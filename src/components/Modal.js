@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { FiTrash, FiX, FiCheck, FiPlus } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import { ordinal_suffix_of, tConvert } from "../common/common";
-import { toggleModal } from "../redux/schedule/scheduleAction";
+import { addNotificationMsg } from "../redux/auth/authActions";
+import { addClass, toggleModal } from "../redux/schedule/scheduleAction";
 import CustomSelect from "./CustomSelect";
 
 function Modal({ faculty, courses, classes }) {
@@ -29,20 +30,29 @@ function Modal({ faculty, courses, classes }) {
     slot: modalData?.slot?.slot,
     subject: [],
     teacher: [],
-    _id: "",
+    _id: modalData?.id,
   });
   console.log(selectedData);
 
   const dispatch = useDispatch();
   const handleAddRow = () => {
     setRows(2);
+    setSelectedData({
+      ...selectedData,
+      class: [selectedData.class[0]],
+    });
   };
   const handleTrashClick = (i) => {
     if (i === 0) {
       setSelectedData({
         ...selectedData,
         Time: selectedData.Time[1] ? [undefined, selectedData.Time[1]] : [],
-        class: selectedData.class[1] ? [undefined, selectedData.class[1]] : [],
+        class:
+          rows === 1
+            ? []
+            : selectedData.class[1]
+            ? [undefined, selectedData.class[1]]
+            : [],
         subject: selectedData.subject[1]
           ? [undefined, selectedData.subject[1]]
           : [],
@@ -77,6 +87,48 @@ function Modal({ faculty, courses, classes }) {
         document.getElementById(`from${i}`).value = "";
         document.getElementById(`to${i}`).value = "";
       }
+    }
+  };
+
+  const handleMultiSelectChange = (e, index) => {
+    const taughtCourses = e.map((item) => item.courses);
+    const relevantCourses = [];
+
+    if (selectedData.teacher[index]) {
+      courses.map((course) => {
+        if (taughtCourses.every((crs) => crs.includes(course.course_code))) {
+          relevantCourses.push(course);
+        }
+        return null;
+      });
+      setRelevantCoursesRow1(
+        relevantCourses.filter((relCourse) => {
+          const teacher = faculty.find(
+            (fac) => fac._id === selectedData.teacher[index]
+          );
+          return teacher.taught_courses.includes(relCourse.course_code);
+        })
+      );
+    } else {
+      courses.map((course) => {
+        if (taughtCourses.every((crs) => crs.includes(course.course_code))) {
+          relevantCourses.push(course);
+        }
+        return null;
+      });
+      setRelevantCoursesRow1(relevantCourses);
+    }
+
+    if (e.at(-1) === undefined) {
+      setSelectedData({
+        ...selectedData,
+        class: [],
+      });
+    } else {
+      setSelectedData({
+        ...selectedData,
+        class: e.map((item) => item.value),
+      });
     }
   };
 
@@ -176,6 +228,11 @@ function Modal({ faculty, courses, classes }) {
   };
 
   const handleTimeChange = (e, index) => {
+    const time = e.target.value.split(":");
+    if (time[0] < 8 || (time[0] >= 22 && time[1] > 0)) {
+      document.getElementById(`${e.target.name}${index}`).value = "";
+      return dispatch(addNotificationMsg("Time should be greater than 8"));
+    }
     if (index === 0) {
       if (e.target.name === "to") {
         setSelectedData({
@@ -188,7 +245,7 @@ function Modal({ faculty, courses, classes }) {
                 selectedData.Time[index + 1],
               ]
             : [
-                `${selectedData.Time[index].split("-")[0].trim()} - ${tConvert(
+                `${selectedData.Time[index]?.split("-")[0].trim()} - ${tConvert(
                   e.target.value
                 )}`,
               ],
@@ -248,6 +305,43 @@ function Modal({ faculty, courses, classes }) {
       }
     }
   };
+
+  const handleSubmit = () => {
+    if (
+      selectedData.subject.length === 0 ||
+      selectedData.class.length === 0 ||
+      selectedData.teacher.length === 0 ||
+      selectedData.Time.length === 0
+    )
+      return dispatch(addNotificationMsg("Please fill all the fields"));
+
+    if (
+      selectedData.Time[0].split("-")[0].trim() === "undefined" ||
+      selectedData.Time[0].split("-")[0].trim() === "" ||
+      selectedData.Time[0].split("-")[1].trim() === "undefined" ||
+      selectedData.Time[0].split("-")[1].trim() === ""
+    )
+      return dispatch(addNotificationMsg("Please fill all the fields"));
+
+    if (rows === 2) {
+      if (
+        selectedData.subject.length < 2 ||
+        selectedData.class.length < 2 ||
+        selectedData.teacher.length < 2 ||
+        selectedData.Time.length < 2 ||
+        selectedData.subject.includes(undefined) ||
+        selectedData.class.includes(undefined) ||
+        selectedData.teacher.includes(undefined) ||
+        selectedData.Time.includes(undefined) ||
+        selectedData.Time[1].split("-")[0].trim() === "undefined" ||
+        selectedData.Time[1].split("-")[0].trim() === "" ||
+        selectedData.Time[1].split("-")[1].trim() === "undefined" ||
+        selectedData.Time[1].split("-")[1].trim() === ""
+      )
+        return dispatch(addNotificationMsg("Please fill all the fields"));
+    }
+    dispatch(addClass(selectedData));
+  };
   useEffect(() => {
     setRows(1);
     setSelectedData({
@@ -259,7 +353,7 @@ function Modal({ faculty, courses, classes }) {
       slot: modalData?.slot?.slot,
       subject: [],
       teacher: [],
-      _id: "",
+      _id: modalData?.id,
     });
     setRelevantCoursesRow1(courses);
     setRelevantCoursesRow2(courses);
@@ -377,20 +471,53 @@ function Modal({ faculty, courses, classes }) {
                         })),
                       ]
                 }
+                isMulti={rows === 1 ? true : false}
+                defaultValue={
+                  rows === 1 ? selectedData.class : selectedData.class[index]
+                }
+                onChange={
+                  rows === 1
+                    ? (e) => handleMultiSelectChange(e, index)
+                    : (e) => handleSelectChange(e, index)
+                }
+                controlShouldRenderValue={
+                  selectedData.class[index] !== undefined
+                }
+              />
+              {/* <CustomSelect
+                placeholder="Class..."
+                options={
+                  index === 0
+                    ? [
+                        ...relevantClassesRow1.map((cls) => ({
+                          value: cls._id,
+                          label: `${cls.program} ${cls.semester} ${cls.section}`,
+                          name: "class",
+                          courses: cls.courses,
+                        })),
+                      ]
+                    : [
+                        ...relevantClassesRow2.map((cls) => ({
+                          value: cls._id,
+                          label: `${cls.program} ${cls.semester} ${cls.section}`,
+                          name: "class",
+                          courses: cls.courses,
+                        })),
+                      ]
+                }
                 defaultValue={selectedData.class[index]}
                 onChange={(e) => handleSelectChange(e, index)}
                 controlShouldRenderValue={
                   selectedData.class[index] !== undefined
                 }
-              />
+              /> */}
               <input
                 type="time"
                 name="from"
                 id={`from${index}`}
                 defaultValue={selectedData.Time[index]?.split("-")[0].trim()}
                 onChange={(e) => handleTimeChange(e, index)}
-                min={"8:00"}
-                max={"22:00"}
+                required
               />
               <input
                 type="time"
@@ -398,8 +525,7 @@ function Modal({ faculty, courses, classes }) {
                 id={`to${index}`}
                 defaultValue={selectedData.Time[index]?.split("-")[1].trim()}
                 onChange={(e) => handleTimeChange(e, index)}
-                min={"8:00"}
-                max={"22:00"}
+                required
               />
               {/* <CustomSelect
                 placeholder="From..."
@@ -477,7 +603,10 @@ function Modal({ faculty, courses, classes }) {
 
               <span>Cancel</span>
             </div>
-            <div className="modal-btn submit-btn">
+            <div
+              className="modal-btn submit-btn"
+              onClick={() => handleSubmit()}
+            >
               <FiCheck className="icon" color="white" size="25px" />
 
               <span>Submit</span>

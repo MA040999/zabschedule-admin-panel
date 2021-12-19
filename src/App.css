@@ -453,11 +453,18 @@ input[type="time"]::after {
   left: 80%;
   width: 1px;
   height: 60%;
-  /* right: 20%; */
   background-color: hsl(0, 0%, 80%);
 }
 input[type="time"]:hover {
   border-color: hsl(0, 0%, 70%);
+}
+input[type="time"]:disabled {
+  background-color: hsl(0, 0%, 95%);
+  border-color: hsl(0, 0%, 90%);
+  color: hsl(0, 0%, 60%);
+}
+input[type="time"]:disabled::after {
+  background-color: hsl(0, 0%, 90%);
 }
 /* MODAL STYLING END */
 

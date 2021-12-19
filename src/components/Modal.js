@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { FiTrash, FiX, FiCheck, FiPlus } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-import { ordinal_suffix_of, tConvert } from "../common/common";
+import {
+  convertTime12to24,
+  ordinal_suffix_of,
+  tConvert,
+} from "../common/common";
 import { addNotificationMsg } from "../redux/auth/authActions";
 import { addClass, toggleModal } from "../redux/schedule/scheduleAction";
 import CustomSelect from "./CustomSelect";
@@ -343,18 +347,19 @@ function Modal({ faculty, courses, classes }) {
     dispatch(addClass(selectedData));
   };
   useEffect(() => {
-    setRows(1);
+    setRows(modalData?.teacher?.length || 1);
     setSelectedData({
-      Time: [],
+      Time: modalData?.time || [],
       campus: modalData?.campus,
-      class: [],
+      class: modalData?.cls || [],
       day: modalData?.selectedDay,
       room: modalData?.room,
       slot: modalData?.slot?.slot,
-      subject: [],
-      teacher: [],
+      subject: modalData?.subject || [],
+      teacher: modalData?.teacher || [],
       _id: modalData?.id,
     });
+
     setRelevantCoursesRow1(courses);
     setRelevantCoursesRow2(courses);
 
@@ -417,11 +422,35 @@ function Modal({ faculty, courses, classes }) {
                         })),
                       ]
                 }
-                defaultValue={selectedData.teacher[index]}
+                // defaultValue={selectedData.teacher[index]}
+                value={
+                  index === 0
+                    ? relevantFacultyRow1.map((teacher) => {
+                        if (teacher._id === selectedData.teacher[index])
+                          return {
+                            value: teacher._id,
+                            label: teacher.faculty_name,
+                            name: "teacher",
+                            taught_courses: teacher.taught_courses,
+                          };
+                        return null;
+                      })
+                    : relevantFacultyRow2.map((teacher) => {
+                        if (teacher._id === selectedData.teacher[index])
+                          return {
+                            value: teacher._id,
+                            label: teacher.faculty_name,
+                            name: "teacher",
+                            taught_courses: teacher.taught_courses,
+                          };
+                        return null;
+                      })
+                }
                 onChange={(e) => handleSelectChange(e, index)}
                 controlShouldRenderValue={
                   selectedData.teacher[index] !== undefined
                 }
+                isDisabled={modalData?.subject.length > 0 ? true : false}
               />
               <CustomSelect
                 placeholder="Subject..."
@@ -444,11 +473,35 @@ function Modal({ faculty, courses, classes }) {
                         })),
                       ]
                 }
-                defaultValue={selectedData.subject[index]}
+                value={
+                  index === 0
+                    ? relevantCoursesRow1.map((course) => {
+                        if (course._id === selectedData.subject[index])
+                          return {
+                            value: course._id,
+                            label: course.course_name,
+                            name: "subject",
+                            course_code: course.course_code,
+                          };
+                        return null;
+                      })
+                    : relevantCoursesRow2.map((course) => {
+                        if (course._id === selectedData.subject[index])
+                          return {
+                            value: course._id,
+                            label: course.course_name,
+                            name: "subject",
+                            course_code: course.course_code,
+                          };
+                        return null;
+                      })
+                }
+                // value={selectedData.subject[index]}
                 onChange={(e) => handleSelectChange(e, index)}
                 controlShouldRenderValue={
                   selectedData.subject[index] !== undefined
                 }
+                isDisabled={modalData?.subject.length > 0 ? true : false}
               />
               <CustomSelect
                 placeholder="Class..."
@@ -472,8 +525,43 @@ function Modal({ faculty, courses, classes }) {
                       ]
                 }
                 isMulti={rows === 1 ? true : false}
-                defaultValue={
-                  rows === 1 ? selectedData.class : selectedData.class[index]
+                // defaultValue={
+                //   rows === 1 ? selectedData.class : selectedData.class[index]
+                // }
+                value={
+                  index === 0
+                    ? rows === 1
+                      ? relevantClassesRow1.map((cls) => {
+                          // if (cls._id === selectedData.class[index])
+                          if (selectedData.class.includes(cls._id))
+                            return {
+                              value: cls._id,
+                              label: `${cls.program} ${cls.semester} ${cls.section}`,
+                              name: "class",
+                              courses: cls.courses,
+                            };
+                          return null;
+                        })
+                      : relevantClassesRow1.map((cls) => {
+                          if (cls._id === selectedData.class[index])
+                            return {
+                              value: cls._id,
+                              label: `${cls.program} ${cls.semester} ${cls.section}`,
+                              name: "class",
+                              courses: cls.courses,
+                            };
+                          return null;
+                        })
+                    : relevantClassesRow2.map((cls) => {
+                        if (cls._id === selectedData.class[index])
+                          return {
+                            value: cls._id,
+                            label: `${cls.program} ${cls.semester} ${cls.section}`,
+                            name: "class",
+                            courses: cls.courses,
+                          };
+                        return null;
+                      })
                 }
                 onChange={
                   rows === 1
@@ -483,6 +571,7 @@ function Modal({ faculty, courses, classes }) {
                 controlShouldRenderValue={
                   selectedData.class[index] !== undefined
                 }
+                isDisabled={modalData?.subject.length > 0 ? true : false}
               />
               {/* <CustomSelect
                 placeholder="Class..."
@@ -515,16 +604,28 @@ function Modal({ faculty, courses, classes }) {
                 type="time"
                 name="from"
                 id={`from${index}`}
-                defaultValue={selectedData.Time[index]?.split("-")[0].trim()}
+                defaultValue={
+                  selectedData.Time[index] &&
+                  convertTime12to24(
+                    selectedData.Time[index]?.split("-")[0].trim()
+                  )
+                }
                 onChange={(e) => handleTimeChange(e, index)}
+                disabled={modalData?.subject.length > 0 ? true : false}
                 required
               />
               <input
                 type="time"
                 name="to"
                 id={`to${index}`}
-                defaultValue={selectedData.Time[index]?.split("-")[1].trim()}
+                defaultValue={
+                  selectedData.Time[index] &&
+                  convertTime12to24(
+                    selectedData.Time[index]?.split("-")[1].trim()
+                  )
+                }
                 onChange={(e) => handleTimeChange(e, index)}
+                disabled={modalData?.subject.length > 0 ? true : false}
                 required
               />
               {/* <CustomSelect

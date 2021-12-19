@@ -54,6 +54,11 @@ function CampusSchedule({ schedule, campus, selectedDay, colSpan }) {
                       ? j + 1
                       : j;
 
+                  console.log(
+                    `sortedSchedule[i + jIndex].teacher`,
+                    sortedSchedule[i + jIndex].teacher
+                  );
+
                   dispatch(
                     toggleModal(
                       schedule.room,
@@ -62,7 +67,15 @@ function CampusSchedule({ schedule, campus, selectedDay, colSpan }) {
                       slots[jIndex],
                       schedule.room === sortedSchedule[i + jIndex]?.room
                         ? sortedSchedule[i + jIndex]?._id
-                        : undefined
+                        : undefined,
+                      sortedSchedule[i + jIndex].teacher.map(
+                        (teacher) => teacher._id
+                      ),
+                      sortedSchedule[i + jIndex].subject.map(
+                        (subject) => subject._id
+                      ),
+                      sortedSchedule[i + jIndex].class.map((cls) => cls._id),
+                      sortedSchedule[i + jIndex].Time
                     )
                   );
                 };

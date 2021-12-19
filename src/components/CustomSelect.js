@@ -5,9 +5,10 @@ function CustomSelect({
   placeholder,
   options,
   isMulti,
-  defaultValue,
+  value,
   onChange,
   controlShouldRenderValue,
+  isDisabled,
 }) {
   return (
     <Select
@@ -18,9 +19,10 @@ function CustomSelect({
       noOptionsMessage={() => "No record available"}
       onChange={onChange}
       isMulti={isMulti}
-      defaultValue={defaultValue}
+      value={value}
       className="search-select"
       controlShouldRenderValue={controlShouldRenderValue}
+      isDisabled={isDisabled}
     />
   );
 }

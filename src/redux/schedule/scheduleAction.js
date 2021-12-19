@@ -59,9 +59,29 @@ export const addClass = (data) => {
   };
 };
 
-export const toggleModal = (room, selectedDay, campus, slot, id) => {
+export const toggleModal = (
+  room,
+  selectedDay,
+  campus,
+  slot,
+  id,
+  teacher,
+  subject,
+  cls,
+  time
+) => {
   return {
     type: TOGGLE_MODAL,
-    payload: { room, selectedDay, campus, slot, id },
+    payload: {
+      room,
+      selectedDay,
+      campus,
+      slot,
+      id,
+      teacher,
+      subject,
+      cls,
+      time,
+    },
   };
 };

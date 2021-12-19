@@ -25,3 +25,22 @@ export function tConvert(time) {
   }
   return time.join("");
 }
+
+export function convertTime12to24(time12h) {
+  const [time, modifier] = [time12h.slice(0, -2), time12h.slice(-2)];
+
+  let [hours, minutes] = time.split(":");
+
+  if (hours === "12") {
+    hours = "00";
+  }
+
+  if (modifier === "PM") {
+    hours = parseInt(hours, 10) + 12;
+  }
+
+  if (modifier === "AM" && hours.length === 1) {
+    hours = `0${hours}`;
+  }
+  return `${hours}:${minutes}`;
+}

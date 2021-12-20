@@ -75,7 +75,8 @@ function CampusSchedule({ schedule, campus, selectedDay, colSpan }) {
                         (subject) => subject._id
                       ),
                       sortedSchedule[i + jIndex].class.map((cls) => cls._id),
-                      sortedSchedule[i + jIndex].Time
+                      sortedSchedule[i + jIndex].Time,
+                      sortedSchedule[i + jIndex].subject.length > 0
                     )
                   );
                 };

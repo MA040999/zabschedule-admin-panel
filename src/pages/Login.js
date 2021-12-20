@@ -17,12 +17,12 @@ function Login({ user }) {
   let handleSubmit = function (e) {
     e.preventDefault();
     if (userId === "" || password === "") {
-      dispatch(addNotificationMsg("Please fill both the fields"));
+      dispatch(addNotificationMsg("Please fill both the fields", "error"));
     } else {
       // if (validateEmail(userId)) {
       //   dispatch(login({ userId, password }, navigate, socket));
       // } else {
-      //   dispatch(addNotificationMsg("Email address is invalid"));
+      //   dispatch(addNotificationMsg("Email address is invalid", 'error'));
       // }
 
       dispatch(login({ userId, password }, navigate));

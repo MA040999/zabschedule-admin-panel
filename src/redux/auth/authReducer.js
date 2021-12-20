@@ -12,6 +12,7 @@ const intitalState = {
   user: null,
   err: "",
   notificationMsg: null,
+  notificationMsgType: null,
 };
 
 const authReducer = (state = intitalState, action) => {
@@ -45,11 +46,13 @@ const authReducer = (state = intitalState, action) => {
       return {
         ...state,
         notificationMsg: null,
+        notificationMsgType: null,
       };
     case ADD_NOTIFICATION_MSG:
       return {
         ...state,
-        notificationMsg: action.payload,
+        notificationMsg: action.payload.msg,
+        notificationMsgType: action.payload.type,
       };
     default:
       return state;

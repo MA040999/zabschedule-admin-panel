@@ -5,6 +5,9 @@ import { removeNotificationMsg } from "../redux/auth/authActions";
 function Notification() {
   const dispatch = useDispatch();
   const notificationMsg = useSelector((state) => state.auth.notificationMsg);
+  const notificationMsgType = useSelector(
+    (state) => state.auth.notificationMsgType
+  );
 
   useEffect(() => {
     setTimeout(() => {
@@ -14,7 +17,11 @@ function Notification() {
   }, [notificationMsg]);
 
   return (
-    <div className="notification-container">
+    <div
+      className={`notification-container ${
+        notificationMsgType === "error" && "error-notification"
+      }`}
+    >
       <p>{notificationMsg}</p>
     </div>
   );

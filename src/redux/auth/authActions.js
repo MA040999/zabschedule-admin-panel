@@ -26,7 +26,7 @@ export const login = ({ userId, password }, navigate) => {
       navigate("/Home", { replace: true });
     } catch (error) {
       console.log(`error`, error);
-      dispatch(addNotificationMsg(error?.response?.data?.message));
+      dispatch(addNotificationMsg(error?.response?.data?.message, "error"));
     }
   };
 };
@@ -38,7 +38,7 @@ export const verifyAuth = () => {
       dispatch({ type: VERIFY_AUTH, payload: user?.data });
     } catch (error) {
       console.log(`error`, error);
-      dispatch(addNotificationMsg(error.response.data.message));
+      dispatch(addNotificationMsg(error.response.data.message, "error"));
 
       dispatch({ type: LOGOUT });
     }
@@ -71,7 +71,7 @@ export const signup = ({ fullname, userId, password }, navigate) => {
       navigate("/Home", { replace: true });
     } catch (error) {
       console.log(`error`, error);
-      dispatch(addNotificationMsg(error?.response?.data?.message));
+      dispatch(addNotificationMsg(error?.response?.data?.message, "error"));
     }
   };
 };
@@ -89,10 +89,10 @@ export const logout = (navigate) => {
   };
 };
 
-export const addNotificationMsg = (msg) => {
+export const addNotificationMsg = (msg, type) => {
   return {
     type: ADD_NOTIFICATION_MSG,
-    payload: msg,
+    payload: { msg, type },
   };
 };
 

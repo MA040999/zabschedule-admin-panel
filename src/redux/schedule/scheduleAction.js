@@ -1,8 +1,12 @@
 import app from "../../axiosConfig";
+import { addNotificationMsg } from "../auth/authActions";
 import {
   ADD_CLASS,
+  DELETE_CLASS,
   FETCH_COMBINED_SCHEDULE,
   FETCH_SLOTS,
+  REMOVE_MODAL_DATA,
+  TOGGLE_CONFIRMATION_MODAL,
   TOGGLE_MODAL,
   UPDATE_CLASS,
 } from "./scheduleTypes";
@@ -46,13 +50,32 @@ export const addClass = (data) => {
           payload: newClass?.data,
         });
         dispatch(toggleModal());
+        dispatch(addNotificationMsg("Class updated successfully"));
       } else {
         dispatch({
           type: ADD_CLASS,
           payload: newClass?.data,
         });
         dispatch(toggleModal());
+        dispatch(addNotificationMsg("Class added successfully"));
       }
+    } catch (error) {
+      console.log(`error`, error);
+    }
+  };
+};
+
+export const deleteClass = (id) => {
+  return async (dispatch) => {
+    try {
+      await app.patch(`/time-table/delete-class/${id}`);
+      dispatch({
+        type: DELETE_CLASS,
+        payload: id,
+      });
+      dispatch(toggleModal());
+      dispatch(toggleConfirmationModal());
+      dispatch(addNotificationMsg("Class deleted successfully"));
     } catch (error) {
       console.log(`error`, error);
     }
@@ -68,7 +91,8 @@ export const toggleModal = (
   teacher,
   subject,
   cls,
-  time
+  time,
+  slotAssigned
 ) => {
   return {
     type: TOGGLE_MODAL,
@@ -82,6 +106,20 @@ export const toggleModal = (
       subject,
       cls,
       time,
+      slotAssigned,
     },
+  };
+};
+
+export const toggleConfirmationModal = () => {
+  return {
+    type: TOGGLE_CONFIRMATION_MODAL,
+  };
+};
+
+export const removeModalData = (index) => {
+  return {
+    type: REMOVE_MODAL_DATA,
+    payload: index,
   };
 };

@@ -7,7 +7,13 @@ import {
   tConvert,
 } from "../common/common";
 import { addNotificationMsg } from "../redux/auth/authActions";
-import { addClass, toggleModal } from "../redux/schedule/scheduleAction";
+import {
+  addClass,
+  removeModalData,
+  toggleConfirmationModal,
+  toggleModal,
+} from "../redux/schedule/scheduleAction";
+import ConfirmationModal from "./ConfirmationModal";
 import CustomSelect from "./CustomSelect";
 
 function Modal({ faculty, courses, classes }) {
@@ -46,8 +52,16 @@ function Modal({ faculty, courses, classes }) {
       class: [selectedData.class[0]],
     });
   };
+
+  const handleUnscheduleBtnClick = () => {
+    dispatch(toggleConfirmationModal());
+  };
+
   const handleTrashClick = (i) => {
     if (i === 0) {
+      if (modalData?.subject.length > 0) {
+        dispatch(removeModalData(i));
+      }
       setSelectedData({
         ...selectedData,
         Time: selectedData.Time[1] ? [undefined, selectedData.Time[1]] : [],
@@ -70,6 +84,9 @@ function Modal({ faculty, courses, classes }) {
       document.getElementById(`from${i}`).value = "";
       document.getElementById(`to${i}`).value = "";
     } else {
+      if (modalData?.subject[i] !== undefined) {
+        dispatch(removeModalData(i));
+      }
       if (
         selectedData.Time[1] === undefined &&
         selectedData.class[1] === undefined &&
@@ -233,9 +250,81 @@ function Modal({ faculty, courses, classes }) {
 
   const handleTimeChange = (e, index) => {
     const time = e.target.value.split(":");
-    if (time[0] < 8 || (time[0] >= 22 && time[1] > 0)) {
+    if (Number(time[0]) < 8) {
+      setSelectedData({
+        ...selectedData,
+        Time:
+          index === 0
+            ? e.target.name === "to"
+              ? [
+                  `${selectedData.Time[index]
+                    ?.split("-")[0]
+                    .trim()} - undefined`,
+                  selectedData.Time[1],
+                ]
+              : [
+                  `undefined - ${selectedData.Time[index]
+                    ?.split("-")[1]
+                    .trim()}`,
+                  selectedData.Time[1],
+                ]
+            : [
+                selectedData.Time[0],
+                `${
+                  e.target.name === "to"
+                    ? `${selectedData.Time[index]
+                        ?.split("-")[0]
+                        .trim()} - undefined`
+                    : `undefined - ${selectedData.Time[index]
+                        ?.split("-")[1]
+                        .trim()}`
+                }`,
+              ],
+      });
       document.getElementById(`${e.target.name}${index}`).value = "";
-      return dispatch(addNotificationMsg("Time should be greater than 8"));
+      return dispatch(
+        addNotificationMsg("Time should be after 8:00 AM", "error")
+      );
+    }
+    if (Number(time[0]) >= 22) {
+      if (Number(time[0]) === 22 && Number(time[1]) === 0) {
+        //do nothing and continue
+      } else {
+        setSelectedData({
+          ...selectedData,
+          Time:
+            index === 0
+              ? e.target.name === "to"
+                ? [
+                    `${selectedData.Time[index]
+                      ?.split("-")[0]
+                      .trim()} - undefined`,
+                    selectedData.Time[1],
+                  ]
+                : [
+                    `undefined - ${selectedData.Time[index]
+                      ?.split("-")[1]
+                      .trim()}`,
+                    selectedData.Time[1],
+                  ]
+              : [
+                  selectedData.Time[0],
+                  `${
+                    e.target.name === "to"
+                      ? `${selectedData.Time[index]
+                          ?.split("-")[0]
+                          .trim()} - undefined`
+                      : `undefined - ${selectedData.Time[index]
+                          ?.split("-")[1]
+                          .trim()}`
+                  }`,
+                ],
+        });
+        document.getElementById(`${e.target.name}${index}`).value = "";
+        return dispatch(
+          addNotificationMsg("Time should be before 10:00 PM", "error")
+        );
+      }
     }
     if (index === 0) {
       if (e.target.name === "to") {
@@ -312,12 +401,26 @@ function Modal({ faculty, courses, classes }) {
 
   const handleSubmit = () => {
     if (
+      modalData?.time.length !== 0 &&
+      modalData?.time.join(",") === selectedData.Time.join(",")
+    ) {
+      if (
+        modalData?.subject.length > 1 &&
+        modalData?.subject[1] === undefined
+      ) {
+      } else {
+        return dispatch(addNotificationMsg("No changes detected", "error"));
+      }
+    }
+    if (
       selectedData.subject.length === 0 ||
       selectedData.class.length === 0 ||
       selectedData.teacher.length === 0 ||
       selectedData.Time.length === 0
     )
-      return dispatch(addNotificationMsg("Please fill all the fields"));
+      return dispatch(
+        addNotificationMsg("Please fill all the fields", "error")
+      );
 
     if (
       selectedData.Time[0].split("-")[0].trim() === "undefined" ||
@@ -325,7 +428,9 @@ function Modal({ faculty, courses, classes }) {
       selectedData.Time[0].split("-")[1].trim() === "undefined" ||
       selectedData.Time[0].split("-")[1].trim() === ""
     )
-      return dispatch(addNotificationMsg("Please fill all the fields"));
+      return dispatch(
+        addNotificationMsg("Please fill all the fields", "error")
+      );
 
     if (rows === 2) {
       if (
@@ -342,7 +447,9 @@ function Modal({ faculty, courses, classes }) {
         selectedData.Time[1].split("-")[1].trim() === "undefined" ||
         selectedData.Time[1].split("-")[1].trim() === ""
       )
-        return dispatch(addNotificationMsg("Please fill all the fields"));
+        return dispatch(
+          addNotificationMsg("Please fill all the fields", "error")
+        );
     }
     dispatch(addClass(selectedData));
   };
@@ -376,6 +483,7 @@ function Modal({ faculty, courses, classes }) {
   return (
     <div className="modal-container">
       <div className="modal-content">
+        <ConfirmationModal />
         <div className="modal-heading">
           <div className="modal-main-heading">
             <h3>{modalData.room}</h3>
@@ -450,7 +558,13 @@ function Modal({ faculty, courses, classes }) {
                 controlShouldRenderValue={
                   selectedData.teacher[index] !== undefined
                 }
-                isDisabled={modalData?.subject.length > 0 ? true : false}
+                isDisabled={
+                  modalData?.subject.length > 0
+                    ? modalData?.subject[index] === undefined
+                      ? false
+                      : true
+                    : false
+                }
               />
               <CustomSelect
                 placeholder="Subject..."
@@ -501,7 +615,13 @@ function Modal({ faculty, courses, classes }) {
                 controlShouldRenderValue={
                   selectedData.subject[index] !== undefined
                 }
-                isDisabled={modalData?.subject.length > 0 ? true : false}
+                isDisabled={
+                  modalData?.subject.length > 0
+                    ? modalData?.subject[index] === undefined
+                      ? false
+                      : true
+                    : false
+                }
               />
               <CustomSelect
                 placeholder="Class..."
@@ -571,7 +691,13 @@ function Modal({ faculty, courses, classes }) {
                 controlShouldRenderValue={
                   selectedData.class[index] !== undefined
                 }
-                isDisabled={modalData?.subject.length > 0 ? true : false}
+                isDisabled={
+                  modalData?.subject.length > 0
+                    ? modalData?.subject[index] === undefined
+                      ? false
+                      : true
+                    : false
+                }
               />
               {/* <CustomSelect
                 placeholder="Class..."
@@ -611,7 +737,7 @@ function Modal({ faculty, courses, classes }) {
                   )
                 }
                 onChange={(e) => handleTimeChange(e, index)}
-                disabled={modalData?.subject.length > 0 ? true : false}
+                // disabled={modalData?.subject.length > 0 ? true : false}
                 required
               />
               <input
@@ -625,7 +751,7 @@ function Modal({ faculty, courses, classes }) {
                   )
                 }
                 onChange={(e) => handleTimeChange(e, index)}
-                disabled={modalData?.subject.length > 0 ? true : false}
+                // disabled={modalData?.subject.length > 0 ? true : false}
                 required
               />
               {/* <CustomSelect
@@ -690,11 +816,18 @@ function Modal({ faculty, courses, classes }) {
               <span>Add another class</span>
             </div>
           )}
-          <div className="modal-btn delete-class-btn">
-            <FiTrash className="icon" color="white" size="25px" />
+          {modalData?.slotAssigned ? (
+            <div
+              className="modal-btn delete-class-btn"
+              onClick={() => handleUnscheduleBtnClick()}
+            >
+              <FiTrash className="icon" color="white" size="25px" />
 
-            <span>Unschedule class</span>
-          </div>
+              <span>Unschedule class</span>
+            </div>
+          ) : (
+            <div></div>
+          )}
           <div className="btn-container">
             <div
               onClick={() => dispatch(toggleModal())}

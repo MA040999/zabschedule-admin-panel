@@ -6,6 +6,9 @@ import Notification from "./components/Notification";
 import { verifyRefreshToken } from "./redux/auth/authActions";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
+import Loader from "./components/Loader";
+import Navbar from "./components/Navbar";
+import Request from "./pages/Requests";
 
 function RequireAuth({ user }) {
   if (!user) {
@@ -18,6 +21,7 @@ function RequireAuth({ user }) {
 function App() {
   const user = useSelector((state) => state.auth.user);
   const notificationMsg = useSelector((state) => state.auth.notificationMsg);
+  const isLoading = useSelector((state) => state.auth?.isLoading);
 
   const dispatch = useDispatch();
 
@@ -34,12 +38,20 @@ function App() {
     // eslint-disable-next-line
   }, []);
 
+  if (isLoading === true) {
+    return <Loader />;
+  }
+
   return (
     <>
       {notificationMsg && <Notification />}
+      <Navbar />
       <Routes>
         <Route element={<RequireAuth user={user} />}>
           <Route path="/Home" element={<Home />} />
+        </Route>
+        <Route element={<RequireAuth user={user} />}>
+          <Route path="/Requests" element={<Request />} />
         </Route>
         <Route path="/login" element={<Login user={user} />} />
         <Route

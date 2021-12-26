@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../redux/auth/authActions";
 // import { validateEmail } from "../common/common";
 import { addNotificationMsg } from "../redux/auth/authActions";
+import { FiEye, FiEyeOff, FiLock, FiUser } from "react-icons/fi";
 
 function Login({ user }) {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ function Login({ user }) {
 
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordDisplay, setPasswordDisplay] = useState(true);
 
   let handleSubmit = function (e) {
     e.preventDefault();
@@ -40,22 +42,45 @@ function Login({ user }) {
       <div className="login-fields-container">
         <img className="logo" src="/logo-white.svg" alt="logo" />
         <div className="login-input-container">
-          <input
-            className="login-input"
-            label="Registration Number"
-            placeholder="Registration Number"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-          />
+          <div className="input-container">
+            <FiUser size={22} color="white" />
+            <input
+              className="login-input"
+              label="User ID"
+              placeholder="User ID"
+              value={userId}
+              autoComplete="username"
+              onChange={(e) => setUserId(e.target.value)}
+            />
+          </div>
 
-          <input
-            className="login-input"
-            label="Password"
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div className="input-container">
+            <FiLock size={22} color="white" />
+
+            <input
+              className="login-input"
+              label="Password"
+              placeholder="Password"
+              type={passwordDisplay ? "password" : "text"}
+              autoComplete="current-password"
+              id="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            {!passwordDisplay ? (
+              <FiEyeOff
+                size={22}
+                color="white"
+                onClick={() => setPasswordDisplay(!passwordDisplay)}
+              />
+            ) : (
+              <FiEye
+                size={22}
+                color="white"
+                onClick={() => setPasswordDisplay(!passwordDisplay)}
+              />
+            )}
+          </div>
         </div>
         <div className="login-btn-container">
           <button type="submit" className="login-btn">

@@ -34,11 +34,11 @@ function Home() {
     fetchData();
   }, [dispatch]);
   return (
-    <>
+    <div className="body-container">
       <Modal faculty={faculty} courses={courses} classes={classes} />
       <Filter setSelectedDay={setSelectedDay} />
       <CombinedSchedule selectedDay={selectedDay} />
-    </>
+    </div>
   );
 }
 

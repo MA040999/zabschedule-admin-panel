@@ -48,23 +48,17 @@ function CampusSchedule({ schedule, campus, selectedDay, colSpan }) {
                 ),
               ].map((_, j) => {
                 const toggleFunction = () => {
-                  const jIndex =
-                    selectedDay === "Friday" &&
-                    slots[j].slot >= fridayEmptySlot[0].slot
-                      ? j + 1
-                      : j;
-
-                  console.log(
-                    `sortedSchedule[i + jIndex].teacher`,
-                    sortedSchedule[i + jIndex].teacher
-                  );
+                  const jIndex = j;
 
                   dispatch(
                     toggleModal(
                       schedule.room,
                       selectedDay,
                       campus,
-                      slots[jIndex],
+                      selectedDay === "Friday" &&
+                        slots[j].slot >= fridayEmptySlot[0].slot
+                        ? slots[jIndex + 1]
+                        : slots[jIndex],
                       schedule.room === sortedSchedule[i + jIndex]?.room
                         ? sortedSchedule[i + jIndex]?._id
                         : undefined,

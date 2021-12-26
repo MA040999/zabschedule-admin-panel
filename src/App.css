@@ -16,6 +16,14 @@
   --shadow: 0px 0px 15px 2px rgba(0, 0, 0, 0.4);
   --radius: 20px;
 
+  --active-link-bg: rgba(255, 255, 255, 0.192);
+  --active-link-color: rgba(255, 255, 255, 0.63);
+
+  --loader-bg: rgba(255, 255, 255, 0.356);
+  --loader-border-width: 8px;
+
+  --loader-size: 70px;
+
   --modal-width-height: 85%;
 }
 
@@ -35,7 +43,7 @@
   background-color: var(--color4);
   z-index: 150;
   backdrop-filter: blur(3px);
-  border-radius: var(--radius);
+  border-radius: 10px;
   box-shadow: var(--shadow);
   animation: animate-notification 0.4s ease-in-out;
   overflow: hidden;
@@ -95,18 +103,19 @@
 .login-input-container {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 5vh;
   width: 40%;
 }
 .login-input {
   background-color: transparent;
+  border: none;
   outline: none;
   color: var(--color2);
-  border-radius: var(--radius);
-  border: 2px solid var(--color4);
-  min-width: 100%;
-  font-size: clamp(0.7rem, 1.4vw, 1.1rem);
-  padding: 0.4em 0.8em;
+  width: 100%;
+  font-family: "Poppins", sans-serif;
+  font-size: clamp(0.9em, 1.6vw, 1.1em);
 }
 .login-input::placeholder {
   color: #bbbbbb;
@@ -114,15 +123,15 @@
 }
 .login-btn {
   color: var(--color2);
-  font-weight: bold;
+  font-weight: bolder;
   font-family: "Poppins", sans-serif !important;
-  font-size: clamp(0.7em, 1.6vw, 1em);
+  font-size: clamp(0.9em, 1.6vw, 1.5em);
   background-color: transparent;
   text-transform: uppercase;
-  padding: 1em 3em;
+  padding: 0.5em 3em;
   box-shadow: 0 0 0 2pt var(--color4);
   border: none;
-  border-radius: var(--radius);
+  border-radius: 10px;
   position: relative;
   z-index: 3;
   transition: box-shadow 300ms ease;
@@ -174,7 +183,16 @@
   font-size: clamp(1em, 2vw, 1em);
   cursor: pointer;
 }
-
+.input-container {
+  display: flex;
+  gap: 0.6em;
+  border: 2px solid var(--color4);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+  padding: 0.5em 0.6em;
+  align-items: center;
+}
 /* LOGIN STYLING END */
 
 /* SCHEDULE STYLING START */
@@ -252,18 +270,16 @@ td:hover {
   background-color: transparent;
   outline: none;
   color: var(--color3);
-  border-radius: var(--radius);
-  border: 2px solid var(--color1);
+  border-radius: 10px;
+  border: 2px solid var(--color3);
   min-width: 10%;
-  font-size: clamp(0.7rem, 1.4vw, 1.1rem);
-  padding: 0.4em 0.8em;
+  font-size: clamp(0.9rem, 1.4vw, 1.1rem);
+  padding: 0.4em;
+  position: relative;
   font-family: "Poppins", sans-serif;
 }
-.filter-select :hover {
-  outline: none;
-  background-color: var(--color4);
-  color: var(--color1);
-}
+
+/* FILTER STYLING END */
 
 /* MODAL STYLING START */
 .modal-container {
@@ -287,6 +303,7 @@ td:hover {
   height: var(--modal-width-height);
   border-radius: var(--radius);
   overflow: hidden;
+  margin-top: 30px;
 }
 .modal-heading {
   background-color: var(--color1);
@@ -517,7 +534,113 @@ input[type="time"]:disabled::after {
 }
 /* CONFIRMATION MODAL STYLING END */
 
-/* FILTER STYLING END */
+/* Start of Loader styling */
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: absolute;
+  z-index: 9997;
+  width: 100vw;
+  background-color: var(--loader-bg);
+  backdrop-filter: blur(3px);
+}
+.loader-content {
+  position: relative;
+  width: var(--loader-size);
+  aspect-ratio: 1/1;
+}
+
+.loader-top,
+.loader-bottom {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: var(--loader-border-width) solid transparent;
+  border-top-color: var(--color1);
+  animation: spinTop 1s linear infinite;
+}
+.loader-bottom {
+  border: var(--loader-border-width) solid transparent;
+  border-bottom-color: var(--color1);
+  animation: spinBottom 1s linear infinite;
+}
+/* End of Loader styling */
+
+/* START OF BODY STYLING */
+.body-container {
+  margin-top: calc(7vh + 1em);
+}
+/* END OF BODY STYLING */
+
+/* START OF NAVBAR STYLING */
+.navbar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 7vh;
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--color3);
+  font-family: "Poppins", sans-serif;
+  box-shadow: 0px 5px 10px 2px rgba(0, 0, 0, 0.4);
+}
+.navbar-logo {
+  height: 100%;
+  width: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.navbar-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 2rem;
+  margin-right: 2em;
+}
+.navbar-link-container {
+  display: flex;
+  gap: 1em;
+  align-items: center;
+  width: fit-content;
+  border-radius: 9px;
+  padding: 0.7em;
+  white-space: nowrap;
+  background-color: var(--active-link-bg);
+  color: var(--color2);
+}
+.active {
+  background-color: var(--active-link-bg);
+  color: var(--color2) !important;
+  border: 2px solid var(--color2);
+}
+.navbar-icon {
+  height: 100%;
+  width: clamp(1.5em, 100%, 2vw);
+  aspect-ratio: 1;
+}
+.navbar-link-container {
+  text-decoration: none;
+  color: var(--active-link-color);
+}
+.logout {
+  display: flex;
+  background-color: var(--color1);
+  border: 2px solid var(--color2);
+  color: var(--color2);
+  transition: all 0.08s ease;
+  font-weight: 900;
+  cursor: pointer;
+}
+/* END OF NAVBAR STYLING */
 
 @media screen and (max-width: 550px) {
   .login-input-container {
@@ -546,5 +669,35 @@ input[type="time"]:disabled::after {
   }
   100% {
     left: 0%;
+  }
+}
+
+@keyframes spinTop {
+  0% {
+    transform: rotate(0deg);
+    border-width: var(--loader-border-width);
+  }
+  50% {
+    transform: rotate(180deg);
+    border-width: 1px;
+  }
+  100% {
+    transform: rotate(360deg);
+    border-width: var(--loader-border-width);
+  }
+}
+
+@keyframes spinBottom {
+  0% {
+    transform: rotate(0deg);
+    border-width: 1px;
+  }
+  50% {
+    transform: rotate(180deg);
+    border-width: var(--loader-border-width);
+  }
+  100% {
+    transform: rotate(360deg);
+    border-width: 1px;
   }
 }

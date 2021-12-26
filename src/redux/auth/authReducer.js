@@ -1,18 +1,16 @@
 import {
   ADD_NOTIFICATION_MSG,
   AUTH,
-  AUTH_ERROR,
   LOGOUT,
   REMOVE_NOTIFICATION_MSG,
-  VERIFY_AUTH,
 } from "./authTypes";
 
 const intitalState = {
   token: null,
   user: null,
-  err: "",
   notificationMsg: null,
   notificationMsgType: null,
+  isLoading: true,
 };
 
 const authReducer = (state = intitalState, action) => {
@@ -22,37 +20,28 @@ const authReducer = (state = intitalState, action) => {
         ...state,
         token: action.payload.token,
         user: action.payload.userData,
-        err: "",
-      };
-    case VERIFY_AUTH:
-      return {
-        ...state,
-        user: action.payload,
-        err: "",
+        isLoading: false,
       };
     case LOGOUT:
       return {
         ...state,
         token: null,
         user: null,
-        err: "",
-      };
-    case AUTH_ERROR:
-      return {
-        ...state,
-        err: action.payload,
+        isLoading: false,
       };
     case REMOVE_NOTIFICATION_MSG:
       return {
         ...state,
         notificationMsg: null,
         notificationMsgType: null,
+        isLoading: false,
       };
     case ADD_NOTIFICATION_MSG:
       return {
         ...state,
         notificationMsg: action.payload.msg,
         notificationMsgType: action.payload.type,
+        isLoading: false,
       };
     default:
       return state;

@@ -1,6 +1,4 @@
 export const AUTH = "AUTH";
-export const VERIFY_AUTH = "VERIFY_AUTH";
 export const LOGOUT = "LOGOUT";
-export const AUTH_ERROR = "AUTH_ERROR";
 export const ADD_NOTIFICATION_MSG = "ADD_NOTIFICATION_MSG";
 export const REMOVE_NOTIFICATION_MSG = "REMOVE_NOTIFICATION_MSG";

@@ -1,19 +1,10 @@
 import {
   AUTH,
   LOGOUT,
-  AUTH_ERROR,
-  VERIFY_AUTH,
   ADD_NOTIFICATION_MSG,
   REMOVE_NOTIFICATION_MSG,
 } from "./authTypes";
 import app from "../../axiosConfig";
-
-export const authError = (error) => {
-  return {
-    type: AUTH_ERROR,
-    payload: error,
-  };
-};
 
 export const login = ({ userId, password }, navigate) => {
   return async (dispatch) => {
@@ -27,20 +18,6 @@ export const login = ({ userId, password }, navigate) => {
     } catch (error) {
       console.log(`error`, error);
       dispatch(addNotificationMsg(error?.response?.data?.message, "error"));
-    }
-  };
-};
-
-export const verifyAuth = () => {
-  return async (dispatch) => {
-    try {
-      const user = await app.get("/auth/verify-auth");
-      dispatch({ type: VERIFY_AUTH, payload: user?.data });
-    } catch (error) {
-      console.log(`error`, error);
-      dispatch(addNotificationMsg(error.response.data.message, "error"));
-
-      dispatch({ type: LOGOUT });
     }
   };
 };
@@ -82,9 +59,10 @@ export const logout = (navigate) => {
       await app.get("/auth/logout/");
       dispatch({ type: LOGOUT });
 
-      navigate("/Home", { replace: true });
+      navigate("/login", { replace: true });
     } catch (error) {
       console.log(`error`, error);
+      dispatch(addNotificationMsg(error?.response?.data?.message, "error"));
     }
   };
 };

@@ -258,25 +258,57 @@ td:hover {
 /* SCHEDULE STYLING END */
 
 /* FILTER STYLING START */
-.filter-container {
+.filters-container {
   display: flex;
-  gap: 5rem;
+  gap: 1rem;
   justify-content: center;
   align-items: center;
   padding: 1rem;
 }
 
+.filter-container {
+  width: 9em;
+  height: 100%;
+  position: relative;
+  cursor: pointer;
+}
+/* .filter-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--color1);
+  opacity: 0;
+  transition: opacity 300ms ease;
+} */
+.filter-icon {
+  position: absolute;
+  color: hsl(0, 0%, 80%);
+  top: 20%;
+  left: 82%;
+  font-size: 25px;
+  /* background-color: var(--color2); */
+  pointer-events: none;
+}
+
 .filter-select {
+  cursor: pointer;
   background-color: transparent;
   outline: none;
   color: var(--color3);
+  -moz-appearance: none; /* Firefox */
+  -webkit-appearance: none; /* Safari and Chrome */
+  appearance: none;
   border-radius: 10px;
   border: 2px solid var(--color3);
-  min-width: 10%;
+  width: 100% !important;
   font-size: clamp(0.9rem, 1.4vw, 1.1rem);
   padding: 0.4em;
   position: relative;
   font-family: "Poppins", sans-serif;
+  overflow: hidden;
 }
 
 /* FILTER STYLING END */
@@ -453,7 +485,8 @@ td:hover {
 .search-select {
   width: 17%;
 }
-input[type="time"] {
+input[type="time"],
+.filter-select {
   height: 38px;
   width: 17%;
   outline: none;
@@ -468,7 +501,8 @@ input[type="time"] {
   color: hsl(0, 0%, 20%);
   transition: all 100ms;
 }
-input[type="time"]::after {
+input[type="time"]::after,
+.filter-container::after {
   content: "";
   position: absolute;
   top: 20%;
@@ -477,7 +511,8 @@ input[type="time"]::after {
   height: 60%;
   background-color: hsl(0, 0%, 80%);
 }
-input[type="time"]:hover {
+input[type="time"]:hover,
+.filter-select:hover {
   border-color: hsl(0, 0%, 70%);
 }
 input[type="time"]:disabled {
@@ -581,6 +616,7 @@ input[type="time"]:disabled::after {
   top: 0;
   left: 0;
   width: 100%;
+  min-height: 50px;
   height: 7vh;
   z-index: 9998;
   display: flex;
@@ -604,7 +640,7 @@ input[type="time"]:disabled::after {
   align-items: center;
   justify-content: center;
   height: 100%;
-  gap: 2rem;
+  gap: clamp(1em, 2vw, 2em);
   margin-right: 2em;
 }
 .navbar-link-container {
@@ -612,8 +648,10 @@ input[type="time"]:disabled::after {
   gap: 1em;
   align-items: center;
   width: fit-content;
-  border-radius: 9px;
-  padding: 0.7em;
+  border-radius: 0.5em;
+  font-size: clamp(0.5em, 1vw, 1em);
+  font-weight: 600;
+  padding: 0.4em 0.7em;
   white-space: nowrap;
   background-color: var(--active-link-bg);
   color: var(--color2);

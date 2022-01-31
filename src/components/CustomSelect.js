@@ -9,6 +9,7 @@ function CustomSelect({
   onChange,
   controlShouldRenderValue,
   isDisabled,
+  isClearable,
 }) {
   return (
     <Select
@@ -23,6 +24,7 @@ function CustomSelect({
       className="search-select"
       controlShouldRenderValue={controlShouldRenderValue}
       isDisabled={isDisabled}
+      isClearable={isClearable}
     />
   );
 }

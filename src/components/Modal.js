@@ -42,7 +42,6 @@ function Modal({ faculty, courses, classes }) {
     teacher: [],
     _id: modalData?.id,
   });
-  console.log(selectedData);
 
   const dispatch = useDispatch();
   const handleAddRow = () => {

@@ -1,9 +1,15 @@
 import { createStore, applyMiddleware, combineReducers } from "redux";
 import thunk from "redux-thunk";
 import authReducer from "./auth/authReducer";
-import logger from "redux-logger";
 import { composeWithDevTools } from "redux-devtools-extension";
 import scheduleReducer from "./schedule/scheduleReducer";
+
+const middleware = [thunk];
+if (process.env.NODE_ENV !== "production") {
+  const createLogger = require("redux-logger").createLogger;
+  const logger = createLogger();
+  middleware.push(logger);
+}
 
 const reducer = combineReducers({
   auth: authReducer,
@@ -12,7 +18,7 @@ const reducer = combineReducers({
 
 const store = createStore(
   reducer,
-  composeWithDevTools(applyMiddleware(logger, thunk))
+  composeWithDevTools(applyMiddleware(...middleware))
 );
 
 export default store;

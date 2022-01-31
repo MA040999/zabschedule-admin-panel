@@ -2,11 +2,27 @@ import React, { Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleModal } from "../redux/schedule/scheduleAction";
 
-function CampusSchedule({ schedule, campus, selectedDay, colSpan }) {
+function CampusSchedule({
+  selectedData,
+  schedule,
+  filteredSchedule,
+  campus,
+  selectedDay,
+  colSpan,
+}) {
   const dispatch = useDispatch();
-  const campusSchedule = schedule.filter(
-    (schedule) => schedule.campus === campus
-  );
+  let campusSchedule = [];
+  if (
+    selectedData.faculty === "" &&
+    selectedData.course === "" &&
+    selectedData.class === ""
+  ) {
+    campusSchedule = schedule.filter((schedule) => schedule.campus === campus);
+  } else {
+    campusSchedule = filteredSchedule.filter(
+      (schedule) => schedule.campus === campus
+    );
+  }
 
   const slots = useSelector((state) => state.schedule.slots);
 

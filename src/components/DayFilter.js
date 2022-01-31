@@ -1,6 +1,7 @@
 import React from "react";
+import { MdKeyboardArrowDown } from "react-icons/md";
 
-function Filter({ setSelectedDay }) {
+function DayFilter({ setSelectedDay }) {
   return (
     <div className="filter-container">
       <select
@@ -16,8 +17,9 @@ function Filter({ setSelectedDay }) {
         <option value="Saturday">Saturday</option>
         <option value="Sunday">Sunday</option>
       </select>
+      <MdKeyboardArrowDown className="filter-icon" />
     </div>
   );
 }
 
-export default Filter;
+export default DayFilter;

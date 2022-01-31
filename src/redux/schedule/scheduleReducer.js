@@ -3,6 +3,7 @@ import {
   DELETE_CLASS,
   FETCH_COMBINED_SCHEDULE,
   FETCH_SLOTS,
+  FILTERED_SCHEDULE,
   REMOVE_MODAL_DATA,
   TOGGLE_CONFIRMATION_MODAL,
   TOGGLE_MODAL,
@@ -15,6 +16,7 @@ const intitalState = {
   isModalOpen: false,
   modalData: {},
   isConfirmationModalOpen: false,
+  filteredSchedule: [],
 };
 
 const scheduleReducer = (state = intitalState, action) => {
@@ -24,6 +26,64 @@ const scheduleReducer = (state = intitalState, action) => {
         ...state,
         schedule: action.payload,
       };
+    case FILTERED_SCHEDULE:
+      return {
+        ...state,
+        filteredSchedule: state.schedule.map((sch) => {
+          if (sch.teacher.length === 0 && sch.subject.length === 0) return sch;
+          if (
+            action.payload.faculty !== "" &&
+            action.payload.course !== "" &&
+            action.payload.class !== ""
+          ) {
+            if (
+              sch.teacher.some((t) => t._id === action.payload.faculty) &&
+              sch.subject.some((sub) => sub._id === action.payload.course) &&
+              sch.class.some((cls) => cls._id === action.payload.class)
+            )
+              return sch;
+          } else if (
+            action.payload.faculty !== "" &&
+            action.payload.course !== ""
+          ) {
+            if (
+              sch.teacher.some((t) => t._id === action.payload.faculty) &&
+              sch.subject.some((sub) => sub._id === action.payload.course)
+            )
+              return sch;
+          } else if (
+            action.payload.faculty !== "" &&
+            action.payload.class !== ""
+          ) {
+            if (
+              sch.teacher.some((t) => t._id === action.payload.faculty) &&
+              sch.class.some((cls) => cls._id === action.payload.class)
+            )
+              return sch;
+          } else if (
+            action.payload.course !== "" &&
+            action.payload.class !== ""
+          ) {
+            if (
+              sch.subject.some((sub) => sub._id === action.payload.course) &&
+              sch.class.some((cls) => cls._id === action.payload.class)
+            )
+              return sch;
+          } else if (action.payload.faculty !== "") {
+            if (sch.teacher.some((t) => t._id === action.payload.faculty))
+              return sch;
+          } else if (action.payload.course !== "") {
+            if (sch.subject.some((sub) => sub._id === action.payload.course))
+              return sch;
+          } else if (action.payload.class !== "") {
+            if (sch.class.some((cls) => cls._id === action.payload.class))
+              return sch;
+          }
+
+          return { ...sch, teacher: [], subject: [], Time: [], class: [] };
+        }),
+      };
+
     case FETCH_SLOTS:
       return {
         ...state,
@@ -33,6 +93,7 @@ const scheduleReducer = (state = intitalState, action) => {
       return {
         ...state,
         schedule: [...state.schedule, action.payload],
+        filteredSchedule: [...state.filteredSchedule, action.payload],
       };
     case DELETE_CLASS:
       return {
@@ -44,12 +105,24 @@ const scheduleReducer = (state = intitalState, action) => {
               : { ...schedule, teacher: [], subject: [], class: [], Time: [] }
           ),
         ],
+        filteredSchedule: [
+          ...state.filteredSchedule.map((schedule) =>
+            schedule._id !== action.payload
+              ? schedule
+              : { ...schedule, teacher: [], subject: [], class: [], Time: [] }
+          ),
+        ],
       };
     case UPDATE_CLASS:
       return {
         ...state,
         schedule: [
           ...state.schedule.map((schedule) =>
+            schedule._id !== action.payload._id ? schedule : action.payload
+          ),
+        ],
+        filteredSchedule: [
+          ...state.filteredSchedule.map((schedule) =>
             schedule._id !== action.payload._id ? schedule : action.payload
           ),
         ],

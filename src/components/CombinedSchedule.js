@@ -2,18 +2,24 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { ordinal_suffix_of } from "../common/common";
 import CampusSchedule from "./CampusSchedule";
+import Loader from "./Loader";
 
-function CombinedSchedule({ selectedDay }) {
-  // const campusArray = ["100 CAMPUS"];
+function CombinedSchedule({ selectedData, selectedDay }) {
   const campusArray = ["100 CAMPUS", "154 CAMPUS", "153 CAMPUS", "99 CAMPUS"];
   const schedule = useSelector((state) =>
     state.schedule.schedule.filter((item) => item.day === selectedDay)
+  );
+  const filteredSchedule = useSelector((state) =>
+    state.schedule.filteredSchedule.filter((item) => item.day === selectedDay)
   );
   const slots = useSelector((state) =>
     state.schedule.slots.sort((a, b) => a.slot - b.slot)
   );
 
   const colSpan = slots.length * 3 + 1;
+  if (schedule.length === 0) {
+    return <Loader />;
+  }
 
   return (
     <>
@@ -89,6 +95,8 @@ function CombinedSchedule({ selectedDay }) {
                 selectedDay={selectedDay}
                 key={campus}
                 schedule={schedule}
+                selectedData={selectedData}
+                filteredSchedule={filteredSchedule}
                 campus={campus}
               />
             ))}

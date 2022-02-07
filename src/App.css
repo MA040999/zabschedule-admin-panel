@@ -741,6 +741,11 @@ input[type="time"]:disabled::after {
     padding: 2rem;
   }
 }
+@media screen and (max-height: 450px) {
+  .logo {
+    display: none;
+  }
+}
 
 @keyframes animate-notification {
   0% {

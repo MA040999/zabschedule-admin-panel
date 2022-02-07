@@ -12,7 +12,10 @@ function Navbar() {
 
   const location = useLocation();
 
-  if (location.pathname === "/login") {
+  if (
+    location.pathname === "/login" ||
+    location.pathname.split("/").includes("reset-password")
+  ) {
     return null;
   } else {
     return (

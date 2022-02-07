@@ -121,14 +121,16 @@
   color: #bbbbbb;
   opacity: 0.5;
 }
-.login-btn {
+
+.login-btn,
+.cancel-login-btn {
   color: var(--color2);
   font-weight: bolder;
   font-family: "Poppins", sans-serif !important;
   font-size: clamp(0.9em, 1.6vw, 1.5em);
   background-color: transparent;
   text-transform: uppercase;
-  padding: 0.5em 3em;
+  padding: 0.5em 2em;
   box-shadow: 0 0 0 2pt var(--color4);
   border: none;
   border-radius: 10px;
@@ -138,7 +140,20 @@
   overflow: hidden;
   cursor: pointer;
 }
-
+.btns-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+}
+.forgot-password {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5em;
+  color: var(--color2);
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+}
 .login-btn::before {
   content: "";
   position: absolute;
@@ -193,6 +208,40 @@
   padding: 0.5em 0.6em;
   align-items: center;
 }
+.cancel-login-btn {
+  box-shadow: 0 0 0 2pt var(--color2);
+}
+.cancel-login-btn::before {
+  background-color: var(--color2);
+}
+.cancel-login-btn:hover {
+  color: var(--color1);
+}
+.reset-password-heading {
+  color: var(--color2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+  margin: 0 1em;
+  font-family: "Poppins", sans-serif;
+}
+.reset-password-heading h2 {
+  text-align: center;
+}
+.reset-password-heading > p {
+  font-size: clamp(1em, 2.5vw, 1.2em);
+  color: var(--color2);
+}
+.reset-password-container {
+  margin: 0 0.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5em;
+}
+
 /* LOGIN STYLING END */
 
 /* SCHEDULE STYLING START */

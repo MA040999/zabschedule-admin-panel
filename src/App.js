@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Loader from "./components/Loader";
 import Navbar from "./components/Navbar";
 import Request from "./pages/Requests";
+import ResetPassword from "./pages/ResetPassword";
 
 function RequireAuth({ user }) {
   if (!user) {
@@ -54,6 +55,7 @@ function App() {
           <Route path="/Requests" element={<Request />} />
         </Route>
         <Route path="/login" element={<Login user={user} />} />
+        <Route path="/reset-password/:id/:token" element={<ResetPassword />} />
         <Route
           path="*"
           element={

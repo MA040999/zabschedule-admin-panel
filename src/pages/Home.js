@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CombinedSchedule from "../components/CombinedSchedule";
 import {
   fetchCombinedSchedule,
@@ -10,12 +10,16 @@ import app from "../axiosConfig";
 import { FILTERED_SCHEDULE } from "../redux/schedule/scheduleTypes";
 import Filters from "../components/Filters";
 
-function Home() {
+function Home({
+  setRelevantClasses,
+  setRelevantCourses,
+  setRelevantFaculty,
+  relevantClasses,
+  relevantCourses,
+  relevantFaculty,
+}) {
   const dispatch = useDispatch();
-
-  const [relevantCourses, setRelevantCourses] = useState([]);
-  const [relevantClasses, setRelevantClasses] = useState([]);
-  const [relevantFaculty, setRelevantFaculty] = useState([]);
+  const schedule = useSelector((state) => state.schedule.schedule);
 
   const [selectedData, setSelectedData] = useState({
     faculty: "",
@@ -140,10 +144,13 @@ function Home() {
   };
 
   useEffect(() => {
-    dispatch(fetchCombinedSchedule());
-    dispatch(fetchSlots());
+    // if (schedule.length === 0) {
+    //   dispatch(fetchCombinedSchedule());
+    //   dispatch(fetchSlots());
+    // }
     fetchData();
-  }, [dispatch]);
+    //eslint-disable-next-line
+  }, []);
 
   return (
     <div className="body-container">

@@ -172,7 +172,6 @@ function Modal({ faculty, courses, classes }) {
               )
         );
       } else if (e.name === "subject") {
-        console.log("e", e);
         setRelevantClassesRow1(
           classes.filter((cls) => cls.courses.includes(e.course_code))
         );
@@ -698,33 +697,6 @@ function Modal({ faculty, courses, classes }) {
                     : false
                 }
               />
-              {/* <CustomSelect
-                placeholder="Class..."
-                options={
-                  index === 0
-                    ? [
-                        ...relevantClassesRow1.map((cls) => ({
-                          value: cls._id,
-                          label: `${cls.program} ${cls.semester} ${cls.section}`,
-                          name: "class",
-                          courses: cls.courses,
-                        })),
-                      ]
-                    : [
-                        ...relevantClassesRow2.map((cls) => ({
-                          value: cls._id,
-                          label: `${cls.program} ${cls.semester} ${cls.section}`,
-                          name: "class",
-                          courses: cls.courses,
-                        })),
-                      ]
-                }
-                defaultValue={selectedData.class[index]}
-                onChange={(e) => handleSelectChange(e, index)}
-                controlShouldRenderValue={
-                  selectedData.class[index] !== undefined
-                }
-              /> */}
               <input
                 type="time"
                 name="from"
@@ -753,49 +725,6 @@ function Modal({ faculty, courses, classes }) {
                 // disabled={modalData?.subject.length > 0 ? true : false}
                 required
               />
-              {/* <CustomSelect
-                placeholder="From..."
-                options={
-                  modalData.selectedDay !== "Friday"
-                    ? modalData?.slot?.slot_timing.map((time) => ({
-                        value: `${time.split("to")[0].trim()}`,
-                        label: `${time.split("to")[0].trim()}`,
-                        name: "Time",
-                      }))
-                    : modalData?.slot?.friday_slot_timing.map((time) => ({
-                        value: `${time.split("to")[0].trim()}`,
-                        label: `${time.split("to")[0].trim()}`,
-                        name: "Time",
-                      }))
-                }
-                defaultValue={selectedData.Time[index]}
-                onChange={(e) => handleSelectChange(e, index)}
-                controlShouldRenderValue={
-                  selectedData.Time[index] !== undefined
-                }
-              /> */}
-              {/* <CustomSelect
-                placeholder="To..."
-                options={
-                  modalData.selectedDay !== "Friday"
-                    ? modalData?.slot?.slot_timing.map((time) => ({
-                        value: `${time.split("to")[1].trim()}`,
-                        label: `${time.split("to")[1].trim()}`,
-                        name: "to",
-                      }))
-                    : modalData?.slot?.friday_slot_timing.map((time) => ({
-                        value: `${time.split("to")[1].trim()}`,
-                        label: `${time.split("to")[1].trim()}`,
-                        name: "to",
-                      }))
-                }
-                defaultValue={selectedData.Time[index]}
-                onChange={(e) => handleSelectChange(e, index)}
-                controlShouldRenderValue={
-                  selectedData.Time[index] !== undefined
-                }
-              /> */}
-
               <div
                 onClick={() => handleTrashClick(index)}
                 className="icon-container"

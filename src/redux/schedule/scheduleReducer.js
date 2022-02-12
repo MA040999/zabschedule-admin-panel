@@ -5,6 +5,7 @@ import {
   FETCH_SLOTS,
   FILTERED_SCHEDULE,
   REMOVE_MODAL_DATA,
+  SET_LAB_SCHEDULE,
   TOGGLE_CONFIRMATION_MODAL,
   TOGGLE_MODAL,
   UPDATE_CLASS,
@@ -17,6 +18,7 @@ const intitalState = {
   modalData: {},
   isConfirmationModalOpen: false,
   filteredSchedule: [],
+  labSchedule: [],
 };
 
 const scheduleReducer = (state = intitalState, action) => {
@@ -25,6 +27,30 @@ const scheduleReducer = (state = intitalState, action) => {
       return {
         ...state,
         schedule: action.payload,
+      };
+    case SET_LAB_SCHEDULE:
+      const days = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ];
+      return {
+        ...state,
+        labSchedule: state.schedule
+          .filter(
+            (sch) => sch.campus === "100 CAMPUS" && sch.room.includes("Lab")
+          )
+          .sort((a, b) => {
+            let c = days.indexOf(a.day);
+            let d = days.indexOf(b.day);
+            return c < d ? -1 : 1;
+          })
+          .sort((a, b) => a.slot - b.slot)
+          .sort((a, b) => a.room.localeCompare(b.room)),
       };
     case FILTERED_SCHEDULE:
       return {

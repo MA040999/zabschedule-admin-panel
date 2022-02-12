@@ -16,7 +16,6 @@ export const login = ({ userId, password }, navigate) => {
 
       navigate("/Home", { replace: true });
     } catch (error) {
-      console.log(`error`, error);
       dispatch(addNotificationMsg(error?.response?.data?.message, "error"));
     }
   };
@@ -28,7 +27,6 @@ export const verifyRefreshToken = () => {
       const user = await app.get("/auth/refresh-token");
       dispatch({ type: AUTH, payload: user?.data });
     } catch (error) {
-      console.log(`error`, error);
       dispatch({ type: LOGOUT });
     }
   };
@@ -47,7 +45,6 @@ export const signup = ({ fullname, userId, password }, navigate) => {
 
       navigate("/Home", { replace: true });
     } catch (error) {
-      console.log(`error`, error);
       dispatch(addNotificationMsg(error?.response?.data?.message, "error"));
     }
   };
@@ -61,7 +58,6 @@ export const logout = (navigate) => {
 
       navigate("/login", { replace: true });
     } catch (error) {
-      console.log(`error`, error);
       dispatch(addNotificationMsg(error?.response?.data?.message, "error"));
     }
   };

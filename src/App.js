@@ -50,6 +50,7 @@ function App() {
   useEffect(() => {
     dispatch(fetchCombinedSchedule());
     dispatch(fetchSlots());
+    // eslint-disable-next-line
   }, []);
 
   if (isLoading === true) {

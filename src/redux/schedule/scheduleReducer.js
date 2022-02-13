@@ -42,7 +42,9 @@ const scheduleReducer = (state = intitalState, action) => {
         ...state,
         labSchedule: state.schedule
           .filter(
-            (sch) => sch.campus === "100 CAMPUS" && sch.room.includes("Lab")
+            (sch) =>
+              sch.campus === "100 CAMPUS" &&
+              (sch.room.includes("Lab") || sch.room.includes("Media M-32"))
           )
           .sort((a, b) => {
             let c = days.indexOf(a.day);

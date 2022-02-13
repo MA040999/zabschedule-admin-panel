@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import CombinedSchedule from "../components/CombinedSchedule";
-import {
-  fetchCombinedSchedule,
-  fetchSlots,
-} from "../redux/schedule/scheduleAction";
 import Modal from "../components/Modal";
 import app from "../axiosConfig";
 import { FILTERED_SCHEDULE } from "../redux/schedule/scheduleTypes";
@@ -19,7 +15,6 @@ function Home({
   relevantFaculty,
 }) {
   const dispatch = useDispatch();
-  const schedule = useSelector((state) => state.schedule.schedule);
 
   const [selectedData, setSelectedData] = useState({
     faculty: "",

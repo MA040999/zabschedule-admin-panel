@@ -744,12 +744,12 @@ input[type="time"]:disabled::after {
 .time-th {
   background-color: var(--color1);
   color: var(--color2);
-  font-family: Poppins;
+  font-family: Poppins, sans-serif;
   width: 10%;
 }
 
 pre {
-  font-family: Poppins;
+  font-family: Poppins, sans-serif;
   white-space: pre-wrap;
 }
 
@@ -773,7 +773,7 @@ pre {
 }
 .time-day-heading {
   font-size: clamp(1em, 2vw, 1.2em);
-  font-family: Poppins;
+  font-family: Poppins, sans-serif;
   padding: 0.3em;
   background-color: var(--color3);
   color: var(--color2);
@@ -822,6 +822,7 @@ pre {
   font-size: clamp(1em, 1.5vw, 1.5em);
   font-weight: 700;
   text-align: center;
+  font-family: Poppins, sans-serif;
 }
 .lab-selector-arrows {
   cursor: pointer;

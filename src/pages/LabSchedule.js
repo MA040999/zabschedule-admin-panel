@@ -50,49 +50,70 @@ function LabSchedule() {
         <tbody className="lab-table-tbody">
           {slots.map((slot) => {
             return slot.slot_timing.map((s, s_index) => {
+              let currentDay = 0;
               return (
                 <tr key={slot._id + s_index}>
                   <th className="time-th">{s}</th>
 
                   {labSchedule.map((sch) => {
-                    if (arr.includes(sch._id)) return null;
+                    if (arr.includes(sch._id)) {
+                      if (sch.slot === 3) currentDay++;
+                      return null;
+                    }
                     if (sch.slot === slot.slot) {
+                      currentDay++;
+
                       if (
                         printOhArr.some(
                           (x) => x.day === sch.day && x.slot === sch.slot
                         )
                       ) {
                         let rowSpan = 1;
-                        console.log("sch.day", sch.day);
-                        console.log("sch.slot", sch.slot);
-                        console.log("sch", sch);
+
                         for (const next_oh of labSchedule) {
-                          if (
-                            next_oh.day === sch.day &&
-                            next_oh.slot > sch.slot
-                          ) {
-                            if (next_oh.subject.length !== 0) {
-                              console.log("asdasd");
-                              break;
+                          let shouldBreak = false;
+                          for (let i = 0; i < 2; i++) {
+                            if (
+                              next_oh.day === sch.day &&
+                              next_oh.slot > sch.slot
+                            ) {
+                              if (next_oh.subject.length !== 0) {
+                                shouldBreak = true;
+                                break;
+                              }
+                              rowSpan++;
+                              arr.push(next_oh._id);
                             }
-                            rowSpan++;
-                            arr.push(next_oh._id);
-                            console.log("rowSpan", rowSpan);
                           }
+                          if (shouldBreak) break;
+                        }
+                        if (
+                          slot.friday_slot_timing.length === 0 &&
+                          s_index !== 1 &&
+                          currentDay === 5
+                        ) {
+                          return (
+                            <React.Fragment key={sch._id}>
+                              <td className="break-td" rowSpan={2}>
+                                <pre>{`NAMAZ BREAK\n${slot.slot_timing[0]
+                                  .split("to")[0]
+                                  .trim()} - ${slot.slot_timing[1]
+                                  .split("to")[1]
+                                  .trim()}`}</pre>
+                              </td>
+                              <td rowSpan={rowSpan} className="lab-td">
+                                <pre>O-H</pre>
+                              </td>
+                            </React.Fragment>
+                          );
                         }
                         return (
                           <td
-                            rowSpan={
-                              rowSpan > 2
-                                ? rowSpan > 3
-                                  ? rowSpan + 2
-                                  : rowSpan + 2
-                                : rowSpan
-                            }
+                            rowSpan={rowSpan}
                             className="lab-td"
                             key={sch._id}
                           >
-                            <pre>O-Haaaaaaa</pre>
+                            <pre>O-H</pre>
                           </td>
                         );
                       }
@@ -114,8 +135,8 @@ function LabSchedule() {
                         return (
                           <React.Fragment key={sch._id}>
                             {slot.friday_slot_timing.length === 0 &&
-                              sch.day === "Saturday" &&
-                              slot.slot === 3 && (
+                              s_index !== 1 &&
+                              currentDay === 5 && (
                                 <td className="break-td" rowSpan={2}>
                                   <pre>{`NAMAZ BREAK\n${slot.slot_timing[0]
                                     .split("to")[0]
@@ -133,24 +154,25 @@ function LabSchedule() {
                             >
                               <pre>
                                 {rowSpan === 1
-                                  ? `${sch.class[s_index].program} ${
-                                      sch.class[s_index].semester
-                                    } ${sch.class[s_index].section}
-                                  \n${sch.subject[s_index].course_name}
-                                  \n${sch.teacher[s_index].faculty_name}
-                                  \n${sch.Time[s_index].substr(0, 7)}${sch.Time[
-                                      s_index
-                                    ].substr(7)}`
-                                  : `${sch.class[0].program} ${
-                                      sch.class[0].semester
-                                    } ${sch.class[0].section}\n${
-                                      sch.subject[0].course_name
+                                  ? `${sch.class[s_index]?.program} ${
+                                      sch.class[s_index]?.semester
+                                    } ${sch.class[s_index]?.section}
+                                  \n${sch.subject[s_index]?.course_name}
+                                  \n${sch.teacher[s_index]?.faculty_name}
+                                  \n${sch.Time[s_index]?.substr(
+                                    0,
+                                    7
+                                  )}${sch.Time[s_index]?.substr(7)}`
+                                  : `${sch.class[0]?.program} ${
+                                      sch.class[0]?.semester
+                                    } ${sch.class[0]?.section}\n${
+                                      sch.subject[0]?.course_name
                                     }\n${
-                                      sch.teacher[0].faculty_name
-                                    }\n${sch.Time[0].substr(
+                                      sch.teacher[0]?.faculty_name
+                                    }\n${sch.Time[0]?.substr(
                                       0,
                                       7
-                                    )}${sch.Time[1].substr(7)}`}
+                                    )}${sch.Time[1]?.substr(7)}`}
                               </pre>
                             </td>
                           </React.Fragment>
@@ -248,8 +270,8 @@ function LabSchedule() {
                         return (
                           <React.Fragment key={sch._id}>
                             {slot.friday_slot_timing.length === 0 &&
-                              sch.day === "Saturday" &&
-                              slot.slot === 3 && (
+                              s_index !== 1 &&
+                              currentDay === 5 && (
                                 <td className="break-td" rowSpan={2}>
                                   <pre>{`NAMAZ BREAK\n${slot.slot_timing[0]
                                     .split("to")[0]
@@ -266,11 +288,14 @@ function LabSchedule() {
                               rowSpan={rowSpan}
                             >
                               <pre>
-                                {`${sch.class[0]?.program} ${
-                                  sch.class[0]?.semester
-                                } ${sch.class[0]?.section}\n${
-                                  sch.subject[0]?.course_name
-                                }\n${
+                                {sch.class.map((cls, index) => {
+                                  return `${cls.program} ${cls.semester} ${
+                                    cls.section
+                                  }${
+                                    index !== sch.class.length - 1 ? "," : ""
+                                  }\n`;
+                                })}
+                                {`${sch.subject[0]?.course_name}\n${
                                   sch.teacher[0]?.faculty_name
                                 }\n${sch.Time[0]?.substr(
                                   0,
@@ -281,28 +306,51 @@ function LabSchedule() {
                           </React.Fragment>
                         );
                       } else {
-                        let rowSpan = 1;
+                        let rowSpan = 0;
                         for (const next_oh of labSchedule) {
-                          if (
-                            next_oh.day === sch.day &&
-                            next_oh.slot >= sch.slot
-                          ) {
-                            if (next_oh.subject.length !== 0) {
-                              break;
+                          let shouldBreak = false;
+                          for (let index = 0; index < 2; index++) {
+                            if (
+                              next_oh.day === sch.day &&
+                              next_oh.slot >= sch.slot
+                            ) {
+                              if (next_oh.subject.length !== 0) {
+                                shouldBreak = true;
+                                break;
+                              }
+                              rowSpan++;
+                              arr.push(next_oh._id);
                             }
-                            rowSpan++;
-                            arr.push(next_oh._id);
                           }
+                          if (shouldBreak) break;
+                        }
+                        if (
+                          slot.friday_slot_timing.length === 0 &&
+                          s_index !== 1 &&
+                          currentDay === 5
+                        ) {
+                          return (
+                            <React.Fragment key={sch._id}>
+                              <td className="break-td" rowSpan={2}>
+                                <pre>{`NAMAZ BREAK\n${slot.slot_timing[0]
+                                  .split("to")[0]
+                                  .trim()} - ${slot.slot_timing[1]
+                                  .split("to")[1]
+                                  .trim()}`}</pre>
+                              </td>
+                              <td
+                                rowSpan={rowSpan}
+                                className="lab-td"
+                                key={sch._id}
+                              >
+                                <pre>O-H</pre>
+                              </td>
+                            </React.Fragment>
+                          );
                         }
                         return (
                           <td
-                            rowSpan={
-                              rowSpan > 2
-                                ? rowSpan > 3
-                                  ? rowSpan + 2
-                                  : rowSpan + 1
-                                : rowSpan
-                            }
+                            rowSpan={rowSpan}
                             className="lab-td"
                             key={sch._id}
                           >

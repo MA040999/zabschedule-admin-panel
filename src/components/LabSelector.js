@@ -1,5 +1,6 @@
 import React from "react";
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from "react-icons/hi";
+
 function LabSelector({ selectedRoom, setSelectedRoom, rooms }) {
   const handleLeftArrowClick = () => {
     const index = rooms.indexOf(selectedRoom);

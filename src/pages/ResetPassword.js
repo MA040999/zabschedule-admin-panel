@@ -118,66 +118,6 @@ function ResetPassword() {
         </div>
       </div>
     </form>
-    // <div className="login-page-container">
-    //   <img className="login-logo" src="/logo.svg" alt="" />
-
-    //   <form className="login-form-container" onSubmit={(e) => handleSubmit(e)}>
-    //     <div className="reset-password-heading">
-    //       <h2>Create New Password</h2>
-    //     </div>
-    //     <input
-    //       label="User ID"
-    //       autoComplete="username"
-    //       placeholder="User ID"
-    //       hidden
-    //       aria-hidden
-    //     />
-    //     <div className="login-input-container">
-    //       <FiLock size={22} color="white" />
-    //       <input
-    //         className="login-input"
-    //         label="Password"
-    //         autoComplete="new-password"
-    //         id="current-password"
-    //         type={passwordDisplay ? "password" : "text"}
-    //         placeholder="Password"
-    //         value={password}
-    //         onChange={(e) => setPassword(e.target.value)}
-    //       />
-    //       {!passwordDisplay ? (
-    //         <FiEyeOff
-    //           size={22}
-    //           color="white"
-    //           onClick={() => setPasswordDisplay(!passwordDisplay)}
-    //         />
-    //       ) : (
-    //         <FiEye
-    //           size={22}
-    //           color="white"
-    //           onClick={() => setPasswordDisplay(!passwordDisplay)}
-    //         />
-    //       )}
-    //     </div>
-    //     <div className="login-input-container">
-    //       <FiLock size={22} color="white" />
-    //       <input
-    //         className="login-input"
-    //         label="Password"
-    //         autoComplete="new-password"
-    //         id="confirm-password"
-    //         type={passwordDisplay ? "password" : "text"}
-    //         placeholder="Confirm Password"
-    //         value={confirmPassword}
-    //         onChange={(e) => setConfirmPassword(e.target.value)}
-    //       />
-    //     </div>
-    //     <div className="login-btn-container">
-    //       <button type="submit" className="login-btn">
-    //         Reset Password
-    //       </button>
-    //     </div>
-    //   </form>
-    // </div>
   );
 }
 

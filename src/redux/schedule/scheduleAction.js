@@ -6,6 +6,7 @@ import {
   FETCH_COMBINED_SCHEDULE,
   FETCH_SLOTS,
   REMOVE_MODAL_DATA,
+  SET_LAB_SCHEDULE,
   TOGGLE_CONFIRMATION_MODAL,
   TOGGLE_MODAL,
   UPDATE_CLASS,
@@ -19,9 +20,16 @@ export const fetchCombinedSchedule = () => {
         type: FETCH_COMBINED_SCHEDULE,
         payload: combinedSchedule?.data,
       });
+      dispatch(setLabSchedule());
     } catch (error) {
       console.log(`error`, error);
     }
+  };
+};
+
+export const setLabSchedule = () => {
+  return {
+    type: SET_LAB_SCHEDULE,
   };
 };
 

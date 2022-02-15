@@ -14,6 +14,7 @@ function CustomSelect({
   return (
     <Select
       menuPortalTarget={document.body}
+      menuPosition={"fixed"}
       styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
       placeholder={placeholder}
       options={options}

@@ -1,6 +1,7 @@
 import React from "react";
-import { BsCalendarDayFill } from "react-icons/bs";
+import { BsFillCalendar2WeekFill } from "react-icons/bs";
 import { FaClipboardList } from "react-icons/fa";
+import { ImLab } from "react-icons/im";
 import { FiLogOut } from "react-icons/fi";
 import { useDispatch } from "react-redux";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
@@ -29,8 +30,17 @@ function Navbar() {
                 `navbar-link-container ${isActive ? "active" : ""}`
               }
             >
-              <BsCalendarDayFill className="navbar-icon" size={22} />
+              <BsFillCalendar2WeekFill className="navbar-icon" size={22} />
               <p>Combined Schedule</p>
+            </NavLink>
+            <NavLink
+              to="/Lab"
+              className={({ isActive }) =>
+                `navbar-link-container ${isActive ? "active" : ""}`
+              }
+            >
+              <ImLab className="navbar-icon" size={22} />
+              <p>Lab Schedule</p>
             </NavLink>
             <NavLink
               to="/Requests"

@@ -15,6 +15,8 @@ import {
   fetchCombinedSchedule,
   fetchSlots,
 } from "./redux/schedule/scheduleAction";
+import Modal from "./components/Modal";
+import app from "./axiosConfig";
 
 function RequireAuth({ user }) {
   if (!user) {
@@ -32,6 +34,10 @@ function App() {
   const [relevantCourses, setRelevantCourses] = useState([]);
   const [relevantClasses, setRelevantClasses] = useState([]);
   const [relevantFaculty, setRelevantFaculty] = useState([]);
+
+  const [faculty, setFaculty] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const [classes, setClasses] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -53,6 +59,26 @@ function App() {
     // eslint-disable-next-line
   }, []);
 
+  const fetchData = () => {
+    app.get("/time-table/faculty").then((res) => {
+      setFaculty(res.data);
+      setRelevantFaculty(res.data);
+    });
+    app.get("/time-table/courses").then((res) => {
+      setCourses(res.data);
+      setRelevantCourses(res.data);
+    });
+    app.get("/time-table/classes").then((res) => {
+      setClasses(res.data);
+      setRelevantClasses(res.data);
+    });
+  };
+
+  useEffect(() => {
+    fetchData();
+    //eslint-disable-next-line
+  }, []);
+
   if (isLoading === true) {
     return <Loader />;
   }
@@ -61,39 +87,48 @@ function App() {
     <>
       {notificationMsg && <Notification />}
       <Navbar />
-      <Routes>
-        <Route element={<RequireAuth user={user} />}>
+      <div className="body-container">
+        <Modal faculty={faculty} courses={courses} classes={classes} />
+        <Routes>
+          <Route element={<RequireAuth user={user} />}>
+            <Route
+              path="/Home"
+              element={
+                <Home
+                  relevantCourses={relevantCourses}
+                  setRelevantFaculty={setRelevantFaculty}
+                  setRelevantCourses={setRelevantCourses}
+                  setRelevantClasses={setRelevantClasses}
+                  relevantClasses={relevantClasses}
+                  relevantFaculty={relevantFaculty}
+                  faculty={faculty}
+                  courses={courses}
+                  classes={classes}
+                />
+              }
+            />
+          </Route>
+          <Route element={<RequireAuth user={user} />}>
+            <Route path="/Requests" element={<Request />} />
+          </Route>
+          <Route path="/login" element={<Login user={user} />} />
+          <Route path="/Lab" element={<LabSchedule />} />
           <Route
-            path="/Home"
+            path="/reset-password/:id/:token"
+            element={<ResetPassword />}
+          />
+          <Route
+            path="*"
             element={
-              <Home
-                relevantCourses={relevantCourses}
-                setRelevantFaculty={setRelevantFaculty}
-                setRelevantCourses={setRelevantCourses}
-                setRelevantClasses={setRelevantClasses}
-                relevantClasses={relevantClasses}
-                relevantFaculty={relevantFaculty}
-              />
+              !user ? (
+                <Navigate replace to="/login" />
+              ) : (
+                <Navigate replace to="/Home" />
+              )
             }
           />
-        </Route>
-        <Route element={<RequireAuth user={user} />}>
-          <Route path="/Requests" element={<Request />} />
-        </Route>
-        <Route path="/login" element={<Login user={user} />} />
-        <Route path="/Lab" element={<LabSchedule />} />
-        <Route path="/reset-password/:id/:token" element={<ResetPassword />} />
-        <Route
-          path="*"
-          element={
-            !user ? (
-              <Navigate replace to="/login" />
-            ) : (
-              <Navigate replace to="/Home" />
-            )
-          }
-        />
-      </Routes>
+        </Routes>
+      </div>
     </>
   );
 }

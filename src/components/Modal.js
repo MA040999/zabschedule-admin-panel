@@ -10,6 +10,7 @@ import { addNotificationMsg } from "../redux/auth/authActions";
 import {
   addClass,
   removeModalData,
+  removeModalDataTime,
   toggleConfirmationModal,
   toggleModal,
 } from "../redux/schedule/scheduleAction";
@@ -43,12 +44,21 @@ function Modal({ faculty, courses, classes }) {
     _id: modalData?.id,
   });
 
+  console.log("selectedData", selectedData);
   const dispatch = useDispatch();
   const handleAddRow = () => {
     setRows(2);
     setSelectedData({
       ...selectedData,
       class: [selectedData.class[0]],
+      Time: [
+        `${modalData?.slot?.slot_timing[0]
+          ?.split("to")[0]
+          .trim()} - ${modalData?.slot?.slot_timing[0]?.split("to")[1].trim()}`,
+        `${modalData?.slot?.slot_timing[1]
+          ?.split("to")[0]
+          .trim()} - ${modalData?.slot?.slot_timing[1]?.split("to")[1].trim()}`,
+      ],
     });
   };
 
@@ -63,7 +73,12 @@ function Modal({ faculty, courses, classes }) {
       }
       setSelectedData({
         ...selectedData,
-        Time: selectedData.Time[1] ? [undefined, selectedData.Time[1]] : [],
+        Time:
+          rows === 1
+            ? selectedData.Time[1]
+              ? [undefined, selectedData.Time[1]]
+              : []
+            : selectedData.Time,
         class:
           rows === 1
             ? []
@@ -80,23 +95,33 @@ function Modal({ faculty, courses, classes }) {
       setRelevantCoursesRow1(courses);
       setRelevantClassesRow1(classes);
       setRelevantFacultyRow1(faculty);
-      document.getElementById(`from${i}`).value = "";
-      document.getElementById(`to${i}`).value = "";
+      // document.getElementById(`from${i}`).value = "";
+      // document.getElementById(`to${i}`).value = "";
     } else {
       if (modalData?.subject[i] !== undefined) {
         dispatch(removeModalData(i));
+      } else if (modalData?.time[i] !== undefined) {
+        dispatch(removeModalDataTime(i));
       }
       if (
-        selectedData.Time[1] === undefined &&
+        // selectedData.Time[1] === undefined &&
         selectedData.class[1] === undefined &&
         selectedData.subject[1] === undefined &&
         selectedData.teacher[1] === undefined
       ) {
-        setRows(1);
-      } else {
         setSelectedData({
           ...selectedData,
-          Time: selectedData.Time.filter((_, index) => index !== i),
+          Time: [selectedData.Time[0]],
+        });
+        setRows(1);
+      } else {
+        console.log("remove", rows);
+        setSelectedData({
+          ...selectedData,
+          Time:
+            rows === 1
+              ? selectedData.Time.filter((_, index) => index !== i)
+              : selectedData.Time,
           class: selectedData.class.filter((_, index) => index !== i),
           subject: selectedData.subject.filter((_, index) => index !== i),
           teacher: selectedData.teacher.filter((_, index) => index !== i),
@@ -104,8 +129,8 @@ function Modal({ faculty, courses, classes }) {
         setRelevantCoursesRow2(courses);
         setRelevantClassesRow2(classes);
         setRelevantFacultyRow2(faculty);
-        document.getElementById(`from${i}`).value = "";
-        document.getElementById(`to${i}`).value = "";
+        // document.getElementById(`from${i}`).value = "";
+        // document.getElementById(`to${i}`).value = "";
       }
     }
   };
@@ -153,6 +178,8 @@ function Modal({ faculty, courses, classes }) {
   };
 
   const handleSelectChange = (e, index) => {
+    console.log("e", e);
+    console.log("index", index);
     if (index === 0) {
       if (e.name === "teacher") {
         setRelevantCoursesRow1(
@@ -191,6 +218,60 @@ function Modal({ faculty, courses, classes }) {
                 })
             : courses.filter((course) => e.courses.includes(course.course_code))
         );
+      } else if (e.name === "from") {
+        if (
+          e.value === modalData.slot?.slot_timing[0]?.split("to")[1]?.trim()
+        ) {
+          setSelectedData({
+            ...selectedData,
+            Time: selectedData.Time[index + 1]
+              ? [
+                  `${tConvert(e.value)} - ${modalData.slot?.slot_timing[1]
+                    ?.split("to")[1]
+                    ?.trim()}`,
+                  selectedData.Time[index + 1],
+                ]
+              : [
+                  `${tConvert(e.value)} - ${modalData.slot?.slot_timing[1]
+                    ?.split("to")[1]
+                    ?.trim()}`,
+                ],
+          });
+          return;
+        }
+        setSelectedData({
+          ...selectedData,
+          Time: selectedData.Time[index + 1]
+            ? [
+                `${tConvert(e.value)} - ${selectedData.Time[index]
+                  ?.split("-")[1]
+                  .trim()}`,
+                selectedData.Time[index + 1],
+              ]
+            : [
+                `${tConvert(e.value)} - ${selectedData.Time[index]
+                  ?.split("-")[1]
+                  .trim()}`,
+              ],
+        });
+        return;
+      } else if (e.name === "to") {
+        setSelectedData({
+          ...selectedData,
+          Time: selectedData.Time[index + 1]
+            ? [
+                `${selectedData.Time[index].split("-")[0].trim()} - ${tConvert(
+                  e.value
+                )}`,
+                selectedData.Time[index + 1],
+              ]
+            : [
+                `${selectedData.Time[index]?.split("-")[0].trim()} - ${tConvert(
+                  e.value
+                )}`,
+              ],
+        });
+        return;
       }
 
       setSelectedData({
@@ -238,6 +319,44 @@ function Modal({ faculty, courses, classes }) {
             : courses.filter((course) => e.courses.includes(course.course_code))
         );
       }
+      // else if (e.name === "from") {
+      //   setSelectedData({
+      //     ...selectedData,
+      //     Time: selectedData.Time[index - 1]
+      //       ? [
+      //           selectedData.Time[index - 1],
+      //           `${tConvert(e.value)} - ${selectedData.Time[index]
+      //             ?.split("-")[1]
+      //             .trim()}`,
+      //         ]
+      //       : [
+      //           undefined,
+      //           `${tConvert(e.value)} - ${selectedData.Time[index]
+      //             ?.split("-")[1]
+      //             .trim()}`,
+      //         ],
+      //   });
+      //   return;
+      // } else if (e.name === "to") {
+      //   console.log("e", e);
+      //   setSelectedData({
+      //     ...selectedData,
+      //     Time: selectedData.Time[index - 1]
+      //       ? [
+      //           selectedData.Time[index - 1],
+      //           `${tConvert(e.value)} - ${selectedData.Time[index]
+      //             ?.split("-")[1]
+      //             .trim()}`,
+      //         ]
+      //       : [
+      //           undefined,
+      //           `${tConvert(e.value)} - ${selectedData.Time[index]
+      //             ?.split("-")[1]
+      //             .trim()}`,
+      //         ],
+      //   });
+      //   return;
+      // }
 
       setSelectedData({
         ...selectedData,
@@ -452,7 +571,7 @@ function Modal({ faculty, courses, classes }) {
     dispatch(addClass(selectedData));
   };
   useEffect(() => {
-    setRows(modalData?.teacher?.length || 1);
+    setRows(modalData?.time?.length || 1);
     setSelectedData({
       Time: modalData?.time || [],
       campus: modalData?.campus,
@@ -557,7 +676,7 @@ function Modal({ faculty, courses, classes }) {
                   selectedData.teacher[index] !== undefined
                 }
                 isDisabled={
-                  modalData?.subject.length > 0
+                  modalData?.subject?.length > 0
                     ? modalData?.subject[index] === undefined
                       ? false
                       : true
@@ -614,7 +733,7 @@ function Modal({ faculty, courses, classes }) {
                   selectedData.subject[index] !== undefined
                 }
                 isDisabled={
-                  modalData?.subject.length > 0
+                  modalData?.subject?.length > 0
                     ? modalData?.subject[index] === undefined
                       ? false
                       : true
@@ -690,14 +809,99 @@ function Modal({ faculty, courses, classes }) {
                   selectedData.class[index] !== undefined
                 }
                 isDisabled={
-                  modalData?.subject.length > 0
+                  modalData?.subject?.length > 0
                     ? modalData?.subject[index] === undefined
                       ? false
                       : true
                     : false
                 }
               />
-              <input
+              <CustomSelect
+                placeholder="From..."
+                options={[
+                  ...modalData.slot.slot_timing.map((slot) => ({
+                    value: slot.split("to")[0].trim(),
+                    label: slot.split("to")[0].trim(),
+                    name: "from",
+                  })),
+                ]}
+                value={
+                  selectedData.Time[index]?.split("-")[0].trim() !==
+                    "undefined" && selectedData.Time.length !== 0
+                    ? {
+                        value: selectedData.Time[index]?.split("-")[0].trim(),
+                        label: selectedData.Time[index]?.split("-")[0].trim(),
+                        name: "from",
+                      }
+                    : null
+                  // : selectedData.Time[index]?.split("to")[0].trim()
+                  // ? {
+                  //     value: selectedData.Time[index]?.split("to")[0].trim(),
+                  //     label: selectedData.Time[index]?.split("to")[0].trim(),
+                  //     name: "from",
+                  //   }
+                  // : null
+                }
+                onChange={(e) =>
+                  index === 0 ? handleSelectChange(e, index) : ""
+                }
+                isMulti={false}
+                isSearchable={false}
+                isDisabled={rows === 2 ? true : false}
+              />
+              <CustomSelect
+                placeholder="To..."
+                options={[
+                  ...modalData.slot.slot_timing.map((slot) => ({
+                    value: slot.split("to")[1].trim(),
+                    label: slot.split("to")[1].trim(),
+                    name: "to",
+                  })),
+                ]}
+                value={
+                  index === 0 &&
+                  selectedData.Time[0]?.split("-")[0].trim() ===
+                    modalData.slot?.slot_timing[0]?.split("to")[1]?.trim()
+                    ? {
+                        value: modalData.slot?.slot_timing[1]
+                          ?.split("to")[1]
+                          ?.trim(),
+                        label: modalData.slot?.slot_timing[1]
+                          ?.split("to")[1]
+                          ?.trim(),
+                        name: "to",
+                      }
+                    : selectedData.Time[index]?.split("-")[1].trim() !==
+                        "undefined" && selectedData.Time.length !== 0
+                    ? {
+                        value: selectedData.Time[index]?.split("-")[1].trim(),
+                        label: selectedData.Time[index]?.split("-")[1].trim(),
+                        name: "to",
+                      }
+                    : null
+                  // : selectedData.Time[index]?.split("to")[1].trim()
+                  // ? {
+                  //     value: selectedData.Time[index]?.split("to")[1].trim(),
+                  //     label: selectedData.Time[index]?.split("to")[1].trim(),
+                  //     name: "to",
+                  //   }
+                  // : null
+                }
+                onChange={(e) =>
+                  index === 0 ? handleSelectChange(e, index) : ""
+                }
+                isMulti={false}
+                isSearchable={false}
+                isDisabled={
+                  rows === 2 ||
+                  (index === 0 &&
+                    selectedData.Time[0]?.split("-")[0].trim() ===
+                      modalData.slot?.slot_timing[0]?.split("to")[1]?.trim())
+                    ? true
+                    : false
+                }
+              />
+              {/* <input
                 type="time"
                 name="from"
                 id={`from${index}`}
@@ -710,8 +914,9 @@ function Modal({ faculty, courses, classes }) {
                 onChange={(e) => handleTimeChange(e, index)}
                 // disabled={modalData?.subject.length > 0 ? true : false}
                 required
-              />
-              <input
+              /> */}
+
+              {/* <input
                 type="time"
                 name="to"
                 id={`to${index}`}
@@ -724,7 +929,8 @@ function Modal({ faculty, courses, classes }) {
                 onChange={(e) => handleTimeChange(e, index)}
                 // disabled={modalData?.subject.length > 0 ? true : false}
                 required
-              />
+              /> */}
+
               <div
                 onClick={() => handleTrashClick(index)}
                 className="icon-container"

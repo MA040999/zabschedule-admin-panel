@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CombinedSchedule from "../components/CombinedSchedule";
-import Modal from "../components/Modal";
-import app from "../axiosConfig";
+
 import { FILTERED_SCHEDULE } from "../redux/schedule/scheduleTypes";
 import Filters from "../components/Filters";
+import { toggleModal } from "../redux/schedule/scheduleAction";
 
 function Home({
   setRelevantClasses,
@@ -13,8 +13,13 @@ function Home({
   relevantClasses,
   relevantCourses,
   relevantFaculty,
+  faculty,
+  courses,
+  classes,
 }) {
   const dispatch = useDispatch();
+
+  const modalState = useSelector((state) => state.schedule.isModalOpen);
 
   const [selectedData, setSelectedData] = useState({
     faculty: "",
@@ -119,37 +124,16 @@ function Home({
   };
 
   const [selectedDay, setSelectedDay] = useState("Monday");
-  const [faculty, setFaculty] = useState([]);
-  const [courses, setCourses] = useState([]);
-  const [classes, setClasses] = useState([]);
-
-  const fetchData = () => {
-    app.get("/time-table/faculty").then((res) => {
-      setFaculty(res.data);
-      setRelevantFaculty(res.data);
-    });
-    app.get("/time-table/courses").then((res) => {
-      setCourses(res.data);
-      setRelevantCourses(res.data);
-    });
-    app.get("/time-table/classes").then((res) => {
-      setClasses(res.data);
-      setRelevantClasses(res.data);
-    });
-  };
 
   useEffect(() => {
-    // if (schedule.length === 0) {
-    //   dispatch(fetchCombinedSchedule());
-    //   dispatch(fetchSlots());
-    // }
-    fetchData();
-    //eslint-disable-next-line
+    if (modalState) {
+      dispatch(toggleModal());
+    }
+    // eslint-disable-next-line
   }, []);
 
   return (
-    <div className="body-container">
-      <Modal faculty={faculty} courses={courses} classes={classes} />
+    <>
       <Filters
         relevantCourses={relevantCourses}
         relevantClasses={relevantClasses}
@@ -161,7 +145,7 @@ function Home({
         handleFacultySelectChange={handleFacultySelectChange}
       />
       <CombinedSchedule selectedData={selectedData} selectedDay={selectedDay} />
-    </div>
+    </>
   );
 }
 

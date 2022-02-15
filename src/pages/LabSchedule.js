@@ -3,8 +3,12 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import LabSelector from "../components/LabSelector";
+import { useDispatch } from "react-redux";
+import { toggleModal } from "../redux/schedule/scheduleAction";
+import { useEffect } from "react";
 
 function LabSchedule() {
+  const dispatch = useDispatch();
   const rooms = [
     "C-Lab 3(R-207)",
     "C-Lab 5(R-308)",
@@ -15,22 +19,56 @@ function LabSchedule() {
   const [selectedRoom, setSelectedRoom] = useState(rooms[0]);
 
   const slots = useSelector((state) => state.schedule.slots);
+  const modalState = useSelector((state) => state.schedule.isModalOpen);
   const labSchedule = useSelector((state) => state.schedule.labSchedule).filter(
     (sch) => sch.room === selectedRoom
   );
 
-  const handleClickOpen = () => {};
+  const handleClickOpen = (
+    room,
+    selectedDay,
+    campus,
+    slot,
+    id,
+    teacher,
+    subject,
+    cls,
+    time,
+    slotAssigned
+  ) => {
+    dispatch(
+      toggleModal(
+        room,
+        selectedDay,
+        campus,
+        slot,
+        id,
+        teacher,
+        subject,
+        cls,
+        time,
+        slotAssigned
+      )
+    );
+  };
 
   const arr = [];
   const printOhArr = [];
 
   const days = [...new Set(labSchedule.map((sch) => sch.day))];
 
+  useEffect(() => {
+    if (modalState) {
+      dispatch(toggleModal());
+    }
+    // eslint-disable-next-line
+  }, []);
+
   if (labSchedule.length === 0) {
     return <Loader />;
   }
   return (
-    <div className="body-container">
+    <>
       <LabSelector
         rooms={rooms}
         setSelectedRoom={setSelectedRoom}
@@ -101,7 +139,24 @@ function LabSchedule() {
                                   .split("to")[1]
                                   .trim()}`}</pre>
                               </td>
-                              <td rowSpan={rowSpan} className="lab-td">
+                              <td
+                                rowSpan={rowSpan}
+                                className="lab-td"
+                                onClick={() =>
+                                  handleClickOpen(
+                                    selectedRoom,
+                                    sch.day,
+                                    sch.campus,
+                                    slot,
+                                    sch._id,
+                                    [],
+                                    [],
+                                    [],
+                                    sch.Time,
+                                    false
+                                  )
+                                }
+                              >
                                 <pre>O-H</pre>
                               </td>
                             </React.Fragment>
@@ -112,6 +167,20 @@ function LabSchedule() {
                             rowSpan={rowSpan}
                             className="lab-td"
                             key={sch._id}
+                            onClick={() =>
+                              handleClickOpen(
+                                selectedRoom,
+                                sch.day,
+                                sch.campus,
+                                slot,
+                                sch._id,
+                                [],
+                                [],
+                                [],
+                                sch.Time,
+                                false
+                              )
+                            }
                           >
                             <pre>O-H</pre>
                           </td>
@@ -145,13 +214,7 @@ function LabSchedule() {
                                     .trim()}`}</pre>
                                 </td>
                               )}
-                            <td
-                              onClick={() => {
-                                handleClickOpen();
-                              }}
-                              className="lab-td"
-                              rowSpan={rowSpan}
-                            >
+                            <td className="lab-td" rowSpan={rowSpan}>
                               <pre>
                                 {rowSpan === 1
                                   ? `${sch.class[s_index]?.program} ${
@@ -216,7 +279,24 @@ function LabSchedule() {
                                 .trim()
                           ) {
                             return (
-                              <td className="lab-td" key={sch._id}>
+                              <td
+                                className="lab-td"
+                                key={sch._id}
+                                onClick={() =>
+                                  handleClickOpen(
+                                    selectedRoom,
+                                    sch.day,
+                                    sch.campus,
+                                    slot,
+                                    sch._id,
+                                    [],
+                                    [],
+                                    [],
+                                    sch.Time,
+                                    false
+                                  )
+                                }
+                              >
                                 <pre>O-H</pre>
                               </td>
                             );
@@ -231,7 +311,24 @@ function LabSchedule() {
                                 .trim()
                           ) {
                             return (
-                              <td className="lab-td" key={sch._id}>
+                              <td
+                                className="lab-td"
+                                key={sch._id}
+                                onClick={() =>
+                                  handleClickOpen(
+                                    selectedRoom,
+                                    sch.day,
+                                    sch.campus,
+                                    slot,
+                                    sch._id,
+                                    [],
+                                    [],
+                                    [],
+                                    sch.Time,
+                                    false
+                                  )
+                                }
+                              >
                                 <pre>O-H</pre>
                               </td>
                             );
@@ -260,7 +357,24 @@ function LabSchedule() {
                             s.split("to")[1].trim()
                         ) {
                           return (
-                            <td className="lab-td" key={sch._id}>
+                            <td
+                              className="lab-td"
+                              key={sch._id}
+                              onClick={() =>
+                                handleClickOpen(
+                                  selectedRoom,
+                                  sch.day,
+                                  sch.campus,
+                                  slot,
+                                  sch._id,
+                                  [],
+                                  [],
+                                  [],
+                                  sch.Time,
+                                  false
+                                )
+                              }
+                            >
                               <pre>O-H</pre>
                             </td>
                           );
@@ -280,13 +394,7 @@ function LabSchedule() {
                                     .trim()}`}</pre>
                                 </td>
                               )}
-                            <td
-                              onClick={() => {
-                                handleClickOpen();
-                              }}
-                              className="lab-td"
-                              rowSpan={rowSpan}
-                            >
+                            <td className="lab-td" rowSpan={rowSpan}>
                               <pre>
                                 {sch.class.map((cls, index) => {
                                   return `${cls.program} ${cls.semester} ${
@@ -342,6 +450,20 @@ function LabSchedule() {
                                 rowSpan={rowSpan}
                                 className="lab-td"
                                 key={sch._id}
+                                onClick={() =>
+                                  handleClickOpen(
+                                    selectedRoom,
+                                    sch.day,
+                                    sch.campus,
+                                    slot,
+                                    sch._id,
+                                    [],
+                                    [],
+                                    [],
+                                    sch.Time,
+                                    false
+                                  )
+                                }
                               >
                                 <pre>O-H</pre>
                               </td>
@@ -353,6 +475,20 @@ function LabSchedule() {
                             rowSpan={rowSpan}
                             className="lab-td"
                             key={sch._id}
+                            onClick={() =>
+                              handleClickOpen(
+                                selectedRoom,
+                                sch.day,
+                                sch.campus,
+                                slot,
+                                sch._id,
+                                [],
+                                [],
+                                [],
+                                sch.Time,
+                                false
+                              )
+                            }
                           >
                             <pre>O-H</pre>
                           </td>
@@ -367,7 +503,7 @@ function LabSchedule() {
           })}
         </tbody>
       </table>
-    </div>
+    </>
   );
 }
 

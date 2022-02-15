@@ -10,6 +10,7 @@ function CustomSelect({
   controlShouldRenderValue,
   isDisabled,
   isClearable,
+  isSearchable,
 }) {
   return (
     <Select
@@ -26,6 +27,7 @@ function CustomSelect({
       controlShouldRenderValue={controlShouldRenderValue}
       isDisabled={isDisabled}
       isClearable={isClearable}
+      isSearchable={isSearchable}
     />
   );
 }

@@ -6,6 +6,7 @@ import {
   FETCH_COMBINED_SCHEDULE,
   FETCH_SLOTS,
   REMOVE_MODAL_DATA,
+  REMOVE_MODAL_DATA_TIME,
   SET_LAB_SCHEDULE,
   TOGGLE_CONFIRMATION_MODAL,
   TOGGLE_MODAL,
@@ -128,6 +129,12 @@ export const toggleConfirmationModal = () => {
 export const removeModalData = (index) => {
   return {
     type: REMOVE_MODAL_DATA,
+    payload: index,
+  };
+};
+export const removeModalDataTime = (index) => {
+  return {
+    type: REMOVE_MODAL_DATA_TIME,
     payload: index,
   };
 };

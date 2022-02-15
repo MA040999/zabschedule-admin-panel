@@ -5,6 +5,7 @@ import {
   FETCH_SLOTS,
   FILTERED_SCHEDULE,
   REMOVE_MODAL_DATA,
+  REMOVE_MODAL_DATA_TIME,
   SET_LAB_SCHEDULE,
   TOGGLE_CONFIRMATION_MODAL,
   TOGGLE_MODAL,
@@ -166,6 +167,24 @@ const scheduleReducer = (state = intitalState, action) => {
         ...state,
         isConfirmationModalOpen: !state.isConfirmationModalOpen,
       };
+    case REMOVE_MODAL_DATA_TIME:
+      return {
+        ...state,
+        modalData: {
+          ...state.modalData,
+          time:
+            action.payload === 0
+              ? state.modalData?.time[1] !== undefined
+                ? [state.modalData?.time[0], state.modalData?.time[1]]
+                : []
+              : state.modalData?.time[0] !== undefined &&
+                state.modalData?.cls[1] === undefined &&
+                state.modalData?.subject[1] === undefined &&
+                state.modalData?.teacher[1] === undefined
+              ? [state.modalData?.time[0]]
+              : [state.modalData?.time[0], state.modalData?.time[1]],
+        },
+      };
     case REMOVE_MODAL_DATA:
       return {
         ...state,
@@ -198,11 +217,12 @@ const scheduleReducer = (state = intitalState, action) => {
           time:
             action.payload === 0
               ? state.modalData?.time[1] !== undefined
-                ? [undefined, state.modalData?.time[1]]
+                ? [state.modalData?.time[0], state.modalData?.time[1]]
                 : []
-              : state.modalData?.time[0] !== undefined
-              ? [state.modalData?.time[0], undefined]
-              : [],
+              : state.modalData?.time[0] !== undefined && [
+                  state.modalData?.time[0],
+                  state.modalData?.time[1],
+                ],
         },
       };
     default:

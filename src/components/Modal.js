@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { FiTrash, FiX, FiCheck, FiPlus } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  convertTime12to24,
-  ordinal_suffix_of,
-  tConvert,
-} from "../common/common";
+import { ordinal_suffix_of } from "../common/common";
 import { addNotificationMsg } from "../redux/auth/authActions";
 import {
   addClass,
   removeModalData,
   removeModalDataTime,
+  requestForClass,
   toggleConfirmationModal,
   toggleModal,
 } from "../redux/schedule/scheduleAction";
@@ -44,21 +41,38 @@ function Modal({ faculty, courses, classes }) {
     _id: modalData?.id,
   });
 
-  console.log("selectedData", selectedData);
   const dispatch = useDispatch();
   const handleAddRow = () => {
     setRows(2);
     setSelectedData({
       ...selectedData,
       class: [selectedData.class[0]],
-      Time: [
-        `${modalData?.slot?.slot_timing[0]
-          ?.split("to")[0]
-          .trim()} - ${modalData?.slot?.slot_timing[0]?.split("to")[1].trim()}`,
-        `${modalData?.slot?.slot_timing[1]
-          ?.split("to")[0]
-          .trim()} - ${modalData?.slot?.slot_timing[1]?.split("to")[1].trim()}`,
-      ],
+      Time:
+        selectedData.day === "Friday"
+          ? [
+              `${modalData?.slot?.friday_slot_timing[0]
+                ?.split("to")[0]
+                .trim()} - ${modalData?.slot?.friday_slot_timing[0]
+                ?.split("to")[1]
+                .trim()}`,
+              `${modalData?.slot?.friday_slot_timing[1]
+                ?.split("to")[0]
+                .trim()} - ${modalData?.slot?.friday_slot_timing[1]
+                ?.split("to")[1]
+                .trim()}`,
+            ]
+          : [
+              `${modalData?.slot?.slot_timing[0]
+                ?.split("to")[0]
+                .trim()} - ${modalData?.slot?.slot_timing[0]
+                ?.split("to")[1]
+                .trim()}`,
+              `${modalData?.slot?.slot_timing[1]
+                ?.split("to")[0]
+                .trim()} - ${modalData?.slot?.slot_timing[1]
+                ?.split("to")[1]
+                .trim()}`,
+            ],
     });
   };
 
@@ -115,7 +129,6 @@ function Modal({ faculty, courses, classes }) {
         });
         setRows(1);
       } else {
-        console.log("remove", rows);
         setSelectedData({
           ...selectedData,
           Time:
@@ -178,8 +191,6 @@ function Modal({ faculty, courses, classes }) {
   };
 
   const handleSelectChange = (e, index) => {
-    console.log("e", e);
-    console.log("index", index);
     if (index === 0) {
       if (e.name === "teacher") {
         setRelevantCoursesRow1(
@@ -220,21 +231,31 @@ function Modal({ faculty, courses, classes }) {
         );
       } else if (e.name === "from") {
         if (
-          e.value === modalData.slot?.slot_timing[0]?.split("to")[1]?.trim()
+          e.value === modalData.slot?.slot_timing[0]?.split("to")[1]?.trim() ||
+          e.value ===
+            modalData.slot?.friday_slot_timing[0]?.split("to")[1]?.trim()
         ) {
           setSelectedData({
             ...selectedData,
             Time: selectedData.Time[index + 1]
               ? [
-                  `${tConvert(e.value)} - ${modalData.slot?.slot_timing[1]
-                    ?.split("to")[1]
-                    ?.trim()}`,
+                  `${e.value} - ${
+                    modalData?.selectedDay === "Friday"
+                      ? modalData.slot?.friday_slot_timing[1]
+                          ?.split("to")[1]
+                          ?.trim()
+                      : modalData.slot?.slot_timing[1]?.split("to")[1]?.trim()
+                  }`,
                   selectedData.Time[index + 1],
                 ]
               : [
-                  `${tConvert(e.value)} - ${modalData.slot?.slot_timing[1]
-                    ?.split("to")[1]
-                    ?.trim()}`,
+                  `${e.value} - ${
+                    modalData?.selectedDay === "Friday"
+                      ? modalData.slot?.friday_slot_timing[1]
+                          ?.split("to")[1]
+                          ?.trim()
+                      : modalData.slot?.slot_timing[1]?.split("to")[1]?.trim()
+                  }`,
                 ],
           });
           return;
@@ -243,13 +264,13 @@ function Modal({ faculty, courses, classes }) {
           ...selectedData,
           Time: selectedData.Time[index + 1]
             ? [
-                `${tConvert(e.value)} - ${selectedData.Time[index]
+                `${e.value} - ${selectedData.Time[index]
                   ?.split("-")[1]
                   .trim()}`,
                 selectedData.Time[index + 1],
               ]
             : [
-                `${tConvert(e.value)} - ${selectedData.Time[index]
+                `${e.value} - ${selectedData.Time[index]
                   ?.split("-")[1]
                   .trim()}`,
               ],
@@ -260,15 +281,13 @@ function Modal({ faculty, courses, classes }) {
           ...selectedData,
           Time: selectedData.Time[index + 1]
             ? [
-                `${selectedData.Time[index].split("-")[0].trim()} - ${tConvert(
-                  e.value
-                )}`,
+                `${selectedData.Time[index].split("-")[0].trim()} - ${e.value}`,
                 selectedData.Time[index + 1],
               ]
             : [
-                `${selectedData.Time[index]?.split("-")[0].trim()} - ${tConvert(
+                `${selectedData.Time[index]?.split("-")[0].trim()} - ${
                   e.value
-                )}`,
+                }`,
               ],
         });
         return;
@@ -338,7 +357,6 @@ function Modal({ faculty, courses, classes }) {
       //   });
       //   return;
       // } else if (e.name === "to") {
-      //   console.log("e", e);
       //   setSelectedData({
       //     ...selectedData,
       //     Time: selectedData.Time[index - 1]
@@ -365,170 +383,170 @@ function Modal({ faculty, courses, classes }) {
     }
   };
 
-  const handleTimeChange = (e, index) => {
-    const time = e.target.value.split(":");
-    if (Number(time[0]) < 8) {
-      setSelectedData({
-        ...selectedData,
-        Time:
-          index === 0
-            ? e.target.name === "to"
-              ? [
-                  `${selectedData.Time[index]
-                    ?.split("-")[0]
-                    .trim()} - undefined`,
-                  selectedData.Time[1],
-                ]
-              : [
-                  `undefined - ${selectedData.Time[index]
-                    ?.split("-")[1]
-                    .trim()}`,
-                  selectedData.Time[1],
-                ]
-            : [
-                selectedData.Time[0],
-                `${
-                  e.target.name === "to"
-                    ? `${selectedData.Time[index]
-                        ?.split("-")[0]
-                        .trim()} - undefined`
-                    : `undefined - ${selectedData.Time[index]
-                        ?.split("-")[1]
-                        .trim()}`
-                }`,
-              ],
-      });
-      document.getElementById(`${e.target.name}${index}`).value = "";
-      return dispatch(
-        addNotificationMsg("Time should be after 8:00 AM", "error")
-      );
-    }
-    if (Number(time[0]) >= 22) {
-      if (Number(time[0]) === 22 && Number(time[1]) === 0) {
-        //do nothing and continue
-      } else {
-        setSelectedData({
-          ...selectedData,
-          Time:
-            index === 0
-              ? e.target.name === "to"
-                ? [
-                    `${selectedData.Time[index]
-                      ?.split("-")[0]
-                      .trim()} - undefined`,
-                    selectedData.Time[1],
-                  ]
-                : [
-                    `undefined - ${selectedData.Time[index]
-                      ?.split("-")[1]
-                      .trim()}`,
-                    selectedData.Time[1],
-                  ]
-              : [
-                  selectedData.Time[0],
-                  `${
-                    e.target.name === "to"
-                      ? `${selectedData.Time[index]
-                          ?.split("-")[0]
-                          .trim()} - undefined`
-                      : `undefined - ${selectedData.Time[index]
-                          ?.split("-")[1]
-                          .trim()}`
-                  }`,
-                ],
-        });
-        document.getElementById(`${e.target.name}${index}`).value = "";
-        return dispatch(
-          addNotificationMsg("Time should be before 10:00 PM", "error")
-        );
-      }
-    }
-    if (index === 0) {
-      if (e.target.name === "to") {
-        setSelectedData({
-          ...selectedData,
-          Time: selectedData.Time[index + 1]
-            ? [
-                `${selectedData.Time[index].split("-")[0].trim()} - ${tConvert(
-                  e.target.value
-                )}`,
-                selectedData.Time[index + 1],
-              ]
-            : [
-                `${selectedData.Time[index]?.split("-")[0].trim()} - ${tConvert(
-                  e.target.value
-                )}`,
-              ],
-        });
-      } else {
-        setSelectedData({
-          ...selectedData,
-          Time: selectedData.Time[index + 1]
-            ? [
-                `${tConvert(e.target.value)} - ${selectedData.Time[index]
-                  ?.split("-")[1]
-                  .trim()}`,
-                selectedData.Time[index + 1],
-              ]
-            : [
-                `${tConvert(e.target.value)} - ${selectedData.Time[index]
-                  ?.split("-")[1]
-                  .trim()}`,
-              ],
-        });
-      }
-    } else {
-      if (e.target.name === "to") {
-        setSelectedData({
-          ...selectedData,
-          Time: selectedData.Time[index - 1]
-            ? [
-                selectedData.Time[index - 1],
-                `${selectedData.Time[index].split("-")[0].trim()} - ${tConvert(
-                  e.target.value
-                )}`,
-              ]
-            : [
-                undefined,
-                `${selectedData.Time[index].split("-")[0].trim()} - ${tConvert(
-                  e.target.value
-                )}`,
-              ],
-        });
-      } else {
-        setSelectedData({
-          ...selectedData,
-          Time: selectedData.Time[index - 1]
-            ? [
-                selectedData.Time[index - 1],
-                `${tConvert(e.target.value)} - ${selectedData.Time[index]
-                  ?.split("-")[1]
-                  .trim()}`,
-              ]
-            : [
-                undefined,
-                `${tConvert(e.target.value)} - ${selectedData.Time[index]
-                  ?.split("-")[1]
-                  .trim()}`,
-              ],
-        });
-      }
-    }
-  };
+  // const handleTimeChange = (e, index) => {
+  //   const time = e.target.value.split(":");
+  //   if (Number(time[0]) < 8) {
+  //     setSelectedData({
+  //       ...selectedData,
+  //       Time:
+  //         index === 0
+  //           ? e.target.name === "to"
+  //             ? [
+  //                 `${selectedData.Time[index]
+  //                   ?.split("-")[0]
+  //                   .trim()} - undefined`,
+  //                 selectedData.Time[1],
+  //               ]
+  //             : [
+  //                 `undefined - ${selectedData.Time[index]
+  //                   ?.split("-")[1]
+  //                   .trim()}`,
+  //                 selectedData.Time[1],
+  //               ]
+  //           : [
+  //               selectedData.Time[0],
+  //               `${
+  //                 e.target.name === "to"
+  //                   ? `${selectedData.Time[index]
+  //                       ?.split("-")[0]
+  //                       .trim()} - undefined`
+  //                   : `undefined - ${selectedData.Time[index]
+  //                       ?.split("-")[1]
+  //                       .trim()}`
+  //               }`,
+  //             ],
+  //     });
+  //     document.getElementById(`${e.target.name}${index}`).value = "";
+  //     return dispatch(
+  //       addNotificationMsg("Time should be after 8:00 AM", "error")
+  //     );
+  //   }
+  //   if (Number(time[0]) >= 22) {
+  //     if (Number(time[0]) === 22 && Number(time[1]) === 0) {
+  //       //do nothing and continue
+  //     } else {
+  //       setSelectedData({
+  //         ...selectedData,
+  //         Time:
+  //           index === 0
+  //             ? e.target.name === "to"
+  //               ? [
+  //                   `${selectedData.Time[index]
+  //                     ?.split("-")[0]
+  //                     .trim()} - undefined`,
+  //                   selectedData.Time[1],
+  //                 ]
+  //               : [
+  //                   `undefined - ${selectedData.Time[index]
+  //                     ?.split("-")[1]
+  //                     .trim()}`,
+  //                   selectedData.Time[1],
+  //                 ]
+  //             : [
+  //                 selectedData.Time[0],
+  //                 `${
+  //                   e.target.name === "to"
+  //                     ? `${selectedData.Time[index]
+  //                         ?.split("-")[0]
+  //                         .trim()} - undefined`
+  //                     : `undefined - ${selectedData.Time[index]
+  //                         ?.split("-")[1]
+  //                         .trim()}`
+  //                 }`,
+  //               ],
+  //       });
+  //       document.getElementById(`${e.target.name}${index}`).value = "";
+  //       return dispatch(
+  //         addNotificationMsg("Time should be before 10:00 PM", "error")
+  //       );
+  //     }
+  //   }
+  //   if (index === 0) {
+  //     if (e.target.name === "to") {
+  //       setSelectedData({
+  //         ...selectedData,
+  //         Time: selectedData.Time[index + 1]
+  //           ? [
+  //               `${selectedData.Time[index].split("-")[0].trim()} - ${tConvert(
+  //                 e.target.value
+  //               )}`,
+  //               selectedData.Time[index + 1],
+  //             ]
+  //           : [
+  //               `${selectedData.Time[index]?.split("-")[0].trim()} - ${tConvert(
+  //                 e.target.value
+  //               )}`,
+  //             ],
+  //       });
+  //     } else {
+  //       setSelectedData({
+  //         ...selectedData,
+  //         Time: selectedData.Time[index + 1]
+  //           ? [
+  //               `${tConvert(e.target.value)} - ${selectedData.Time[index]
+  //                 ?.split("-")[1]
+  //                 .trim()}`,
+  //               selectedData.Time[index + 1],
+  //             ]
+  //           : [
+  //               `${tConvert(e.target.value)} - ${selectedData.Time[index]
+  //                 ?.split("-")[1]
+  //                 .trim()}`,
+  //             ],
+  //       });
+  //     }
+  //   } else {
+  //     if (e.target.name === "to") {
+  //       setSelectedData({
+  //         ...selectedData,
+  //         Time: selectedData.Time[index - 1]
+  //           ? [
+  //               selectedData.Time[index - 1],
+  //               `${selectedData.Time[index].split("-")[0].trim()} - ${tConvert(
+  //                 e.target.value
+  //               )}`,
+  //             ]
+  //           : [
+  //               undefined,
+  //               `${selectedData.Time[index].split("-")[0].trim()} - ${tConvert(
+  //                 e.target.value
+  //               )}`,
+  //             ],
+  //       });
+  //     } else {
+  //       setSelectedData({
+  //         ...selectedData,
+  //         Time: selectedData.Time[index - 1]
+  //           ? [
+  //               selectedData.Time[index - 1],
+  //               `${tConvert(e.target.value)} - ${selectedData.Time[index]
+  //                 ?.split("-")[1]
+  //                 .trim()}`,
+  //             ]
+  //           : [
+  //               undefined,
+  //               `${tConvert(e.target.value)} - ${selectedData.Time[index]
+  //                 ?.split("-")[1]
+  //                 .trim()}`,
+  //             ],
+  //       });
+  //     }
+  //   }
+  // };
 
   const handleSubmit = () => {
-    if (
-      modalData?.time.length !== 0 &&
-      modalData?.time.join(",") === selectedData.Time.join(",")
-    ) {
-      if (
-        modalData?.subject.length > 1 &&
-        modalData?.subject[1] === undefined
-      ) {
-      } else {
-        return dispatch(addNotificationMsg("No changes detected", "error"));
-      }
-    }
+    // if (
+    //   modalData?.time.length !== 0 &&
+    //   modalData?.time.join(",") === selectedData.Time.join(",")
+    // ) {
+    //   if (
+    //     modalData?.subject.length > 1 &&
+    //     modalData?.subject[1] === undefined
+    //   ) {
+    //   } else {
+    //     return dispatch(addNotificationMsg("No changes detected", "error"));
+    //   }
+    // }
     if (
       selectedData.subject.length === 0 ||
       selectedData.class.length === 0 ||
@@ -567,6 +585,10 @@ function Modal({ faculty, courses, classes }) {
         return dispatch(
           addNotificationMsg("Please fill all the fields", "error")
         );
+    }
+    if (modalData?.isRequestModal) {
+      dispatch(requestForClass(selectedData));
+      return;
     }
     dispatch(addClass(selectedData));
   };
@@ -818,13 +840,23 @@ function Modal({ faculty, courses, classes }) {
               />
               <CustomSelect
                 placeholder="From..."
-                options={[
-                  ...modalData.slot.slot_timing.map((slot) => ({
-                    value: slot.split("to")[0].trim(),
-                    label: slot.split("to")[0].trim(),
-                    name: "from",
-                  })),
-                ]}
+                options={
+                  modalData?.selectedDay === "Friday"
+                    ? [
+                        ...modalData.slot.friday_slot_timing.map((slot) => ({
+                          value: slot.split("to")[0].trim(),
+                          label: slot.split("to")[0].trim(),
+                          name: "from",
+                        })),
+                      ]
+                    : [
+                        ...modalData.slot.slot_timing.map((slot) => ({
+                          value: slot.split("to")[0].trim(),
+                          label: slot.split("to")[0].trim(),
+                          name: "from",
+                        })),
+                      ]
+                }
                 value={
                   selectedData.Time[index]?.split("-")[0].trim() !==
                     "undefined" && selectedData.Time.length !== 0
@@ -851,26 +883,50 @@ function Modal({ faculty, courses, classes }) {
               />
               <CustomSelect
                 placeholder="To..."
-                options={[
-                  ...modalData.slot.slot_timing.map((slot) => ({
-                    value: slot.split("to")[1].trim(),
-                    label: slot.split("to")[1].trim(),
-                    name: "to",
-                  })),
-                ]}
+                options={
+                  modalData?.selectedDay === "Friday"
+                    ? [
+                        ...modalData.slot.friday_slot_timing.map((slot) => ({
+                          value: slot.split("to")[1].trim(),
+                          label: slot.split("to")[1].trim(),
+                          name: "to",
+                        })),
+                      ]
+                    : [
+                        ...modalData.slot.slot_timing.map((slot) => ({
+                          value: slot.split("to")[1].trim(),
+                          label: slot.split("to")[1].trim(),
+                          name: "to",
+                        })),
+                      ]
+                }
                 value={
-                  index === 0 &&
-                  selectedData.Time[0]?.split("-")[0].trim() ===
-                    modalData.slot?.slot_timing[0]?.split("to")[1]?.trim()
-                    ? {
-                        value: modalData.slot?.slot_timing[1]
-                          ?.split("to")[1]
-                          ?.trim(),
-                        label: modalData.slot?.slot_timing[1]
-                          ?.split("to")[1]
-                          ?.trim(),
-                        name: "to",
-                      }
+                  (index === 0 &&
+                    selectedData.Time[0]?.split("-")[0].trim() ===
+                      modalData.slot?.slot_timing[0]?.split("to")[1]?.trim()) ||
+                  (modalData.slot?.friday_slot_timing[0]
+                    ?.split("to")[1]
+                    ?.trim() === selectedData.Time[0]?.split("-")[0].trim() &&
+                    modalData.slot?.friday_slot_timing[0] !== undefined)
+                    ? modalData?.selectedDay === "Friday"
+                      ? {
+                          value: modalData.slot?.friday_slot_timing[1]
+                            ?.split("to")[1]
+                            ?.trim(),
+                          label: modalData.slot?.friday_slot_timing[1]
+                            ?.split("to")[1]
+                            ?.trim(),
+                          name: "to",
+                        }
+                      : {
+                          value: modalData.slot?.slot_timing[1]
+                            ?.split("to")[1]
+                            ?.trim(),
+                          label: modalData.slot?.slot_timing[1]
+                            ?.split("to")[1]
+                            ?.trim(),
+                          name: "to",
+                        }
                     : selectedData.Time[index]?.split("-")[1].trim() !==
                         "undefined" && selectedData.Time.length !== 0
                     ? {
@@ -896,7 +952,11 @@ function Modal({ faculty, courses, classes }) {
                   rows === 2 ||
                   (index === 0 &&
                     selectedData.Time[0]?.split("-")[0].trim() ===
-                      modalData.slot?.slot_timing[0]?.split("to")[1]?.trim())
+                      modalData.slot?.slot_timing[0]?.split("to")[1]?.trim()) ||
+                  (modalData.slot?.friday_slot_timing[0]
+                    ?.split("to")[1]
+                    ?.trim() === selectedData.Time[0]?.split("-")[0].trim() &&
+                    modalData.slot?.friday_slot_timing[0] !== undefined)
                     ? true
                     : false
                 }
@@ -940,7 +1000,7 @@ function Modal({ faculty, courses, classes }) {
             </div>
           ))}
 
-          {rows !== 2 && (
+          {rows !== 2 && modalData?.slot?.slot_timing?.length !== 1 ? (
             <div
               onClick={() => handleAddRow()}
               className="modal-btn add-class-btn"
@@ -949,6 +1009,8 @@ function Modal({ faculty, courses, classes }) {
 
               <span>Add another class</span>
             </div>
+          ) : (
+            <div></div>
           )}
           {modalData?.slotAssigned ? (
             <div
@@ -977,7 +1039,9 @@ function Modal({ faculty, courses, classes }) {
             >
               <FiCheck className="icon" color="white" size="25px" />
 
-              <span>Submit</span>
+              <span>
+                {modalData?.isRequestModal ? `Submit Request` : `Submit`}
+              </span>
             </div>
           </div>
         </div>

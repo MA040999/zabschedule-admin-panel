@@ -34,8 +34,7 @@ function LabSchedule() {
     subject,
     cls,
     time,
-    slotAssigned,
-    isRequestModal
+    slotAssigned
   ) => {
     dispatch(
       toggleModal(
@@ -48,8 +47,7 @@ function LabSchedule() {
         subject,
         cls,
         time,
-        slotAssigned,
-        isRequestModal
+        slotAssigned
       )
     );
   };
@@ -122,8 +120,8 @@ function LabSchedule() {
                                 break;
                               }
 
-                              // rowSpan++;
-                              // arr.push(next_oh._id);
+                              rowSpan++;
+                              arr.push(next_oh._id);
                             }
                           }
                           if (shouldBreak) break;
@@ -177,8 +175,7 @@ function LabSchedule() {
                                             .split("to")[1]
                                             .trim()}`,
                                         ],
-                                    false,
-                                    true
+                                    false
                                   )
                                 }
                               >
@@ -224,8 +221,7 @@ function LabSchedule() {
                                         .split("to")[1]
                                         .trim()}`,
                                     ],
-                                false,
-                                true
+                                false
                               )
                             }
                           >
@@ -361,8 +357,7 @@ function LabSchedule() {
                                             .split("to")[1]
                                             .trim()}`,
                                         ],
-                                    false,
-                                    true
+                                    false
                                   )
                                 }
                               >
@@ -394,8 +389,7 @@ function LabSchedule() {
                                     [],
                                     [],
                                     sch.Time,
-                                    false,
-                                    true
+                                    false
                                   )
                                 }
                               >
@@ -457,8 +451,7 @@ function LabSchedule() {
                                           .trim()}`,
                                       ],
 
-                                  false,
-                                  true
+                                  false
                                 )
                               }
                             >
@@ -507,7 +500,7 @@ function LabSchedule() {
                           for (let index = 0; index < 2; index++) {
                             if (
                               next_oh.day === sch.day &&
-                              next_oh.slot === sch.slot
+                              next_oh.slot >= sch.slot
                             ) {
                               if (next_oh.subject.length !== 0) {
                                 shouldBreak = true;
@@ -548,8 +541,7 @@ function LabSchedule() {
                                     [],
                                     [],
                                     sch.Time,
-                                    false,
-                                    true
+                                    false
                                   )
                                 }
                               >
@@ -574,8 +566,7 @@ function LabSchedule() {
                                 [],
                                 [],
                                 sch.Time,
-                                false,
-                                true
+                                false
                               )
                             }
                           >

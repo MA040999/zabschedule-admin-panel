@@ -25,6 +25,7 @@ function CampusSchedule({
   }
 
   const slots = useSelector((state) => state.schedule.slots);
+  const role = useSelector((state) => state.auth.user.role);
 
   const fridayEmptySlot = slots.filter(
     (slot) => slot.friday_slot_timing.length === 0
@@ -101,7 +102,7 @@ function CampusSchedule({
                         </td>
                       )}
                     <td
-                      onClick={toggleFunction}
+                      onClick={() => role === "Admin" && toggleFunction()}
                       style={{ backgroundColor: j % 2 === 0 && "#dadada" }}
                     >
                       {schedule.room === sortedSchedule[i + j]?.room && (
@@ -113,7 +114,7 @@ function CampusSchedule({
                       )}
                     </td>
                     <td
-                      onClick={toggleFunction}
+                      onClick={() => role === "Admin" && toggleFunction()}
                       style={{ backgroundColor: j % 2 === 0 && "#dadada" }}
                     >
                       {schedule.room === sortedSchedule[i + j]?.room && (
@@ -125,7 +126,7 @@ function CampusSchedule({
                       )}
                     </td>
                     <td
-                      onClick={toggleFunction}
+                      onClick={() => role === "Admin" && toggleFunction()}
                       style={{ backgroundColor: j % 2 === 0 && "#dadada" }}
                     >
                       {schedule.room === sortedSchedule[i + j]?.room &&

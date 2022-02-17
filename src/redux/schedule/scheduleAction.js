@@ -76,14 +76,9 @@ export const addClass = (data) => {
 export const requestForClass = (data) => {
   return async (dispatch) => {
     try {
-      // const newClass = await app.post("/time-table/request-class", data);
-
-      // dispatch({
-      //   type: ADD_CLASS,
-      //   payload: newClass?.data,
-      // });
+      const requestData = await app.post("/time-table/request-class", data);
       dispatch(toggleModal());
-      dispatch(addNotificationMsg("Your request has been sent to the admin"));
+      dispatch(addNotificationMsg(requestData.data.message));
     } catch (error) {
       console.log(`error`, error);
     }

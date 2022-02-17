@@ -23,6 +23,7 @@ function LabSchedule() {
   const labSchedule = useSelector((state) => state.schedule.labSchedule).filter(
     (sch) => sch.room === selectedRoom
   );
+  const role = useSelector((state) => state.auth.user.role);
 
   const handleClickOpen = (
     room,
@@ -146,6 +147,7 @@ function LabSchedule() {
                                 rowSpan={rowSpan}
                                 className="lab-td"
                                 onClick={() =>
+                                  role === "Faculty" &&
                                   handleClickOpen(
                                     selectedRoom,
                                     sch.day,
@@ -193,6 +195,7 @@ function LabSchedule() {
                             className="lab-td"
                             key={sch._id}
                             onClick={() =>
+                              role === "Faculty" &&
                               handleClickOpen(
                                 selectedRoom,
                                 sch.day,
@@ -330,6 +333,7 @@ function LabSchedule() {
                                 className="lab-td"
                                 key={sch._id}
                                 onClick={() =>
+                                  role === "Faculty" &&
                                   handleClickOpen(
                                     selectedRoom,
                                     sch.day,
@@ -384,6 +388,7 @@ function LabSchedule() {
                                 className="lab-td"
                                 key={sch._id}
                                 onClick={() =>
+                                  role === "Faculty" &&
                                   handleClickOpen(
                                     selectedRoom,
                                     sch.day,
@@ -431,6 +436,7 @@ function LabSchedule() {
                               className="lab-td"
                               key={sch._id}
                               onClick={() =>
+                                role === "Faculty" &&
                                 handleClickOpen(
                                   selectedRoom,
                                   sch.day,
@@ -538,6 +544,7 @@ function LabSchedule() {
                                 className="lab-td"
                                 key={sch._id}
                                 onClick={() =>
+                                  role === "Faculty" &&
                                   handleClickOpen(
                                     selectedRoom,
                                     sch.day,
@@ -564,6 +571,7 @@ function LabSchedule() {
                             className="lab-td"
                             key={sch._id}
                             onClick={() =>
+                              role === "Faculty" &&
                               handleClickOpen(
                                 selectedRoom,
                                 sch.day,

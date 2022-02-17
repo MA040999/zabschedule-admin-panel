@@ -88,7 +88,9 @@ function App() {
       {notificationMsg && <Notification />}
       <Navbar />
       <div className="body-container">
-        <Modal faculty={faculty} courses={courses} classes={classes} />
+        {user ? (
+          <Modal faculty={faculty} courses={courses} classes={classes} />
+        ) : null}
         <Routes>
           <Route element={<RequireAuth user={user} />}>
             <Route
@@ -112,7 +114,9 @@ function App() {
             <Route path="/Requests" element={<Request />} />
           </Route>
           <Route path="/login" element={<Login user={user} />} />
-          <Route path="/Lab" element={<LabSchedule />} />
+          <Route element={<RequireAuth user={user} />}>
+            <Route path="/Lab" element={<LabSchedule />} />
+          </Route>
           <Route
             path="/reset-password/:id/:token"
             element={<ResetPassword />}

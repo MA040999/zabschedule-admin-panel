@@ -19,15 +19,36 @@ function Modal({ faculty, courses, classes }) {
 
   const modalState = useSelector((state) => state.schedule.isModalOpen);
   const modalData = useSelector((state) => state.schedule.modalData);
+  const user = useSelector((state) => state.auth.user);
 
-  const [relevantCoursesRow1, setRelevantCoursesRow1] = useState(courses);
-  const [relevantCoursesRow2, setRelevantCoursesRow2] = useState(courses);
+  const [relevantCoursesRow1, setRelevantCoursesRow1] = useState(
+    user.role === "Faculty"
+      ? courses.filter((course) =>
+          user.taught_courses.includes(course.course_code)
+        )
+      : courses
+  );
+  const [relevantCoursesRow2, setRelevantCoursesRow2] = useState(
+    user.role === "Faculty"
+      ? courses.filter((course) =>
+          user.taught_courses.includes(course.course_code)
+        )
+      : courses
+  );
 
   const [relevantClassesRow1, setRelevantClassesRow1] = useState(classes);
   const [relevantClassesRow2, setRelevantClassesRow2] = useState(classes);
 
-  const [relevantFacultyRow1, setRelevantFacultyRow1] = useState(faculty);
-  const [relevantFacultyRow2, setRelevantFacultyRow2] = useState(faculty);
+  const [relevantFacultyRow1, setRelevantFacultyRow1] = useState(
+    user.role === "Faculty"
+      ? faculty.filter((fac) => fac._id === user.id)
+      : faculty
+  );
+  const [relevantFacultyRow2, setRelevantFacultyRow2] = useState(
+    user.role === "Faculty"
+      ? faculty.filter((fac) => fac._id === user.id)
+      : faculty
+  );
 
   const [selectedData, setSelectedData] = useState({
     Time: [],
@@ -37,7 +58,7 @@ function Modal({ faculty, courses, classes }) {
     room: modalData?.room,
     slot: modalData?.slot?.slot,
     subject: [],
-    teacher: [],
+    teacher: user.role === "Faculty" ? [user.faculty_id] : [],
     _id: modalData?.id,
   });
 
@@ -46,6 +67,10 @@ function Modal({ faculty, courses, classes }) {
     setRows(2);
     setSelectedData({
       ...selectedData,
+      teacher:
+        user.role === "Faculty"
+          ? [user.faculty_id, user.faculty_id]
+          : selectedData.teacher,
       class: [selectedData.class[0]],
       Time:
         selectedData.day === "Friday"
@@ -102,13 +127,24 @@ function Modal({ faculty, courses, classes }) {
         subject: selectedData.subject[1]
           ? [undefined, selectedData.subject[1]]
           : [],
-        teacher: selectedData.teacher[1]
-          ? [undefined, selectedData.teacher[1]]
-          : [],
+        teacher:
+          user.role === "Faculty"
+            ? selectedData.teacher
+            : selectedData.teacher[1]
+            ? [undefined, selectedData.teacher[1]]
+            : [],
       });
-      setRelevantCoursesRow1(courses);
+      setRelevantCoursesRow1(
+        user.role === "Faculty"
+          ? courses.filter((course) =>
+              user.taught_courses.includes(course.course_code)
+            )
+          : courses
+      );
       setRelevantClassesRow1(classes);
-      setRelevantFacultyRow1(faculty);
+      setRelevantFacultyRow1(
+        user.role === "Faculty" ? relevantFacultyRow1 : faculty
+      );
       // document.getElementById(`from${i}`).value = "";
       // document.getElementById(`to${i}`).value = "";
     } else {
@@ -137,11 +173,22 @@ function Modal({ faculty, courses, classes }) {
               : selectedData.Time,
           class: selectedData.class.filter((_, index) => index !== i),
           subject: selectedData.subject.filter((_, index) => index !== i),
-          teacher: selectedData.teacher.filter((_, index) => index !== i),
+          teacher:
+            user.role === "Faculty"
+              ? selectedData.teacher
+              : selectedData.teacher.filter((_, index) => index !== i),
         });
-        setRelevantCoursesRow2(courses);
+        setRelevantCoursesRow2(
+          user.role === "Faculty"
+            ? courses.filter((course) =>
+                user.taught_courses.includes(course.course_code)
+              )
+            : courses
+        );
         setRelevantClassesRow2(classes);
-        setRelevantFacultyRow2(faculty);
+        setRelevantFacultyRow2(
+          user.role === "Faculty" ? relevantFacultyRow2 : faculty
+        );
         // document.getElementById(`from${i}`).value = "";
         // document.getElementById(`to${i}`).value = "";
       }
@@ -602,18 +649,39 @@ function Modal({ faculty, courses, classes }) {
       room: modalData?.room,
       slot: modalData?.slot?.slot,
       subject: modalData?.subject || [],
-      teacher: modalData?.teacher || [],
+      teacher:
+        user.role === "Faculty" ? [user.faculty_id] : modalData?.teacher || [],
       _id: modalData?.id,
     });
 
-    setRelevantCoursesRow1(courses);
-    setRelevantCoursesRow2(courses);
+    setRelevantCoursesRow1(
+      user.role === "Faculty"
+        ? courses.filter((course) =>
+            user.taught_courses.includes(course.course_code)
+          )
+        : courses
+    );
+    setRelevantCoursesRow2(
+      user.role === "Faculty"
+        ? courses.filter((course) =>
+            user.taught_courses.includes(course.course_code)
+          )
+        : courses
+    );
 
     setRelevantClassesRow1(classes);
     setRelevantClassesRow2(classes);
 
-    setRelevantFacultyRow1(faculty);
-    setRelevantFacultyRow2(faculty);
+    setRelevantFacultyRow1(
+      user.role === "Faculty"
+        ? faculty.filter((fac) => fac.userId === user.userId)
+        : faculty
+    );
+    setRelevantFacultyRow2(
+      user.role === "Faculty"
+        ? faculty.filter((fac) => fac.userId === user.userId)
+        : faculty
+    );
     // eslint-disable-next-line
   }, [modalState, modalData]);
 
@@ -673,7 +741,10 @@ function Modal({ faculty, courses, classes }) {
                 value={
                   index === 0
                     ? relevantFacultyRow1.map((teacher) => {
-                        if (teacher._id === selectedData.teacher[index])
+                        if (
+                          teacher._id === selectedData.teacher[index] ||
+                          teacher.userId === user.userId
+                        )
                           return {
                             value: teacher._id,
                             label: teacher.faculty_name,
@@ -683,7 +754,10 @@ function Modal({ faculty, courses, classes }) {
                         return null;
                       })
                     : relevantFacultyRow2.map((teacher) => {
-                        if (teacher._id === selectedData.teacher[index])
+                        if (
+                          teacher._id === selectedData.teacher[index] ||
+                          teacher.userId === user.userId
+                        )
                           return {
                             value: teacher._id,
                             label: teacher.faculty_name,
@@ -698,7 +772,9 @@ function Modal({ faculty, courses, classes }) {
                   selectedData.teacher[index] !== undefined
                 }
                 isDisabled={
-                  modalData?.subject?.length > 0
+                  user.role === "Faculty"
+                    ? true
+                    : modalData?.subject?.length > 0
                     ? modalData?.subject[index] === undefined
                       ? false
                       : true

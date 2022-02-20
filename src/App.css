@@ -11,8 +11,10 @@
   --color2: #ffffff;
   --color3: #363636;
   --color4: #3db166;
-  --color5: #ff3c3c;
-
+  --color5: #c35f5f;
+  --color6: #5c5c5c;
+  --color7: #dcdcdc;
+  --pending-color: #eebc3d;
   --shadow: 0px 0px 15px 2px rgba(0, 0, 0, 0.4);
   --radius: 20px;
 
@@ -847,6 +849,108 @@ pre {
   border-radius: var(--radius);
 }
 /* END OF LAB SCHEDULE STYLING */
+
+/* START OF REQUESTS PAGE STYLING */
+
+.request-table::-webkit-scrollbar {
+  width: 16px;
+}
+
+.request-table::-webkit-scrollbar-thumb {
+  background-clip: padding-box;
+  border: 5px solid var(--color3);
+  background-color: var(--color7);
+  border-radius: var(--radius);
+}
+.request-table::-webkit-scrollbar-track {
+  margin: 15px;
+}
+
+.request-table {
+  width: calc(100vw - 3rem);
+  min-width: 1180px;
+  min-height: 90vh;
+  max-height: 90vh;
+  background-color: var(--color3);
+  color: var(--color7);
+  font-family: Poppins, sans-serif;
+  border-collapse: separate;
+  margin: 0 1.5em;
+  border-radius: 22px;
+  padding: 0 1em;
+  overflow-y: auto;
+}
+.request-table-header {
+  height: 4em;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  position: relative;
+}
+.request-table-header > th {
+  min-width: 10%;
+}
+.request-table-header::after {
+  content: "";
+  position: absolute;
+  width: 95%;
+  bottom: 0;
+  left: 0;
+  margin-left: 2.5%;
+  height: 7px;
+  background-color: var(--color2);
+  border-radius: 50px;
+}
+.request-table-row {
+  background-color: var(--color6);
+  margin: 2em 0;
+  min-width: 100%;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 300px;
+  transition: all 200ms ease;
+}
+.request-table-row:hover {
+  background-color: var(--color7);
+  color: var(--color3);
+}
+.request-table-row > th {
+  min-width: 10%;
+}
+.request-table-row-subject {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+.status-indicator-container {
+  display: flex;
+  justify-content: center;
+}
+.status-container {
+  display: flex;
+  align-items: center;
+  padding: 0.5em 0;
+  justify-content: center;
+  width: 80%;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.Pending {
+  background-color: var(--pending-color);
+  color: var(--color3);
+}
+.Approved {
+  background-color: var(--color4);
+  color: var(--color2);
+}
+.Rejected {
+  background-color: var(--color5);
+  color: var(--color2);
+}
+/* END OF REQUESTS PAGE STYLING */
 
 @media screen and (max-width: 550px) {
   .login-input-container {

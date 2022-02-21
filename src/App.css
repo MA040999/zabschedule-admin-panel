@@ -887,6 +887,7 @@ pre {
   align-items: center;
   justify-content: space-around;
   position: relative;
+  padding: 0 0.5em;
 }
 .request-table-header > span {
   min-width: 10.444%;
@@ -914,7 +915,7 @@ pre {
   justify-content: space-around;
   align-items: center;
   height: 300px;
-  transition: all 200ms ease;
+  padding: 0 0.5em;
 }
 .request-table-row:hover {
   background-color: var(--color7);

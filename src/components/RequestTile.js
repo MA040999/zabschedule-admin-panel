@@ -1,41 +1,47 @@
-import React from "react";
+import moment from "moment";
+import React, { useState } from "react";
 import StatusIndicator from "./StatusIndicator";
 
-function RequestTile({ status }) {
+function RequestTile({ request }) {
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
   return (
     <div className="request-table-row">
-      <th>Asim Riaz</th>
-      <th>
+      <span>{request.teacher[0].faculty_name}</span>
+      <span>
         <div className="request-table-row-subject">
-          <span>
-            Parallel and Distributed Computing Parallel and Distributed
-          </span>
-          <span>
-            Parallel and Distributed Computing Parallel and Distributed
-          </span>
+          {request.subject.map((sub, i) => (
+            <span key={`${sub._id}${i}${request._id}`}>{sub.course_name}</span>
+          ))}
         </div>
-      </th>
-      <th>
+      </span>
+      <span>
         <div className="request-table-row-subject">
-          <span>BCS/BS 7 D</span>
-          <span>BCS/BS 7 E</span>
-          <span>BCS/BS 7 F</span>
+          {request.class.map((cls, i) => (
+            <span
+              key={`${cls._id}${i}${request._id}`}
+            >{`${cls.program} ${cls.semester} ${cls.section}`}</span>
+          ))}
         </div>
-      </th>
-      <th>
+      </span>
+      <span>
         <div className="request-table-row-subject">
-          <span>11:00AM - 12:15PM</span>
-          <span>12:15PM - 1:30PM</span>
+          {request.Time.map((time, i) => (
+            <span key={`${time}${i}${request._id}`}>{time}</span>
+          ))}
         </div>
-      </th>
-      <th>100 CAMPUS</th>
-      <th>Wednesday</th>
-      <th>C-Lab 3(R-207)</th>
-      <th>2</th>
-      <th>30 minutes ago</th>
-      <th className="status-indicator-container">
-        <StatusIndicator status={status} />
-      </th>
+      </span>
+      <span>{request.campus} </span>
+      <span>{request.day}</span>
+      <span>{request.room}</span>
+      <span className="slot-span">{request.slot}</span>
+      <span>{moment(request.created_at).fromNow()}</span>
+      <span className="status-indicator-container">
+        <StatusIndicator
+          status={request.status}
+          setIsSelectOpen={setIsSelectOpen}
+          isSelectOpen={isSelectOpen}
+        />
+      </span>
     </div>
   );
 }

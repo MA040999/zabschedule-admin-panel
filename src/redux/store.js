@@ -3,6 +3,7 @@ import thunk from "redux-thunk";
 import authReducer from "./auth/authReducer";
 import { composeWithDevTools } from "redux-devtools-extension";
 import scheduleReducer from "./schedule/scheduleReducer";
+import requestReducer from "./request/requestReducer";
 
 const middleware = [thunk];
 if (process.env.NODE_ENV !== "production") {
@@ -14,6 +15,7 @@ if (process.env.NODE_ENV !== "production") {
 const reducer = combineReducers({
   auth: authReducer,
   schedule: scheduleReducer,
+  request: requestReducer,
 });
 
 const store = createStore(

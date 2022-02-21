@@ -888,8 +888,11 @@ pre {
   justify-content: space-around;
   position: relative;
 }
-.request-table-header > th {
-  min-width: 10%;
+.request-table-header > span {
+  min-width: 10.444%;
+  text-align: center;
+  font-weight: bolder;
+  text-transform: uppercase;
 }
 .request-table-header::after {
   content: "";
@@ -899,7 +902,7 @@ pre {
   left: 0;
   margin-left: 2.5%;
   height: 7px;
-  background-color: var(--color2);
+  background-color: var(--color7);
   border-radius: 50px;
 }
 .request-table-row {
@@ -917,9 +920,12 @@ pre {
   background-color: var(--color7);
   color: var(--color3);
 }
-.request-table-row > th {
-  min-width: 10%;
+.request-table-row > span {
+  min-width: 10.444%;
+  text-align: center;
+  font-weight: 700;
 }
+
 .request-table-row-subject {
   display: flex;
   flex-direction: column;
@@ -928,6 +934,7 @@ pre {
 .status-indicator-container {
   display: flex;
   justify-content: center;
+  position: relative;
 }
 .status-container {
   display: flex;
@@ -937,6 +944,22 @@ pre {
   width: 80%;
   border-radius: 10px;
   cursor: pointer;
+}
+.select-status-container {
+  display: flex;
+  position: absolute;
+  content: "";
+  flex-direction: column;
+  background-color: var(--color3);
+  justify-content: center;
+  align-items: center;
+  gap: 2em;
+
+  padding: 1.5em 0;
+  margin-top: 3em;
+  margin-right: 1.5em;
+  width: 100%;
+  border-radius: 10px;
 }
 .Pending {
   background-color: var(--pending-color);
@@ -949,6 +972,28 @@ pre {
 .Rejected {
   background-color: var(--color5);
   color: var(--color2);
+}
+.no-requests-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  justify-self: center;
+  height: 100%;
+  margin: 20% 0;
+  padding: 2em 0;
+  background-color: var(--color6);
+  border-radius: 10px;
+  color: var(--color7);
+  font-size: 1.5em;
+  font-weight: bolder;
+  font-family: Poppins, sans-serif;
+}
+.request-table-header > .slot-heading-span {
+  min-width: 6%;
+}
+.request-table-row > .slot-span {
+  min-width: 6%;
 }
 /* END OF REQUESTS PAGE STYLING */
 

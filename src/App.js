@@ -11,10 +11,7 @@ import Navbar from "./components/Navbar";
 import Request from "./pages/Requests";
 import ResetPassword from "./pages/ResetPassword";
 import LabSchedule from "./pages/LabSchedule";
-import {
-  fetchCombinedSchedule,
-  fetchSlots,
-} from "./redux/schedule/scheduleAction";
+import { fetchSlots } from "./redux/schedule/scheduleAction";
 import Modal from "./components/Modal";
 import app from "./axiosConfig";
 
@@ -54,7 +51,7 @@ function App() {
     // eslint-disable-next-line
   }, []);
   useEffect(() => {
-    dispatch(fetchCombinedSchedule());
+    // dispatch(fetchCombinedSchedule());
     dispatch(fetchSlots());
     // eslint-disable-next-line
   }, []);

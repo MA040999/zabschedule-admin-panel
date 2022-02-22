@@ -4,7 +4,11 @@ import { useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import LabSelector from "../components/LabSelector";
 import { useDispatch } from "react-redux";
-import { toggleModal } from "../redux/schedule/scheduleAction";
+import {
+  fetchCombinedSchedule,
+  removeTimeTableData,
+  toggleModal,
+} from "../redux/schedule/scheduleAction";
 import { useEffect } from "react";
 
 function LabSchedule() {
@@ -64,6 +68,17 @@ function LabSchedule() {
     if (modalState) {
       dispatch(toggleModal());
     }
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    dispatch(removeTimeTableData());
+    dispatch(fetchCombinedSchedule());
+
+    return () => {
+      dispatch(removeTimeTableData());
+    };
+
     // eslint-disable-next-line
   }, []);
 

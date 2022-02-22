@@ -37,6 +37,7 @@ function RequestTile({ request }) {
       <span>{moment(request.created_at).fromNow()}</span>
       <span className="status-indicator-container">
         <StatusIndicator
+          id={request._id}
           status={request.status}
           setIsSelectOpen={setIsSelectOpen}
           isSelectOpen={isSelectOpen}

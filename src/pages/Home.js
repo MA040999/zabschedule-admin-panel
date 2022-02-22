@@ -4,7 +4,11 @@ import CombinedSchedule from "../components/CombinedSchedule";
 
 import { FILTERED_SCHEDULE } from "../redux/schedule/scheduleTypes";
 import Filters from "../components/Filters";
-import { toggleModal } from "../redux/schedule/scheduleAction";
+import {
+  fetchCombinedSchedule,
+  removeTimeTableData,
+  toggleModal,
+} from "../redux/schedule/scheduleAction";
 
 function Home({
   setRelevantClasses,
@@ -20,7 +24,6 @@ function Home({
   const dispatch = useDispatch();
 
   const modalState = useSelector((state) => state.schedule.isModalOpen);
-
   const [selectedData, setSelectedData] = useState({
     faculty: "",
     course: "",
@@ -129,6 +132,17 @@ function Home({
     if (modalState) {
       dispatch(toggleModal());
     }
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    dispatch(removeTimeTableData());
+    dispatch(fetchCombinedSchedule());
+
+    return () => {
+      dispatch(removeTimeTableData());
+    };
+
     // eslint-disable-next-line
   }, []);
 

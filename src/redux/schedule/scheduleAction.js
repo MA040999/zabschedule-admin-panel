@@ -7,6 +7,7 @@ import {
   FETCH_SLOTS,
   REMOVE_MODAL_DATA,
   REMOVE_MODAL_DATA_TIME,
+  REMOVE_TIME_TABLE_DATA,
   SET_LAB_SCHEDULE,
   TOGGLE_CONFIRMATION_MODAL,
   TOGGLE_MODAL,
@@ -17,6 +18,7 @@ export const fetchCombinedSchedule = () => {
   return async (dispatch) => {
     try {
       const combinedSchedule = await app.get("/time-table/");
+      console.log("combinedSchedule", combinedSchedule);
       dispatch({
         type: FETCH_COMBINED_SCHEDULE,
         payload: combinedSchedule?.data,
@@ -31,6 +33,12 @@ export const fetchCombinedSchedule = () => {
 export const setLabSchedule = () => {
   return {
     type: SET_LAB_SCHEDULE,
+  };
+};
+
+export const removeTimeTableData = () => {
+  return {
+    type: REMOVE_TIME_TABLE_DATA,
   };
 };
 

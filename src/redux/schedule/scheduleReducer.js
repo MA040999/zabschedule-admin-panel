@@ -6,6 +6,7 @@ import {
   FILTERED_SCHEDULE,
   REMOVE_MODAL_DATA,
   REMOVE_MODAL_DATA_TIME,
+  REMOVE_TIME_TABLE_DATA,
   SET_LAB_SCHEDULE,
   TOGGLE_CONFIRMATION_MODAL,
   TOGGLE_MODAL,
@@ -29,6 +30,12 @@ const scheduleReducer = (state = intitalState, action) => {
         ...state,
         schedule: action.payload,
       };
+    case REMOVE_TIME_TABLE_DATA:
+      return {
+        ...state,
+        schedule: [],
+        labSchedule: [],
+      };
     case SET_LAB_SCHEDULE:
       const days = [
         "Monday",
@@ -43,9 +50,7 @@ const scheduleReducer = (state = intitalState, action) => {
         ...state,
         labSchedule: state.schedule
           .filter(
-            (sch) =>
-              sch.campus === "100 CAMPUS" &&
-              (sch.room.includes("Lab") || sch.room.includes("Media M-32"))
+            (sch) => sch.campus === "100 CAMPUS" && sch.room.includes("Lab")
           )
           .sort((a, b) => {
             let c = days.indexOf(a.day);

@@ -1,10 +1,26 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
-function StatusIndicator({ status, isSelectOpen, setIsSelectOpen }) {
+import Loader from "./Loader";
+import { useDispatch } from "react-redux";
+import { approveRequest, rejectRequest } from "../redux/request/requestActions";
+function StatusIndicator({ id, status, isSelectOpen, setIsSelectOpen }) {
   let buttonRef = useRef();
   let menuRef = useRef();
 
+  const dispatch = useDispatch();
+
+  const [isLoading, setIsLoading] = useState(false);
   const user = useSelector((state) => state.auth.user);
+
+  const handleApproveBtnClick = () => {
+    setIsLoading(true);
+    dispatch(approveRequest(id, setIsLoading, setIsSelectOpen));
+  };
+
+  const handleRejectBtnClick = () => {
+    setIsLoading(true);
+    dispatch(rejectRequest(id, setIsLoading, setIsSelectOpen));
+  };
 
   useEffect(() => {
     let handler = (e) => {
@@ -30,10 +46,31 @@ function StatusIndicator({ status, isSelectOpen, setIsSelectOpen }) {
       >
         <span>{status}</span>
       </div>
-      {isSelectOpen && user.role === "Admin" && (
-        <div ref={menuRef} className="select-status-container">
-          <span className="status-container Approved">Approve</span>
-          <span className="status-container Rejected">Reject</span>
+      {user.role === "Admin" && (
+        <div
+          ref={menuRef}
+          className={`select-status-container ${
+            isSelectOpen && "select-status-container-open"
+          }`}
+        >
+          {!isLoading ? (
+            <>
+              <span
+                onClick={handleApproveBtnClick}
+                className="status-container Approved"
+              >
+                Approve
+              </span>
+              <span
+                onClick={handleRejectBtnClick}
+                className="status-container Rejected"
+              >
+                Reject
+              </span>
+            </>
+          ) : (
+            <Loader smallLoader={true} />
+          )}
         </div>
       )}
     </>

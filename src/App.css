@@ -638,10 +638,10 @@ input[type="time"]:disabled::after {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100%;
   position: absolute;
   z-index: 9997;
-  width: 100vw;
+  width: 100%;
   background-color: var(--loader-bg);
   backdrop-filter: blur(3px);
 }
@@ -665,6 +665,15 @@ input[type="time"]:disabled::after {
   border: var(--loader-border-width) solid transparent;
   border-bottom-color: var(--color1);
   animation: spinBottom 1s linear infinite;
+}
+.small-loader-container {
+  background-color: transparent;
+  backdrop-filter: none;
+}
+.small-loader-container .loader-top,
+.small-loader-container .loader-bottom {
+  border-top-color: var(--color7);
+  border-bottom-color: var(--color7);
 }
 /* End of Loader styling */
 
@@ -916,10 +925,10 @@ pre {
   align-items: center;
   height: 300px;
   padding: 0 0.5em;
+  transition: background-color 200ms ease;
 }
 .request-table-row:hover {
-  background-color: var(--color7);
-  color: var(--color3);
+  background-color: #6e6e6e;
 }
 .request-table-row > span {
   min-width: 10.444%;
@@ -945,6 +954,11 @@ pre {
   width: 80%;
   border-radius: 10px;
   cursor: pointer;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.select-status-container .status-container:hover {
+  transform: scale(1.08, 1.08);
+  box-shadow: var(--shadow);
 }
 .select-status-container {
   display: flex;
@@ -955,12 +969,19 @@ pre {
   justify-content: center;
   align-items: center;
   gap: 2em;
-
+  min-height: 10em;
   padding: 1.5em 0;
   margin-top: 3em;
   margin-right: 1.5em;
   width: 100%;
   border-radius: 10px;
+  transform: scale(0, 0);
+  transform-origin: top;
+  transition: transform 150ms ease;
+  box-shadow: var(--shadow);
+}
+.select-status-container-open {
+  transform: scale(1, 1);
 }
 .Pending {
   background-color: var(--pending-color);

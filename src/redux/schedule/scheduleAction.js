@@ -18,14 +18,13 @@ export const fetchCombinedSchedule = () => {
   return async (dispatch) => {
     try {
       const combinedSchedule = await app.get("/time-table/");
-      console.log("combinedSchedule", combinedSchedule);
       dispatch({
         type: FETCH_COMBINED_SCHEDULE,
         payload: combinedSchedule?.data,
       });
       dispatch(setLabSchedule());
     } catch (error) {
-      console.log(`error`, error);
+      dispatch(addNotificationMsg(error?.response?.data?.message, "error"));
     }
   };
 };
@@ -51,7 +50,7 @@ export const fetchSlots = () => {
         payload: slots?.data,
       });
     } catch (error) {
-      console.log(`error`, error);
+      dispatch(addNotificationMsg(error?.response?.data?.message, "error"));
     }
   };
 };
@@ -77,10 +76,35 @@ export const addClass = (data) => {
         dispatch(addNotificationMsg("Class added successfully"));
       }
     } catch (error) {
-      console.log(`error`, error);
+      dispatch(addNotificationMsg(error?.response?.data?.message, "error"));
     }
   };
 };
+
+export const addMakeUpClass = (data) => {
+  return async (dispatch) => {
+    try {
+      const newClass = await app.post("/time-table/add-makeup-class", data);
+
+      if (data._id) {
+        dispatch({
+          type: UPDATE_CLASS,
+          payload: newClass?.data,
+        });
+      } else {
+        dispatch({
+          type: ADD_CLASS,
+          payload: newClass?.data,
+        });
+      }
+      dispatch(toggleModal());
+      dispatch(addNotificationMsg("Makeup class added successfully"));
+    } catch (error) {
+      dispatch(addNotificationMsg(error?.response?.data?.message, "error"));
+    }
+  };
+};
+
 export const requestForClass = (data) => {
   return async (dispatch) => {
     try {
@@ -88,7 +112,7 @@ export const requestForClass = (data) => {
       dispatch(toggleModal());
       dispatch(addNotificationMsg(requestData.data.message));
     } catch (error) {
-      console.log(`error`, error);
+      dispatch(addNotificationMsg(error?.response?.data?.message, "error"));
     }
   };
 };
@@ -105,7 +129,7 @@ export const deleteClass = (id) => {
       dispatch(toggleConfirmationModal());
       dispatch(addNotificationMsg("Class deleted successfully"));
     } catch (error) {
-      console.log(`error`, error);
+      dispatch(addNotificationMsg(error?.response?.data?.message, "error"));
     }
   };
 };

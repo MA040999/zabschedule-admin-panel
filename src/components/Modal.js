@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ordinal_suffix_of } from "../common/common";
 import { addNotificationMsg } from "../redux/auth/authActions";
 import {
-  addClass,
+  addMakeUpClass,
   removeModalData,
   removeModalDataTime,
   requestForClass,
@@ -637,7 +637,8 @@ function Modal({ faculty, courses, classes }) {
       dispatch(requestForClass(selectedData));
       return;
     }
-    dispatch(addClass(selectedData));
+    // dispatch(addClass(selectedData));
+    dispatch(addMakeUpClass(selectedData));
   };
   useEffect(() => {
     setRows(modalData?.time?.length || 1);

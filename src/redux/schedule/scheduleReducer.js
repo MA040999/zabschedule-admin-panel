@@ -121,7 +121,7 @@ const scheduleReducer = (state = intitalState, action) => {
     case FETCH_SLOTS:
       return {
         ...state,
-        slots: action.payload,
+        slots: action.payload.sort((a, b) => a.slot - b.slot),
       };
     case ADD_CLASS:
       return {

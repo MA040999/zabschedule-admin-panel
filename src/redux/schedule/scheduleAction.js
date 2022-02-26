@@ -3,6 +3,7 @@ import { addNotificationMsg } from "../auth/authActions";
 import {
   ADD_CLASS,
   DELETE_CLASS,
+  CANCEL_CLASS,
   FETCH_COMBINED_SCHEDULE,
   FETCH_SLOTS,
   REMOVE_MODAL_DATA,
@@ -134,6 +135,23 @@ export const deleteClass = (id) => {
   };
 };
 
+export const cancelClass = (id, index) => {
+  return async (dispatch) => {
+    try {
+      await app.patch(`/time-table/cancel-class/${id}/${index}`);
+      dispatch({
+        type: CANCEL_CLASS,
+        payload: { id, index },
+      });
+      dispatch(toggleModal());
+      dispatch(toggleConfirmationModal());
+      dispatch(addNotificationMsg("Class cancelled successfully"));
+    } catch (error) {
+      dispatch(addNotificationMsg(error?.response?.data?.message, "error"));
+    }
+  };
+};
+
 export const toggleModal = (
   room,
   selectedDay,
@@ -165,9 +183,10 @@ export const toggleModal = (
   };
 };
 
-export const toggleConfirmationModal = () => {
+export const toggleConfirmationModal = (index) => {
   return {
     type: TOGGLE_CONFIRMATION_MODAL,
+    payload: index,
   };
 };
 

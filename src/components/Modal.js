@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FiTrash, FiX, FiCheck, FiPlus } from "react-icons/fi";
+import { BsFillCalendar2XFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { ordinal_suffix_of } from "../common/common";
 import { addNotificationMsg } from "../redux/auth/authActions";
@@ -101,8 +102,8 @@ function Modal({ faculty, courses, classes }) {
     });
   };
 
-  const handleUnscheduleBtnClick = () => {
-    dispatch(toggleConfirmationModal());
+  const handleUnscheduleBtnClick = (index) => {
+    dispatch(toggleConfirmationModal(index));
   };
 
   const handleTrashClick = (i) => {
@@ -385,43 +386,6 @@ function Modal({ faculty, courses, classes }) {
             : courses.filter((course) => e.courses.includes(course.course_code))
         );
       }
-      // else if (e.name === "from") {
-      //   setSelectedData({
-      //     ...selectedData,
-      //     Time: selectedData.Time[index - 1]
-      //       ? [
-      //           selectedData.Time[index - 1],
-      //           `${tConvert(e.value)} - ${selectedData.Time[index]
-      //             ?.split("-")[1]
-      //             .trim()}`,
-      //         ]
-      //       : [
-      //           undefined,
-      //           `${tConvert(e.value)} - ${selectedData.Time[index]
-      //             ?.split("-")[1]
-      //             .trim()}`,
-      //         ],
-      //   });
-      //   return;
-      // } else if (e.name === "to") {
-      //   setSelectedData({
-      //     ...selectedData,
-      //     Time: selectedData.Time[index - 1]
-      //       ? [
-      //           selectedData.Time[index - 1],
-      //           `${tConvert(e.value)} - ${selectedData.Time[index]
-      //             ?.split("-")[1]
-      //             .trim()}`,
-      //         ]
-      //       : [
-      //           undefined,
-      //           `${tConvert(e.value)} - ${selectedData.Time[index]
-      //             ?.split("-")[1]
-      //             .trim()}`,
-      //         ],
-      //   });
-      //   return;
-      // }
 
       setSelectedData({
         ...selectedData,
@@ -430,170 +394,19 @@ function Modal({ faculty, courses, classes }) {
     }
   };
 
-  // const handleTimeChange = (e, index) => {
-  //   const time = e.target.value.split(":");
-  //   if (Number(time[0]) < 8) {
-  //     setSelectedData({
-  //       ...selectedData,
-  //       Time:
-  //         index === 0
-  //           ? e.target.name === "to"
-  //             ? [
-  //                 `${selectedData.Time[index]
-  //                   ?.split("-")[0]
-  //                   .trim()} - undefined`,
-  //                 selectedData.Time[1],
-  //               ]
-  //             : [
-  //                 `undefined - ${selectedData.Time[index]
-  //                   ?.split("-")[1]
-  //                   .trim()}`,
-  //                 selectedData.Time[1],
-  //               ]
-  //           : [
-  //               selectedData.Time[0],
-  //               `${
-  //                 e.target.name === "to"
-  //                   ? `${selectedData.Time[index]
-  //                       ?.split("-")[0]
-  //                       .trim()} - undefined`
-  //                   : `undefined - ${selectedData.Time[index]
-  //                       ?.split("-")[1]
-  //                       .trim()}`
-  //               }`,
-  //             ],
-  //     });
-  //     document.getElementById(`${e.target.name}${index}`).value = "";
-  //     return dispatch(
-  //       addNotificationMsg("Time should be after 8:00 AM", "error")
-  //     );
-  //   }
-  //   if (Number(time[0]) >= 22) {
-  //     if (Number(time[0]) === 22 && Number(time[1]) === 0) {
-  //       //do nothing and continue
-  //     } else {
-  //       setSelectedData({
-  //         ...selectedData,
-  //         Time:
-  //           index === 0
-  //             ? e.target.name === "to"
-  //               ? [
-  //                   `${selectedData.Time[index]
-  //                     ?.split("-")[0]
-  //                     .trim()} - undefined`,
-  //                   selectedData.Time[1],
-  //                 ]
-  //               : [
-  //                   `undefined - ${selectedData.Time[index]
-  //                     ?.split("-")[1]
-  //                     .trim()}`,
-  //                   selectedData.Time[1],
-  //                 ]
-  //             : [
-  //                 selectedData.Time[0],
-  //                 `${
-  //                   e.target.name === "to"
-  //                     ? `${selectedData.Time[index]
-  //                         ?.split("-")[0]
-  //                         .trim()} - undefined`
-  //                     : `undefined - ${selectedData.Time[index]
-  //                         ?.split("-")[1]
-  //                         .trim()}`
-  //                 }`,
-  //               ],
-  //       });
-  //       document.getElementById(`${e.target.name}${index}`).value = "";
-  //       return dispatch(
-  //         addNotificationMsg("Time should be before 10:00 PM", "error")
-  //       );
-  //     }
-  //   }
-  //   if (index === 0) {
-  //     if (e.target.name === "to") {
-  //       setSelectedData({
-  //         ...selectedData,
-  //         Time: selectedData.Time[index + 1]
-  //           ? [
-  //               `${selectedData.Time[index].split("-")[0].trim()} - ${tConvert(
-  //                 e.target.value
-  //               )}`,
-  //               selectedData.Time[index + 1],
-  //             ]
-  //           : [
-  //               `${selectedData.Time[index]?.split("-")[0].trim()} - ${tConvert(
-  //                 e.target.value
-  //               )}`,
-  //             ],
-  //       });
-  //     } else {
-  //       setSelectedData({
-  //         ...selectedData,
-  //         Time: selectedData.Time[index + 1]
-  //           ? [
-  //               `${tConvert(e.target.value)} - ${selectedData.Time[index]
-  //                 ?.split("-")[1]
-  //                 .trim()}`,
-  //               selectedData.Time[index + 1],
-  //             ]
-  //           : [
-  //               `${tConvert(e.target.value)} - ${selectedData.Time[index]
-  //                 ?.split("-")[1]
-  //                 .trim()}`,
-  //             ],
-  //       });
-  //     }
-  //   } else {
-  //     if (e.target.name === "to") {
-  //       setSelectedData({
-  //         ...selectedData,
-  //         Time: selectedData.Time[index - 1]
-  //           ? [
-  //               selectedData.Time[index - 1],
-  //               `${selectedData.Time[index].split("-")[0].trim()} - ${tConvert(
-  //                 e.target.value
-  //               )}`,
-  //             ]
-  //           : [
-  //               undefined,
-  //               `${selectedData.Time[index].split("-")[0].trim()} - ${tConvert(
-  //                 e.target.value
-  //               )}`,
-  //             ],
-  //       });
-  //     } else {
-  //       setSelectedData({
-  //         ...selectedData,
-  //         Time: selectedData.Time[index - 1]
-  //           ? [
-  //               selectedData.Time[index - 1],
-  //               `${tConvert(e.target.value)} - ${selectedData.Time[index]
-  //                 ?.split("-")[1]
-  //                 .trim()}`,
-  //             ]
-  //           : [
-  //               undefined,
-  //               `${tConvert(e.target.value)} - ${selectedData.Time[index]
-  //                 ?.split("-")[1]
-  //                 .trim()}`,
-  //             ],
-  //       });
-  //     }
-  //   }
-  // };
-
   const handleSubmit = () => {
-    // if (
-    //   modalData?.time.length !== 0 &&
-    //   modalData?.time.join(",") === selectedData.Time.join(",")
-    // ) {
-    //   if (
-    //     modalData?.subject.length > 1 &&
-    //     modalData?.subject[1] === undefined
-    //   ) {
-    //   } else {
-    //     return dispatch(addNotificationMsg("No changes detected", "error"));
-    //   }
-    // }
+    if (
+      modalData?.time.length !== 0 &&
+      modalData?.time.join(",") === selectedData.Time.join(",")
+    ) {
+      if (
+        modalData?.subject.length > 1 &&
+        modalData?.subject[1] === undefined
+      ) {
+      } else {
+        return dispatch(addNotificationMsg("No changes detected", "error"));
+      }
+    }
     if (
       selectedData.subject.length === 0 ||
       selectedData.class.length === 0 ||
@@ -826,7 +639,6 @@ function Modal({ faculty, courses, classes }) {
                         return null;
                       })
                 }
-                // value={selectedData.subject[index]}
                 onChange={(e) => handleSelectChange(e, index)}
                 controlShouldRenderValue={
                   selectedData.subject[index] !== undefined
@@ -861,9 +673,6 @@ function Modal({ faculty, courses, classes }) {
                       ]
                 }
                 isMulti={rows === 1 ? true : false}
-                // defaultValue={
-                //   rows === 1 ? selectedData.class : selectedData.class[index]
-                // }
                 value={
                   index === 0
                     ? rows === 1
@@ -943,20 +752,17 @@ function Modal({ faculty, courses, classes }) {
                         name: "from",
                       }
                     : null
-                  // : selectedData.Time[index]?.split("to")[0].trim()
-                  // ? {
-                  //     value: selectedData.Time[index]?.split("to")[0].trim(),
-                  //     label: selectedData.Time[index]?.split("to")[0].trim(),
-                  //     name: "from",
-                  //   }
-                  // : null
                 }
                 onChange={(e) =>
                   index === 0 ? handleSelectChange(e, index) : ""
                 }
                 isMulti={false}
                 isSearchable={false}
-                isDisabled={rows === 2 ? true : false}
+                isDisabled={
+                  rows === 2 || modalData?.time.at(index) !== undefined
+                    ? true
+                    : false
+                }
               />
               <CustomSelect
                 placeholder="To..."
@@ -1012,13 +818,6 @@ function Modal({ faculty, courses, classes }) {
                         name: "to",
                       }
                     : null
-                  // : selectedData.Time[index]?.split("to")[1].trim()
-                  // ? {
-                  //     value: selectedData.Time[index]?.split("to")[1].trim(),
-                  //     label: selectedData.Time[index]?.split("to")[1].trim(),
-                  //     name: "to",
-                  //   }
-                  // : null
                 }
                 onChange={(e) =>
                   index === 0 ? handleSelectChange(e, index) : ""
@@ -1033,70 +832,86 @@ function Modal({ faculty, courses, classes }) {
                   (modalData.slot?.friday_slot_timing[0]
                     ?.split("to")[1]
                     ?.trim() === selectedData.Time[0]?.split("-")[0].trim() &&
-                    modalData.slot?.friday_slot_timing[0] !== undefined)
+                    modalData.slot?.friday_slot_timing[0] !== undefined) ||
+                  modalData?.time.at(index) !== undefined
                     ? true
                     : false
                 }
               />
-              {/* <input
-                type="time"
-                name="from"
-                id={`from${index}`}
-                defaultValue={
-                  selectedData.Time[index] &&
-                  convertTime12to24(
-                    selectedData.Time[index]?.split("-")[0].trim()
-                  )
-                }
-                onChange={(e) => handleTimeChange(e, index)}
-                // disabled={modalData?.subject.length > 0 ? true : false}
-                required
-              /> */}
-
-              {/* <input
-                type="time"
-                name="to"
-                id={`to${index}`}
-                defaultValue={
-                  selectedData.Time[index] &&
-                  convertTime12to24(
-                    selectedData.Time[index]?.split("-")[1].trim()
-                  )
-                }
-                onChange={(e) => handleTimeChange(e, index)}
-                // disabled={modalData?.subject.length > 0 ? true : false}
-                required
-              /> */}
-
-              <div
-                onClick={() => handleTrashClick(index)}
-                className="icon-container"
-              >
-                <FiTrash color="white" size="20px" />
-              </div>
+              {modalData?.teacher.length === 2 &&
+                modalData?.teacher[0] !== modalData?.teacher[1] &&
+                modalData?.subject[0] !== modalData?.subject[1] &&
+                modalData?.cls[0] !== modalData?.cls[1] && (
+                  <div
+                    onClick={() => handleUnscheduleBtnClick(index)}
+                    className="icon-container"
+                  >
+                    <BsFillCalendar2XFill color="white" size="20px" />
+                  </div>
+                )}
+              {modalData?.time.at(index) === undefined ? (
+                <div
+                  onClick={() => handleTrashClick(index)}
+                  className="icon-container"
+                >
+                  <FiTrash color="white" size="20px" />
+                </div>
+              ) : (
+                ""
+              )}
             </div>
           ))}
 
           {rows !== 2 && modalData?.slot?.slot_timing?.length !== 1 ? (
-            <div
-              onClick={() => handleAddRow()}
-              className="modal-btn add-class-btn"
-            >
-              <FiPlus className="icon" color="white" size="25px" />
+            modalData?.time?.length !== 1 ||
+            (modalData?.time[0]?.split("-")[1]?.trim() !==
+              modalData?.slot?.slot_timing[1]?.split("to")[1]?.trim() &&
+              modalData?.time[0]?.split("-")[1]?.trim() !==
+                modalData?.slot?.friday_slot_timing[1]
+                  ?.split("to")[1]
+                  ?.trim()) ? (
+              <div
+                onClick={() => handleAddRow()}
+                className="modal-btn add-class-btn"
+              >
+                <FiPlus className="icon" color="white" size="25px" />
 
-              <span>Add another class</span>
-            </div>
+                <span>Add another class</span>
+              </div>
+            ) : (
+              <div></div>
+            )
           ) : (
             <div></div>
           )}
-          {modalData?.slotAssigned ? (
+          {modalData?.slotAssigned && modalData?.time?.length === 1 ? (
             <div
               className="modal-btn delete-class-btn"
               onClick={() => handleUnscheduleBtnClick()}
             >
-              <FiTrash className="icon" color="white" size="25px" />
+              <BsFillCalendar2XFill
+                className="icon"
+                color="white"
+                size="25px"
+              />
 
-              <span>Unschedule class</span>
+              <span>Cancel Class</span>
+            </div>
+          ) : modalData?.teacher.length === 2 &&
+            modalData?.teacher[0] === modalData?.teacher[1] &&
+            modalData?.subject[0] === modalData?.subject[1] &&
+            modalData?.cls[0] === modalData?.cls[1] ? (
+            <div
+              className="modal-btn delete-class-btn"
+              onClick={() => handleUnscheduleBtnClick()}
+            >
+              <BsFillCalendar2XFill
+                className="icon"
+                color="white"
+                size="25px"
+              />
+
+              <span>Cancel Class</span>
             </div>
           ) : (
             <div></div>

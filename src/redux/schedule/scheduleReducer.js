@@ -1,5 +1,6 @@
 import {
   ADD_CLASS,
+  CANCEL_CLASS,
   DELETE_CLASS,
   FETCH_COMBINED_SCHEDULE,
   FETCH_SLOTS,
@@ -19,6 +20,7 @@ const intitalState = {
   isModalOpen: false,
   modalData: {},
   isConfirmationModalOpen: false,
+  confirmationModalIndex: undefined,
   filteredSchedule: [],
   labSchedule: [],
 };
@@ -134,16 +136,98 @@ const scheduleReducer = (state = intitalState, action) => {
         ...state,
         schedule: [
           ...state.schedule.map((schedule) =>
-            schedule._id !== action.payload
+            schedule._id !== action.payload.id
               ? schedule
-              : { ...schedule, teacher: [], subject: [], class: [], Time: [] }
+              : {
+                  ...schedule,
+                  teacher: action.payload.index
+                    ? [schedule.teacher[action.payload.index === 1 ? 0 : 1]]
+                    : [],
+                  subject: action.payload.index
+                    ? [schedule.subject[action.payload.index === 1 ? 0 : 1]]
+                    : [],
+                  class: action.payload.index
+                    ? [schedule.class[action.payload.index === 1 ? 0 : 1]]
+                    : [],
+                  Time: action.payload.index
+                    ? [schedule.Time[action.payload.index === 1 ? 0 : 1]]
+                    : [],
+                }
           ),
         ],
         filteredSchedule: [
           ...state.filteredSchedule.map((schedule) =>
-            schedule._id !== action.payload
+            schedule._id !== action.payload.id
               ? schedule
-              : { ...schedule, teacher: [], subject: [], class: [], Time: [] }
+              : {
+                  ...schedule,
+                  teacher: action.payload.index
+                    ? [schedule.teacher[action.payload.index === 1 ? 0 : 1]]
+                    : [],
+                  subject: action.payload.index
+                    ? [schedule.subject[action.payload.index === 1 ? 0 : 1]]
+                    : [],
+                  class: action.payload.index
+                    ? [schedule.class[action.payload.index === 1 ? 0 : 1]]
+                    : [],
+                  Time: action.payload.index
+                    ? [schedule.Time[action.payload.index === 1 ? 0 : 1]]
+                    : [],
+                }
+          ),
+        ],
+      };
+    case CANCEL_CLASS:
+      return {
+        ...state,
+        schedule: [
+          ...state.schedule.map((schedule) =>
+            schedule._id !== action.payload.id
+              ? schedule
+              : {
+                  ...schedule,
+                  teacher:
+                    action.payload.index !== undefined
+                      ? [schedule.teacher[action.payload.index === 1 ? 0 : 1]]
+                      : [],
+                  subject:
+                    action.payload.index !== undefined
+                      ? [schedule.subject[action.payload.index === 1 ? 0 : 1]]
+                      : [],
+                  class:
+                    action.payload.index !== undefined
+                      ? [schedule.class[action.payload.index === 1 ? 0 : 1]]
+                      : [],
+                  Time:
+                    action.payload.index !== undefined
+                      ? [schedule.Time[action.payload.index === 1 ? 0 : 1]]
+                      : [],
+                }
+          ),
+        ],
+        filteredSchedule: [
+          ...state.filteredSchedule.map((schedule) =>
+            schedule._id !== action.payload.id
+              ? schedule
+              : {
+                  ...schedule,
+                  teacher:
+                    action.payload.index !== undefined
+                      ? [schedule.teacher[action.payload.index === 1 ? 0 : 1]]
+                      : [],
+                  subject:
+                    action.payload.index !== undefined
+                      ? [schedule.subject[action.payload.index === 1 ? 0 : 1]]
+                      : [],
+                  class:
+                    action.payload.index !== undefined
+                      ? [schedule.class[action.payload.index === 1 ? 0 : 1]]
+                      : [],
+                  Time:
+                    action.payload.index !== undefined
+                      ? [schedule.Time[action.payload.index === 1 ? 0 : 1]]
+                      : [],
+                }
           ),
         ],
       };
@@ -171,6 +255,7 @@ const scheduleReducer = (state = intitalState, action) => {
       return {
         ...state,
         isConfirmationModalOpen: !state.isConfirmationModalOpen,
+        confirmationModalIndex: action.payload,
       };
     case REMOVE_MODAL_DATA_TIME:
       return {

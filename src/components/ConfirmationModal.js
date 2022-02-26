@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  deleteClass,
+  cancelClass,
   toggleConfirmationModal,
 } from "../redux/schedule/scheduleAction";
 import { FiX, FiCheck } from "react-icons/fi";
@@ -12,6 +12,9 @@ function ConfirmationModal() {
     (state) => state.schedule.isConfirmationModalOpen
   );
   const modalData = useSelector((state) => state.schedule.modalData);
+  const confirmationModalIndex = useSelector(
+    (state) => state.schedule.confirmationModalIndex
+  );
 
   if (!confirmationModalState) return null;
 
@@ -19,7 +22,7 @@ function ConfirmationModal() {
     <div className="confiramtion-modal-container">
       <div className="confirmation-modal-content">
         <div className="confirmation-modal-header">
-          <h3>Are you sure you want to delete this schedule?</h3>
+          <h3>Are you sure you want to cancel this class?</h3>
         </div>
         <div className="confirmation-modal-body">
           <div className="btn-container">
@@ -33,7 +36,9 @@ function ConfirmationModal() {
             </div>
             <div
               className="modal-btn submit-btn"
-              onClick={() => dispatch(deleteClass(modalData?.id))}
+              onClick={() =>
+                dispatch(cancelClass(modalData?.id, confirmationModalIndex))
+              }
             >
               <FiCheck className="icon" color="white" size="25px" />
 

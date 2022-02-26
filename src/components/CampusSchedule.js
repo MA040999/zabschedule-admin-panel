@@ -79,15 +79,29 @@ function CampusSchedule({
                       schedule.room === sortedSchedule[i + jIndex]?.room
                         ? sortedSchedule[i + jIndex]?._id
                         : undefined,
-                      sortedSchedule[i + jIndex].teacher.map(
-                        (teacher) => teacher._id
-                      ),
-                      sortedSchedule[i + jIndex].subject.map(
-                        (subject) => subject._id
-                      ),
-                      sortedSchedule[i + jIndex].class.map((cls) => cls._id),
-                      sortedSchedule[i + jIndex].Time,
-                      sortedSchedule[i + jIndex].subject.length > 0
+                      !sortedSchedule[i + j]?.isCancelled ||
+                        sortedSchedule[i + j]?.isMakeUpClass
+                        ? sortedSchedule[i + jIndex].teacher.map(
+                            (teacher) => teacher._id
+                          )
+                        : [],
+                      !sortedSchedule[i + j]?.isCancelled ||
+                        sortedSchedule[i + j]?.isMakeUpClass
+                        ? sortedSchedule[i + jIndex].subject.map(
+                            (subject) => subject._id
+                          )
+                        : [],
+                      !sortedSchedule[i + j]?.isCancelled ||
+                        sortedSchedule[i + j]?.isMakeUpClass
+                        ? sortedSchedule[i + jIndex].class.map((cls) => cls._id)
+                        : [],
+                      !sortedSchedule[i + j]?.isCancelled ||
+                        sortedSchedule[i + j]?.isMakeUpClass
+                        ? sortedSchedule[i + jIndex].Time
+                        : [],
+                      (!sortedSchedule[i + j]?.isCancelled ||
+                        sortedSchedule[i + j]?.isMakeUpClass) &&
+                        sortedSchedule[i + jIndex].subject.length > 0
                     )
                   );
                 };
@@ -105,25 +119,33 @@ function CampusSchedule({
                       onClick={() => role === "Admin" && toggleFunction()}
                       style={{ backgroundColor: j % 2 === 0 && "#dadada" }}
                     >
-                      {schedule.room === sortedSchedule[i + j]?.room && (
-                        <span className="block">
-                          {sortedSchedule[i + j]?.teacher.map((teacher, t) => (
-                            <span key={t}>{teacher.faculty_name}</span>
-                          ))}
-                        </span>
-                      )}
+                      {schedule.room === sortedSchedule[i + j]?.room &&
+                        (!sortedSchedule[i + j]?.isCancelled ||
+                          sortedSchedule[i + j]?.isMakeUpClass) && (
+                          <span className="block">
+                            {sortedSchedule[i + j]?.teacher.map(
+                              (teacher, t) => (
+                                <span key={t}>{teacher.faculty_name}</span>
+                              )
+                            )}
+                          </span>
+                        )}
                     </td>
                     <td
                       onClick={() => role === "Admin" && toggleFunction()}
                       style={{ backgroundColor: j % 2 === 0 && "#dadada" }}
                     >
-                      {schedule.room === sortedSchedule[i + j]?.room && (
-                        <span className="block">
-                          {sortedSchedule[i + j]?.subject.map((subject, s) => (
-                            <span key={s}>{subject.course_name}</span>
-                          ))}
-                        </span>
-                      )}
+                      {schedule.room === sortedSchedule[i + j]?.room &&
+                        (!sortedSchedule[i + j]?.isCancelled ||
+                          sortedSchedule[i + j]?.isMakeUpClass) && (
+                          <span className="block">
+                            {sortedSchedule[i + j]?.subject.map(
+                              (subject, s) => (
+                                <span key={s}>{subject.course_name}</span>
+                              )
+                            )}
+                          </span>
+                        )}
                     </td>
                     <td
                       onClick={() => role === "Admin" && toggleFunction()}
@@ -131,6 +153,8 @@ function CampusSchedule({
                     >
                       {schedule.room === sortedSchedule[i + j]?.room &&
                         sortedSchedule[i + j]?.Time.length === 2 &&
+                        (!sortedSchedule[i + j]?.isCancelled ||
+                          sortedSchedule[i + j]?.isMakeUpClass) &&
                         sortedSchedule[i + j]?.class.map((cls, k) => (
                           <span key={k} className="class-span">
                             <span>{`${cls.program} ${cls.semester} ${cls.section}`}</span>
@@ -143,7 +167,9 @@ function CampusSchedule({
                           </span>
                         ))}
                       {schedule.room === sortedSchedule[i + j]?.room &&
-                        sortedSchedule[i + j]?.Time.length === 1 && (
+                        sortedSchedule[i + j]?.Time.length === 1 &&
+                        (!sortedSchedule[i + j]?.isCancelled ||
+                          sortedSchedule[i + j]?.isMakeUpClass) && (
                           <span className="class-span">
                             {sortedSchedule[i + j]?.Time.length === 1 &&
                               sortedSchedule[i + j]?.class.map((cls, c) =>
@@ -157,16 +183,26 @@ function CampusSchedule({
                                   >{`${cls.program} ${cls.semester} ${cls.section},`}</span>
                                 )
                               )}
-                            {sortedSchedule[i + j]?.Time.length === 1 && (
-                              <>
-                                <span className="start-time">
-                                  {sortedSchedule[i + j]?.Time[0].split("-")[0]}
-                                </span>
-                                <span className="end-time">
-                                  {sortedSchedule[i + j]?.Time[0].split("-")[1]}
-                                </span>
-                              </>
-                            )}
+                            {sortedSchedule[i + j]?.Time.length === 1 &&
+                              (!sortedSchedule[i + j]?.isCancelled ||
+                                sortedSchedule[i + j]?.isMakeUpClass) && (
+                                <>
+                                  <span className="start-time">
+                                    {
+                                      sortedSchedule[i + j]?.Time[0].split(
+                                        "-"
+                                      )[0]
+                                    }
+                                  </span>
+                                  <span className="end-time">
+                                    {
+                                      sortedSchedule[i + j]?.Time[0].split(
+                                        "-"
+                                      )[1]
+                                    }
+                                  </span>
+                                </>
+                              )}
                           </span>
                         )}
                     </td>

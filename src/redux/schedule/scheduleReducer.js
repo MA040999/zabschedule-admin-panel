@@ -186,22 +186,27 @@ const scheduleReducer = (state = intitalState, action) => {
               ? schedule
               : {
                   ...schedule,
-                  teacher:
-                    action.payload.index !== undefined
-                      ? [schedule.teacher[action.payload.index === 1 ? 0 : 1]]
-                      : [],
-                  subject:
-                    action.payload.index !== undefined
-                      ? [schedule.subject[action.payload.index === 1 ? 0 : 1]]
-                      : [],
-                  class:
-                    action.payload.index !== undefined
-                      ? [schedule.class[action.payload.index === 1 ? 0 : 1]]
-                      : [],
-                  Time:
-                    action.payload.index !== undefined
-                      ? [schedule.Time[action.payload.index === 1 ? 0 : 1]]
-                      : [],
+                  cancelledClassIndex:
+                    action.payload.index === undefined
+                      ? null
+                      : action.payload.index,
+                  isCancelled: true,
+                  // teacher:
+                  //   action.payload.index !== undefined
+                  //     ? [schedule.teacher[action.payload.index === 1 ? 0 : 1]]
+                  //     : [],
+                  // subject:
+                  //   action.payload.index !== undefined
+                  //     ? [schedule.subject[action.payload.index === 1 ? 0 : 1]]
+                  //     : [],
+                  // class:
+                  //   action.payload.index !== undefined
+                  //     ? [schedule.class[action.payload.index === 1 ? 0 : 1]]
+                  //     : [],
+                  // Time:
+                  //   action.payload.index !== undefined
+                  //     ? [schedule.Time[action.payload.index === 1 ? 0 : 1]]
+                  //     : [],
                 }
           ),
         ],
@@ -211,22 +216,27 @@ const scheduleReducer = (state = intitalState, action) => {
               ? schedule
               : {
                   ...schedule,
-                  teacher:
-                    action.payload.index !== undefined
-                      ? [schedule.teacher[action.payload.index === 1 ? 0 : 1]]
-                      : [],
-                  subject:
-                    action.payload.index !== undefined
-                      ? [schedule.subject[action.payload.index === 1 ? 0 : 1]]
-                      : [],
-                  class:
-                    action.payload.index !== undefined
-                      ? [schedule.class[action.payload.index === 1 ? 0 : 1]]
-                      : [],
-                  Time:
-                    action.payload.index !== undefined
-                      ? [schedule.Time[action.payload.index === 1 ? 0 : 1]]
-                      : [],
+                  cancelledClassIndex:
+                    action.payload.index === undefined
+                      ? null
+                      : action.payload.index,
+                  isCancelled: true,
+                  // teacher:
+                  //   action.payload.index !== undefined
+                  //     ? [schedule.teacher[action.payload.index === 1 ? 0 : 1]]
+                  //     : [],
+                  // subject:
+                  //   action.payload.index !== undefined
+                  //     ? [schedule.subject[action.payload.index === 1 ? 0 : 1]]
+                  //     : [],
+                  // class:
+                  //   action.payload.index !== undefined
+                  //     ? [schedule.class[action.payload.index === 1 ? 0 : 1]]
+                  //     : [],
+                  // Time:
+                  //   action.payload.index !== undefined
+                  //     ? [schedule.Time[action.payload.index === 1 ? 0 : 1]]
+                  //     : [],
                 }
           ),
         ],

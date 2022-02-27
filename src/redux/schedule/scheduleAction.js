@@ -163,7 +163,11 @@ export const toggleModal = (
   cls,
   time,
   slotAssigned,
-  isRequestModal
+  isRequestModal,
+  isMakeUpClass,
+  isCancelled,
+  cancelledClassIndex,
+  normalClassIndex
 ) => {
   return {
     type: TOGGLE_MODAL,
@@ -179,6 +183,10 @@ export const toggleModal = (
       time,
       slotAssigned,
       isRequestModal,
+      isMakeUpClass,
+      isCancelled,
+      cancelledClassIndex,
+      normalClassIndex,
     },
   };
 };

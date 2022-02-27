@@ -299,6 +299,21 @@ td:hover {
   gap: 2em;
   font-family: "Segoe UI" !important;
 }
+.cancelled {
+  background-color: var(--color5);
+  padding: 0.5em;
+  border-radius: 12px;
+  margin: 0.2em 0;
+
+  color: var(--color2);
+}
+.makeup {
+  background-color: var(--color1) !important;
+  padding: 0.5em;
+  border-radius: 12px;
+  margin: 0.2em 0;
+  color: var(--color2);
+}
 .class-span {
   display: flex;
   flex-direction: column;

@@ -839,16 +839,34 @@ function Modal({ faculty, courses, classes }) {
                 }
               />
               {modalData?.teacher.length === 2 &&
-                modalData?.teacher[0] !== modalData?.teacher[1] &&
-                modalData?.subject[0] !== modalData?.subject[1] &&
-                modalData?.cls[0] !== modalData?.cls[1] && (
-                  <div
-                    onClick={() => handleUnscheduleBtnClick(index)}
-                    className="icon-container"
-                  >
-                    <BsFillCalendar2XFill color="white" size="20px" />
-                  </div>
-                )}
+              (modalData?.teacher[0] !== modalData?.teacher[1] ||
+                modalData?.subject[0] !== modalData?.subject[1] ||
+                modalData?.cls[0] !== modalData?.cls[1]) &&
+              modalData?.normalClassIndex === index &&
+              modalData?.cancelledClassIndex !== 10 ? (
+                <div
+                  onClick={() => handleUnscheduleBtnClick(index)}
+                  className="icon-container"
+                >
+                  <BsFillCalendar2XFill color="white" size="20px" />
+                </div>
+              ) : (modalData?.normalClassIndex === undefined ||
+                  modalData?.normalClassIndex === null) &&
+                modalData?.time.length > 1 &&
+                !modalData.isMakeUpClass &&
+                modalData?.time.at(index) &&
+                (modalData?.teacher[0] !== modalData?.teacher[1] ||
+                  modalData?.subject[0] !== modalData?.subject[1] ||
+                  modalData?.cls[0] !== modalData?.cls[1]) ? (
+                <div
+                  onClick={() => handleUnscheduleBtnClick(index)}
+                  className="icon-container"
+                >
+                  <BsFillCalendar2XFill color="white" size="20px" />
+                </div>
+              ) : (
+                ""
+              )}
               {modalData?.time.at(index) === undefined ? (
                 <div
                   onClick={() => handleTrashClick(index)}
@@ -884,7 +902,14 @@ function Modal({ faculty, courses, classes }) {
           ) : (
             <div></div>
           )}
-          {modalData?.slotAssigned && modalData?.time?.length === 1 ? (
+          {(modalData?.slotAssigned &&
+            modalData?.time?.length === 1 &&
+            modalData?.isMakeUpClass !== true &&
+            modalData?.isCancelled !== true) ||
+          (modalData?.time?.length > 0 &&
+            modalData?.cancelledClassIndex !== undefined &&
+            modalData?.cancelledClassIndex !== null &&
+            modalData?.isMakeUpClass !== true) ? (
             <div
               className="modal-btn delete-class-btn"
               onClick={() => handleUnscheduleBtnClick()}
@@ -900,7 +925,8 @@ function Modal({ faculty, courses, classes }) {
           ) : modalData?.teacher.length === 2 &&
             modalData?.teacher[0] === modalData?.teacher[1] &&
             modalData?.subject[0] === modalData?.subject[1] &&
-            modalData?.cls[0] === modalData?.cls[1] ? (
+            modalData?.cls[0] === modalData?.cls[1] &&
+            !modalData?.isMakeUpClass ? (
             <div
               className="modal-btn delete-class-btn"
               onClick={() => handleUnscheduleBtnClick()}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { FiTrash, FiX, FiCheck, FiPlus } from "react-icons/fi";
+import { FiX, FiCheck, FiPlus } from "react-icons/fi";
 import { BsFillCalendar2XFill } from "react-icons/bs";
+import { AiOutlineClear } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { ordinal_suffix_of } from "../common/common";
 import { addNotificationMsg } from "../redux/auth/authActions";
@@ -62,7 +63,7 @@ function Modal({ faculty, courses, classes }) {
     teacher: user.role === "Faculty" ? [user.faculty_id] : [],
     _id: modalData?.id,
   });
-
+  console.log("selectedData", selectedData);
   const dispatch = useDispatch();
   const handleAddRow = () => {
     setRows(2);
@@ -397,7 +398,7 @@ function Modal({ faculty, courses, classes }) {
   const handleSubmit = () => {
     if (
       modalData?.time.length !== 0 &&
-      modalData?.time.join(",") === selectedData.Time.join(",")
+      modalData?.teacher.join(",") === selectedData.teacher.join(",")
     ) {
       if (
         modalData?.subject.length > 1 &&
@@ -839,9 +840,11 @@ function Modal({ faculty, courses, classes }) {
                 }
               />
               {modalData?.teacher.length === 2 &&
+              modalData?.teacher.indexOf(undefined) !== index &&
               (modalData?.teacher[0] !== modalData?.teacher[1] ||
                 modalData?.subject[0] !== modalData?.subject[1] ||
-                modalData?.cls[0] !== modalData?.cls[1]) &&
+                modalData?.cls[0] !== modalData?.cls[1] ||
+                modalData?.isMakeUpClass) &&
               modalData?.normalClassIndex === index &&
               modalData?.cancelledClassIndex !== 10 ? (
                 <div
@@ -854,6 +857,7 @@ function Modal({ faculty, courses, classes }) {
                   modalData?.normalClassIndex === null) &&
                 modalData?.time.length > 1 &&
                 !modalData.isMakeUpClass &&
+                modalData?.teacher.indexOf(undefined) !== index &&
                 modalData?.time.at(index) &&
                 (modalData?.teacher[0] !== modalData?.teacher[1] ||
                   modalData?.subject[0] !== modalData?.subject[1] ||
@@ -867,12 +871,12 @@ function Modal({ faculty, courses, classes }) {
               ) : (
                 ""
               )}
-              {modalData?.time.at(index) === undefined ? (
+              {modalData?.teacher.at(index) === undefined ? (
                 <div
                   onClick={() => handleTrashClick(index)}
                   className="icon-container"
                 >
-                  <FiTrash color="white" size="20px" />
+                  <AiOutlineClear color="white" size="20px" />
                 </div>
               ) : (
                 ""

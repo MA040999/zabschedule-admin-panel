@@ -824,6 +824,12 @@ pre {
   border: 1.5px solid #bbbbbb;
   border-collapse: collapse;
 }
+.lab-table-tbody tr,
+.lab-table-tbody td {
+  min-height: 200px !important;
+  height: 200px !important;
+  max-height: 200px !important;
+}
 .lab-table-tbody td {
   padding: 0.5em;
   max-width: fit-content;

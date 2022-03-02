@@ -77,7 +77,7 @@ function CampusSchedule({
                           slots[jIndex].friday_slot_timing[1])
                     ) {
                       const newSchedule = {
-                        ...schedule,
+                        ...tempSchedule,
                         class: [undefined, tempSchedule?.class[0]],
                         subject: [undefined, tempSchedule?.subject[0]],
                         teacher: [undefined, tempSchedule?.teacher[0]],
@@ -212,10 +212,6 @@ function CampusSchedule({
                       return;
                     }
                   }
-                  console.log(
-                    "sortedSchedule[i + jIndex]",
-                    sortedSchedule[i + jIndex]
-                  );
                   dispatch(
                     toggleModal(
                       schedule.room,
@@ -242,7 +238,9 @@ function CampusSchedule({
                                 (sortedSchedule[i + jIndex].teacher.length ===
                                   2 &&
                                   typeof sortedSchedule[i + jIndex]
-                                    ?.cancelledClassIndex === "number") ||
+                                    ?.cancelledClassIndex === "number" &&
+                                  sortedSchedule[i + jIndex]
+                                    ?.cancelledClassIndex !== tIndex) ||
                                 sortedSchedule[i + jIndex]
                                   ?.cancelledClassIndex !== tIndex ||
                                 (typeof sortedSchedule[i + jIndex]
@@ -254,7 +252,21 @@ function CampusSchedule({
                                     sortedSchedule[i + jIndex]
                                       ?.normalClassIndex &&
                                   sortedSchedule[i + jIndex]?.isCancelled &&
-                                  sortedSchedule[i + jIndex]?.isMakeUpClass)
+                                  sortedSchedule[i + jIndex]?.isMakeUpClass) ||
+                                (sortedSchedule[i + jIndex].teacher.length ===
+                                  2 &&
+                                  typeof sortedSchedule[i + jIndex]
+                                    ?.cancelledClassIndex === "number" &&
+                                  typeof sortedSchedule[i + jIndex]
+                                    ?.normalClassIndex === "number" &&
+                                  sortedSchedule[i + jIndex]?.isMakeUpClass &&
+                                  sortedSchedule[i + jIndex]?.isCancelled &&
+                                  sortedSchedule[i + jIndex]
+                                    ?.cancelledClassIndex === tIndex &&
+                                  sortedSchedule[i + jIndex]
+                                    ?.cancelledClassIndex ===
+                                    sortedSchedule[i + jIndex]
+                                      ?.normalClassIndex)
                             )
                             .map((teacher, index) =>
                               sortedSchedule[i + jIndex].teacher.length === 2 &&
@@ -284,7 +296,9 @@ function CampusSchedule({
                                 (sortedSchedule[i + jIndex].teacher.length ===
                                   2 &&
                                   typeof sortedSchedule[i + jIndex]
-                                    ?.cancelledClassIndex === "number") ||
+                                    ?.cancelledClassIndex === "number" &&
+                                  sortedSchedule[i + jIndex]
+                                    ?.cancelledClassIndex !== sIndex) ||
                                 sortedSchedule[i + jIndex]
                                   ?.cancelledClassIndex !== sIndex ||
                                 (typeof sortedSchedule[i + jIndex]
@@ -296,7 +310,21 @@ function CampusSchedule({
                                     sortedSchedule[i + jIndex]
                                       ?.normalClassIndex &&
                                   sortedSchedule[i + jIndex]?.isCancelled &&
-                                  sortedSchedule[i + jIndex]?.isMakeUpClass)
+                                  sortedSchedule[i + jIndex]?.isMakeUpClass) ||
+                                (sortedSchedule[i + jIndex].subject.length ===
+                                  2 &&
+                                  typeof sortedSchedule[i + jIndex]
+                                    ?.cancelledClassIndex === "number" &&
+                                  typeof sortedSchedule[i + jIndex]
+                                    ?.normalClassIndex === "number" &&
+                                  sortedSchedule[i + jIndex]?.isMakeUpClass &&
+                                  sortedSchedule[i + jIndex]?.isCancelled &&
+                                  sortedSchedule[i + jIndex]
+                                    ?.cancelledClassIndex === sIndex &&
+                                  sortedSchedule[i + jIndex]
+                                    ?.cancelledClassIndex ===
+                                    sortedSchedule[i + jIndex]
+                                      ?.normalClassIndex)
                             )
                             .map((subject, index) =>
                               sortedSchedule[i + jIndex].subject.length === 2 &&
@@ -326,7 +354,9 @@ function CampusSchedule({
                                 (sortedSchedule[i + jIndex].teacher.length ===
                                   2 &&
                                   typeof sortedSchedule[i + jIndex]
-                                    ?.cancelledClassIndex === "number") ||
+                                    ?.cancelledClassIndex === "number" &&
+                                  sortedSchedule[i + jIndex]
+                                    ?.cancelledClassIndex !== cIndex) ||
                                 sortedSchedule[i + jIndex]
                                   ?.cancelledClassIndex !== cIndex ||
                                 (typeof sortedSchedule[i + jIndex]
@@ -338,7 +368,21 @@ function CampusSchedule({
                                     sortedSchedule[i + jIndex]
                                       ?.normalClassIndex &&
                                   sortedSchedule[i + jIndex]?.isCancelled &&
-                                  sortedSchedule[i + jIndex]?.isMakeUpClass)
+                                  sortedSchedule[i + jIndex]?.isMakeUpClass) ||
+                                (sortedSchedule[i + jIndex].class.length ===
+                                  2 &&
+                                  typeof sortedSchedule[i + jIndex]
+                                    ?.cancelledClassIndex === "number" &&
+                                  typeof sortedSchedule[i + jIndex]
+                                    ?.normalClassIndex === "number" &&
+                                  sortedSchedule[i + jIndex]?.isMakeUpClass &&
+                                  sortedSchedule[i + jIndex]?.isCancelled &&
+                                  sortedSchedule[i + jIndex]
+                                    ?.cancelledClassIndex === cIndex &&
+                                  sortedSchedule[i + jIndex]
+                                    ?.cancelledClassIndex ===
+                                    sortedSchedule[i + jIndex]
+                                      ?.normalClassIndex)
                             )
                             .map((cls, index) =>
                               sortedSchedule[i + jIndex].class.length === 2 &&
@@ -367,7 +411,9 @@ function CampusSchedule({
                               (sortedSchedule[i + jIndex].teacher.length ===
                                 2 &&
                                 typeof sortedSchedule[i + jIndex]
-                                  ?.cancelledClassIndex === "number") ||
+                                  ?.cancelledClassIndex === "number" &&
+                                sortedSchedule[i + jIndex]
+                                  ?.cancelledClassIndex !== timeIndex) ||
                               sortedSchedule[i + jIndex]
                                 ?.cancelledClassIndex !== timeIndex ||
                               (typeof sortedSchedule[i + jIndex]
@@ -379,7 +425,19 @@ function CampusSchedule({
                                   sortedSchedule[i + jIndex]
                                     ?.normalClassIndex &&
                                 sortedSchedule[i + jIndex]?.isCancelled &&
-                                sortedSchedule[i + jIndex]?.isMakeUpClass)
+                                sortedSchedule[i + jIndex]?.isMakeUpClass) ||
+                              (sortedSchedule[i + jIndex].Time.length === 2 &&
+                                typeof sortedSchedule[i + jIndex]
+                                  ?.cancelledClassIndex === "number" &&
+                                typeof sortedSchedule[i + jIndex]
+                                  ?.normalClassIndex === "number" &&
+                                sortedSchedule[i + jIndex]?.isMakeUpClass &&
+                                sortedSchedule[i + jIndex]?.isCancelled &&
+                                sortedSchedule[i + jIndex]
+                                  ?.cancelledClassIndex === timeIndex &&
+                                sortedSchedule[i + jIndex]
+                                  ?.cancelledClassIndex ===
+                                  sortedSchedule[i + jIndex]?.normalClassIndex)
                           )
                         : [],
                       (!sortedSchedule[i + j]?.isCancelled ||

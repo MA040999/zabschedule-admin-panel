@@ -63,7 +63,6 @@ function Modal({ faculty, courses, classes }) {
     teacher: user.role === "Faculty" ? [user.faculty_id] : [],
     _id: modalData?.id,
   });
-  console.log("selectedData", selectedData);
   const dispatch = useDispatch();
   const handleAddRow = () => {
     setRows(2);

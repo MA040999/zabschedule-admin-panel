@@ -117,6 +117,8 @@ function Modal({ faculty, courses, classes }) {
           rows === 1
             ? selectedData.Time[1]
               ? [undefined, selectedData.Time[1]]
+              : modalData?.isRequestModal
+              ? selectedData.Time
               : []
             : selectedData.Time,
         class:
@@ -156,9 +158,12 @@ function Modal({ faculty, courses, classes }) {
       }
       if (
         // selectedData.Time[1] === undefined &&
-        selectedData.class[1] === undefined &&
-        selectedData.subject[1] === undefined &&
-        selectedData.teacher[1] === undefined
+        (selectedData.class[1] === undefined &&
+          selectedData.subject[1] === undefined &&
+          selectedData.teacher[1] === undefined) ||
+        (modalData?.isRequestModal &&
+          selectedData.class[1] === undefined &&
+          selectedData.subject[1] === undefined)
       ) {
         setSelectedData({
           ...selectedData,

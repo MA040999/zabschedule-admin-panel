@@ -42,7 +42,9 @@ function StatusIndicator({ id, status, isSelectOpen, setIsSelectOpen }) {
       <div
         ref={buttonRef}
         onClick={() => status === "Pending" && setIsSelectOpen(!isSelectOpen)}
-        className={`status-container ${status}`}
+        className={`status-container ${status} ${
+          status === "Pending" && user.role === "Faculty" ? "disabled" : ""
+        }`}
       >
         <span>{status}</span>
       </div>

@@ -279,7 +279,30 @@ function LabSchedule() {
                                     .trim()}`}</pre>
                                 </td>
                               )}
-                            <td className="lab-td" rowSpan={rowSpan}>
+                            {console.log("sch", sch)}
+                            {console.log("s_index", s_index)}
+                            <td
+                              className={`lab-td 
+                              ${
+                                sch.isCancelled === true &&
+                                (sch.isMakeUpClass !== true ||
+                                  sch.normalClassIndex === s_index) &&
+                                (sch.cancelledClassIndex !== undefined ||
+                                  sch.cancelledClassIndex !== null)
+                                  ? sch?.cancelledClassIndex === s_index ||
+                                    sch?.cancelledClassIndex === 10 ||
+                                    sch?.cancelledClassIndex === null ||
+                                    (sch?.cancelledClassIndex === 1 &&
+                                      sch?.teacher.length === 1)
+                                    ? `lab-td-cancelled`
+                                    : ""
+                                  : sch.isCancelled === true &&
+                                    sch.isMakeUpClass !== true
+                                  ? `lab-td-cancelled`
+                                  : ""
+                              }`}
+                              rowSpan={rowSpan}
+                            >
                               <pre>
                                 {rowSpan === 1
                                   ? `${sch.class[s_index]?.program} ${
@@ -502,7 +525,28 @@ function LabSchedule() {
                                     .trim()}`}</pre>
                                 </td>
                               )}
-                            <td className="lab-td" rowSpan={rowSpan}>
+                            <td
+                              className={`lab-td 
+                              ${
+                                sch.isCancelled === true &&
+                                (sch.isMakeUpClass !== true ||
+                                  sch.normalClassIndex === s_index) &&
+                                (sch.cancelledClassIndex !== undefined ||
+                                  sch.cancelledClassIndex !== null)
+                                  ? sch?.cancelledClassIndex === s_index ||
+                                    sch?.cancelledClassIndex === 10 ||
+                                    sch?.cancelledClassIndex === null ||
+                                    (sch?.cancelledClassIndex === 1 &&
+                                      sch?.teacher.length === 1)
+                                    ? `lab-td-cancelled`
+                                    : ""
+                                  : sch.isCancelled === true &&
+                                    sch.isMakeUpClass !== true
+                                  ? `lab-td-cancelled`
+                                  : ""
+                              }`}
+                              rowSpan={rowSpan}
+                            >
                               <pre>
                                 {sch.class.map((cls, index) => {
                                   return `${cls.program} ${cls.semester} ${

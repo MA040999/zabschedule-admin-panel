@@ -2,6 +2,7 @@ import app from "../../axiosConfig";
 import { addNotificationMsg } from "../auth/authActions";
 import {
   APPROVE_REQUEST,
+  EXPIRE_REQUEST,
   FETCH_REQUESTS,
   REJECT_REQUEST,
 } from "./requestTypes";
@@ -27,6 +28,9 @@ export const approveRequest = (id, setIsLoading, setIsSelectOpen) => {
       setIsLoading(false);
       setIsSelectOpen(false);
     } catch (error) {
+      if (error?.response?.status === 406) {
+        dispatch({ type: EXPIRE_REQUEST, payload: id });
+      }
       dispatch(addNotificationMsg(error?.response?.data?.message, "error"));
       setIsLoading(false);
       setIsSelectOpen(false);

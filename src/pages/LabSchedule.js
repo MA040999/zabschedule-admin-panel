@@ -29,6 +29,23 @@ function LabSchedule() {
   );
   const role = useSelector((state) => state.auth.user.role);
 
+  const isCancelled = (sch, s_index) => {
+    return sch.isCancelled === true &&
+      !sch.isMakeUpClass &&
+      (sch.isMakeUpClass !== true || sch.normalClassIndex === s_index) &&
+      (sch.cancelledClassIndex !== undefined ||
+        sch.cancelledClassIndex !== null)
+      ? sch?.cancelledClassIndex === s_index ||
+        sch?.cancelledClassIndex === 10 ||
+        sch?.cancelledClassIndex === null ||
+        (sch?.cancelledClassIndex === 1 && sch?.teacher.length === 1)
+        ? true
+        : false
+      : sch.isCancelled === true && sch.isMakeUpClass !== true
+      ? true
+      : false;
+  };
+
   const handleClickOpen = (
     room,
     selectedDay,
@@ -279,26 +296,58 @@ function LabSchedule() {
                                     .trim()}`}</pre>
                                 </td>
                               )}
-                            {console.log("sch", sch)}
-                            {console.log("s_index", s_index)}
                             <td
+                              onClick={() =>
+                                role === "Faculty" &&
+                                isCancelled(sch, s_index) &&
+                                handleClickOpen(
+                                  selectedRoom,
+                                  sch.day,
+                                  sch.campus,
+                                  {
+                                    ...slot,
+                                    slot_timing:
+                                      sch.teacher[0]._id ===
+                                        sch.teacher[1]._id &&
+                                      sch.subject[0]._id ===
+                                        sch.subject[1]._id &&
+                                      sch.class[0]._id === sch.class[1]._id
+                                        ? slot.slot_timing
+                                        : [slot.slot_timing[s_index]],
+                                    friday_slot_timing: [
+                                      slot.friday_slot_timing[s_index],
+                                    ],
+                                  },
+                                  sch._id,
+                                  [],
+                                  [],
+                                  [],
+
+                                  sch.day === "Friday"
+                                    ? [
+                                        `${slot.friday_slot_timing[s_index]
+                                          ?.split("to")[0]
+                                          .trim()} - ${slot.friday_slot_timing[
+                                          s_index
+                                        ]
+                                          ?.split("to")[1]
+                                          .trim()}`,
+                                      ]
+                                    : [
+                                        `${slot.slot_timing[s_index]
+                                          ?.split("to")[0]
+                                          .trim()} - ${slot.slot_timing[s_index]
+                                          ?.split("to")[1]
+                                          .trim()}`,
+                                      ],
+                                  false,
+                                  true
+                                )
+                              }
                               className={`lab-td 
                               ${
-                                sch.isCancelled === true &&
-                                (sch.isMakeUpClass !== true ||
-                                  sch.normalClassIndex === s_index) &&
-                                (sch.cancelledClassIndex !== undefined ||
-                                  sch.cancelledClassIndex !== null)
-                                  ? sch?.cancelledClassIndex === s_index ||
-                                    sch?.cancelledClassIndex === 10 ||
-                                    sch?.cancelledClassIndex === null ||
-                                    (sch?.cancelledClassIndex === 1 &&
-                                      sch?.teacher.length === 1)
-                                    ? `lab-td-cancelled`
-                                    : ""
-                                  : sch.isCancelled === true &&
-                                    sch.isMakeUpClass !== true
-                                  ? `lab-td-cancelled`
+                                isCancelled(sch, s_index)
+                                  ? "lab-td-cancelled"
                                   : ""
                               }`}
                               rowSpan={rowSpan}
@@ -528,23 +577,59 @@ function LabSchedule() {
                             <td
                               className={`lab-td 
                               ${
-                                sch.isCancelled === true &&
-                                (sch.isMakeUpClass !== true ||
-                                  sch.normalClassIndex === s_index) &&
-                                (sch.cancelledClassIndex !== undefined ||
-                                  sch.cancelledClassIndex !== null)
-                                  ? sch?.cancelledClassIndex === s_index ||
-                                    sch?.cancelledClassIndex === 10 ||
-                                    sch?.cancelledClassIndex === null ||
-                                    (sch?.cancelledClassIndex === 1 &&
-                                      sch?.teacher.length === 1)
-                                    ? `lab-td-cancelled`
-                                    : ""
-                                  : sch.isCancelled === true &&
-                                    sch.isMakeUpClass !== true
-                                  ? `lab-td-cancelled`
+                                isCancelled(sch, s_index)
+                                  ? "lab-td-cancelled"
                                   : ""
                               }`}
+                              onClick={() => {
+                                const index =
+                                  sch.selectedDay === "Friday"
+                                    ? slot.friday_slot_timing.indexOf(
+                                        sch.Time[0].replace("-", "to")
+                                      )
+                                    : slot.slot_timing.indexOf(
+                                        sch.Time[0].replace("-", "to")
+                                      );
+                                role === "Faculty" &&
+                                  isCancelled(sch, s_index) &&
+                                  handleClickOpen(
+                                    selectedRoom,
+                                    sch.day,
+                                    sch.campus,
+                                    {
+                                      ...slot,
+                                      slot_timing:
+                                        index === -1
+                                          ? slot.slot_timing
+                                          : [slot.slot_timing[index]],
+                                      friday_slot_timing:
+                                        index === -1
+                                          ? slot.slot_timing
+                                          : [slot.friday_slot_timing[index]],
+                                    },
+                                    sch._id,
+                                    [],
+                                    [],
+                                    [],
+
+                                    sch.day === "Friday"
+                                      ? [slot.friday_slot_timing[index]]
+                                      : [
+                                          `${slot.slot_timing[
+                                            index === -1 ? 0 : index
+                                          ]
+                                            .split("to")[0]
+                                            .trim()} - ${slot.slot_timing[
+                                            index === -1 ? 0 : index
+                                          ]
+                                            .split("to")[1]
+                                            .trim()}`,
+                                        ],
+
+                                    false,
+                                    true
+                                  );
+                              }}
                               rowSpan={rowSpan}
                             >
                               <pre>

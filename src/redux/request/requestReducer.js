@@ -1,5 +1,6 @@
 import {
   APPROVE_REQUEST,
+  EXPIRE_REQUEST,
   FETCH_REQUESTS,
   REJECT_REQUEST,
 } from "./requestTypes";
@@ -21,6 +22,15 @@ const requestReducer = (state = intitalState, action) => {
         requests: state.requests.filter((request) =>
           request._id === action.payload
             ? (request.status = "Rejected")
+            : request
+        ),
+      };
+    case EXPIRE_REQUEST:
+      return {
+        ...state,
+        requests: state.requests.filter((request) =>
+          request._id === action.payload
+            ? (request.status = "Expired")
             : request
         ),
       };

@@ -138,10 +138,12 @@ export const deleteClass = (id) => {
 export const cancelClass = (id, index) => {
   return async (dispatch) => {
     try {
-      await app.patch(`/time-table/cancel-class/${id}/${index}`);
+      const { data } = await app.patch(
+        `/time-table/cancel-class/${id}/${index}`
+      );
       dispatch({
         type: CANCEL_CLASS,
-        payload: { id, index },
+        payload: { id, index: data.cancelledClassIndex },
       });
       dispatch(toggleModal());
       dispatch(toggleConfirmationModal());

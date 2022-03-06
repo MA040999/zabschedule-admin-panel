@@ -114,7 +114,6 @@ function CampusSchedule({
                                 tempSchedule?.Time[0],
                               ],
                       };
-                      console.log("newSchedule", newSchedule);
                       dispatch(
                         toggleModal(
                           schedule.room,
@@ -151,7 +150,6 @@ function CampusSchedule({
                                     teacher === undefined
                                 )
                                 .map((teacher) => {
-                                  console.log("teacher", teacher);
                                   return teacher ? teacher._id : undefined;
                                 })
                             : [],
